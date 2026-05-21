@@ -16,8 +16,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $users = $request->user()->isAdmin() ? \App\Models\User::all() : collect();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'users' => $users,
         ]);
     }
 

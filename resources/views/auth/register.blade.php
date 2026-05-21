@@ -1,52 +1,54 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <!-- Header/Title inside card -->
+    <div class="mb-8">
+        <h2 class="font-serif text-3xl tracking-tight text-[#18181B] dark:text-zinc-100">Tạo tài khoản</h2>
+        <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400 font-sans font-light">
+            Đăng ký để trở thành thành viên của cộng đồng PetAdoption.
+        </p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
         <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="space-y-1.5">
+            <x-input-label for="name" value="Tên người dùng" />
+            <x-text-input id="name" class="block w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Ví dụ: Nguyễn Văn A" />
+            <x-input-error :messages="$errors->get('name')" />
         </div>
 
         <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="space-y-1.5">
+            <x-input-label for="email" value="Địa chỉ Email" />
+            <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="name@example.com" />
+            <x-input-error :messages="$errors->get('email')" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="space-y-1.5">
+            <x-input-label for="password" value="Mật khẩu bảo mật" />
+            <x-text-input id="password" class="block w-full" type="password" name="password" required autocomplete="new-password" placeholder="••••••••" />
+            <x-input-error :messages="$errors->get('password')" />
         </div>
 
         <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="space-y-1.5">
+            <x-input-label for="password_confirmation" value="Xác nhận mật khẩu" />
+            <x-text-input id="password_confirmation" class="block w-full" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••" />
+            <x-input-error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
+        <div class="pt-4 space-y-4">
+            <x-primary-button class="w-full justify-center py-2.5 text-sm">
+                Đăng ký tài khoản
             </x-primary-button>
+            
+            <div class="text-center text-xs text-zinc-500 dark:text-zinc-400">
+                Đã có tài khoản?
+                <a class="font-medium text-[#18181B] dark:text-zinc-100 hover:underline transition duration-150 ml-1" href="{{ route('login') }}">
+                    Đăng nhập ngay
+                </a>
+            </div>
         </div>
     </form>
 </x-guest-layout>
