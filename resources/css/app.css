@@ -6,7 +6,69 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Geist', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Nunito', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-mono: 'Geist Mono', 'SF Mono', monospace;
+
+    /* PETJAM Custom Tokens */
+    --color-orange-brand: #f08c50;
+    --color-surface-strong: oklab(0 0 0 / 0.2);
+    
+    /* Dark Mode UI Tokens */
+    --color-bg-dark: #0a0a0a;
+    --color-card-dark: #1c1c1e;
+    --color-input-dark: #2a2a2a;
+    --color-text-muted: #8e8e93;
+    
+    /* Admin Dashboard Tokens */
+    --color-sidebar-blue: #3f899a;
+
+    --shadow-soft: 0px 2px 10px 0px rgba(0, 0, 0, 0.05), 0px 1px 3px 0px rgba(0, 0, 0, 0.03) inset;
+    --shadow-glow: 0px 4px 14px 0px rgba(240, 140, 80, 0.39);
+    
+    --radius-xs: 8px;
+    --radius-sm: 33554400px; /* pill */
+
+    /* Typography Scale Overrides */
+    --text-xs: 12px;
+    --text-sm: 13px;
+    --text-base: 14px;
+    --text-lg: 16px;
+    --text-xl: 28px;
+    --text-2xl: 36px;
+    
+    /* Spacing Scale Overrides */
+    --spacing-1: 6px;
+    --spacing-2: 8px;
+    --spacing-3: 10px;
+    --spacing-4: 12px;
+    --spacing-5: 14px;
+    --spacing-6: 20px;
+    --spacing-7: 24px;
+    --spacing-8: 32px;
+}
+
+/* Custom Slim Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 transparent;
 }

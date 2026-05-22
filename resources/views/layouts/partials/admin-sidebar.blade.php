@@ -1,28 +1,28 @@
 <aside 
-    class="flex flex-col bg-white dark:bg-zinc-900 border-r border-[#EAEAEA] dark:border-zinc-800 transition-all duration-300 ease-in-out shrink-0 h-full relative z-20"
+    class="flex flex-col bg-sidebar-blue shadow-lg transition-all duration-300 ease-in-out shrink-0 h-full relative z-20 text-white"
     :class="expanded ? 'w-64' : 'w-20'"
 >
     <!-- Sidebar Header (Logo + Toggle) -->
-    <div class="h-16 flex items-center justify-between px-4 border-b border-[#EAEAEA] dark:border-zinc-800 shrink-0">
+    <div class="h-16 flex items-center justify-between px-4 border-b border-white/10 shrink-0">
         <!-- Logo Area -->
         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 overflow-hidden" x-show="expanded" x-transition.opacity.duration.300ms>
-            <div class="w-8 h-8 rounded-full bg-[#18181B] dark:bg-zinc-100 flex items-center justify-center shrink-0">
-                <div class="w-3 h-3 rounded-full bg-[#FBFBFA] dark:bg-zinc-950"></div>
+            <div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+                <div class="w-3 h-3 rounded-full bg-white"></div>
             </div>
             <span class="font-serif text-xl tracking-tight leading-none pt-1 truncate">PetAdoption</span>
         </a>
         
         <!-- Collapsed Icon only -->
         <div class="w-full flex justify-center" x-show="!expanded" x-transition.opacity.duration.300ms style="display: none;">
-            <div class="w-8 h-8 rounded-full bg-[#18181B] dark:bg-zinc-100 flex items-center justify-center shrink-0">
-                <div class="w-3 h-3 rounded-full bg-[#FBFBFA] dark:bg-zinc-950"></div>
+            <div class="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center shrink-0">
+                <div class="w-3 h-3 rounded-full bg-white"></div>
             </div>
         </div>
 
         <!-- Toggle Button (Absolute to hover right edge, or simple inline) -->
         <button 
             @click="expanded = !expanded" 
-            class="absolute -right-3.5 top-5 bg-white dark:bg-zinc-900 border border-[#EAEAEA] dark:border-zinc-800 rounded-full p-1 text-zinc-400 hover:text-[#18181B] dark:hover:text-zinc-100 transition-colors shadow-sm"
+            class="absolute -right-3.5 top-5 bg-sidebar-blue border border-white/20 rounded-full p-1 text-white/70 hover:text-white hover:bg-white/10 transition-colors shadow-sm"
         >
             <svg class="w-4 h-4 transition-transform duration-300" :class="expanded ? 'rotate-0' : 'rotate-180'" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -34,7 +34,7 @@
     <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
         <!-- Dashboard Link -->
         <a href="{{ route('dashboard') }}" 
-           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors group {{ request()->routeIs('dashboard') ? 'bg-[#18181B] text-white dark:bg-zinc-100 dark:text-zinc-950' : 'text-zinc-500 hover:bg-[#FBFBFA] hover:text-[#18181B] dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100' }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors group {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white border-l-4 border-orange-brand shadow-sm font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
            :class="!expanded && 'justify-center px-0'"
            title="Bảng điều khiển"
         >
@@ -46,7 +46,7 @@
 
         <!-- Users Dummy Link -->
         <a href="#" 
-           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-zinc-500 hover:bg-[#FBFBFA] hover:text-[#18181B] dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 group"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-white/70 hover:bg-white/10 hover:text-white group"
            :class="!expanded && 'justify-center px-0'"
            title="Quản lý người dùng"
         >
@@ -58,7 +58,7 @@
 
         <!-- Pets Dummy Link -->
         <a href="#" 
-           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-zinc-500 hover:bg-[#FBFBFA] hover:text-[#18181B] dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 group"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-white/70 hover:bg-white/10 hover:text-white group"
            :class="!expanded && 'justify-center px-0'"
            title="Danh sách thú cưng"
         >
@@ -70,7 +70,7 @@
 
         <!-- Profile Link -->
         <a href="{{ route('profile.edit') }}" 
-           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors group {{ request()->routeIs('profile.edit') ? 'bg-[#18181B] text-white dark:bg-zinc-100 dark:text-zinc-950' : 'text-zinc-500 hover:bg-[#FBFBFA] hover:text-[#18181B] dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100' }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors group {{ request()->routeIs('profile.edit') ? 'bg-white/15 text-white border-l-4 border-orange-brand shadow-sm font-bold' : 'text-white/70 hover:bg-white/10 hover:text-white' }}"
            :class="!expanded && 'justify-center px-0'"
            title="Hồ sơ cá nhân"
         >
@@ -82,11 +82,11 @@
     </nav>
 
     <!-- Sidebar Footer (Actions) -->
-    <div class="p-3 border-t border-[#EAEAEA] dark:border-zinc-800 space-y-1 shrink-0">
+    <div class="p-3 border-t border-white/10 space-y-1 shrink-0">
         
         <!-- Back to main site -->
         <a href="/" 
-           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-zinc-500 hover:bg-[#FBFBFA] hover:text-[#18181B] dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 group"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-white/70 hover:bg-white/10 hover:text-white group"
            :class="!expanded && 'justify-center px-0'"
            title="Trang chủ"
         >
@@ -100,7 +100,7 @@
         <form method="POST" action="{{ route('logout') }}" class="m-0">
             @csrf
             <button type="submit" 
-               class="w-full flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 group"
+               class="w-full flex items-center gap-3 px-3 py-2.5 rounded-[6px] transition-colors text-red-300 hover:bg-red-500/20 hover:text-red-200 group"
                :class="!expanded && 'justify-center px-0'"
                title="Đăng xuất"
             >
@@ -122,10 +122,10 @@
     background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #EAEAEA;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
 }
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #27272A; /* zinc-800 */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 </style>

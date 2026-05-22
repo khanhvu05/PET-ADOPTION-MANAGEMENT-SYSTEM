@@ -1,32 +1,40 @@
 <x-guest-layout>
-    <div class="mb-8">
-        <h2 class="font-serif text-3xl tracking-tight text-[#18181B] dark:text-zinc-100">Quên mật khẩu?</h2>
-        <p class="mt-3 text-xs text-zinc-500 dark:text-zinc-400 font-sans font-light leading-relaxed">
+    <!-- Header/Title inside card -->
+    <div class="mb-6 text-center">
+        <h2 class="text-2xl font-black tracking-tight text-white">Quên mật khẩu?</h2>
+        <p class="mt-1.5 text-[11px] text-text-muted font-bold px-4 leading-relaxed">
             Đừng lo lắng. Hãy nhập địa chỉ email của bạn, chúng tôi sẽ gửi một liên kết để bạn có thể đặt lại mật khẩu mới an toàn.
         </p>
     </div>
 
     <!-- Session Status -->
-    <x-auth-session-status class="mb-6 p-4 bg-[#EDF3EC] dark:bg-emerald-950/20 text-[#346538] dark:text-emerald-400 text-xs font-mono rounded-[6px] border border-[#D5E8D4]/60 dark:border-emerald-900/30" :status="session('status')" />
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}" class="space-y-6">
+    <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
         @csrf
 
         <!-- Email Address -->
         <div class="space-y-1.5">
-            <x-input-label for="email" value="Địa chỉ Email" />
-            <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autofocus placeholder="name@example.com" />
-            <x-input-error :messages="$errors->get('email')" />
+            <x-input-label for="email" value="ĐỊA CHỈ EMAIL" class="!text-[10px] !text-text-muted" />
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="vidu@email.com" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+            </div>
+            <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
 
         <div class="pt-2">
-            <x-primary-button class="w-full justify-center py-2.5 text-sm">
+            <button type="submit" class="w-full flex justify-center py-3 px-4 bg-orange-brand hover:opacity-90 rounded-full text-white text-sm font-bold shadow-glow transition duration-200">
                 Gửi liên kết khôi phục
-            </x-primary-button>
+            </button>
         </div>
         
-        <div class="text-center text-xs text-zinc-500 dark:text-zinc-400">
-            <a class="font-medium text-[#18181B] dark:text-zinc-100 hover:underline transition duration-150" href="{{ route('login') }}">
+        <div class="mt-4 text-center text-xs text-text-muted font-bold">
+            <a class="text-orange-brand hover:underline transition ml-1" href="{{ route('login') }}">
                 Quay lại đăng nhập
             </a>
         </div>

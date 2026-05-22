@@ -1,30 +1,30 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+    <!-- Header/Title inside card -->
+    <div class="mb-6 text-center">
+        <h2 class="text-2xl font-black tracking-tight text-white">Xác thực Email</h2>
+        <p class="mt-1.5 text-[11px] text-text-muted font-bold px-4 leading-relaxed">
+            Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, vui lòng xác thực địa chỉ email bằng cách nhấn vào liên kết chúng tôi vừa gửi. Nếu bạn chưa nhận được, chúng tôi sẽ gửi lại một email khác.
+        </p>
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        <div class="mb-4 font-bold text-[11px] text-emerald-400 text-center px-4">
+            Một liên kết xác thực mới vừa được gửi đến địa chỉ email bạn cung cấp khi đăng ký.
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
+    <div class="mt-6 flex flex-col gap-4 items-center justify-between">
+        <form method="POST" action="{{ route('verification.send') }}" class="w-full">
             @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
+            <button type="submit" class="w-full flex justify-center py-3 px-4 bg-orange-brand hover:opacity-90 rounded-full text-white text-sm font-bold shadow-glow transition duration-200">
+                Gửi lại Email Xác Thực
+            </button>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                {{ __('Log Out') }}
+            <button type="submit" class="text-xs text-text-muted hover:text-white font-bold transition">
+                Đăng xuất
             </button>
         </form>
     </div>

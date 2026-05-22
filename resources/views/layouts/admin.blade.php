@@ -10,12 +10,12 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Nunito:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased text-[#18181B] dark:text-zinc-100 bg-[#FBFBFA] dark:bg-zinc-950 overflow-hidden">
+    <body class="font-sans antialiased text-slate-900 bg-[#F4F7F6] overflow-hidden">
         
         <!-- Alpine State wrapper for layout -->
         <div x-data="{ expanded: true }" class="flex h-screen overflow-hidden">
@@ -29,7 +29,7 @@
                 
                 <!-- Page Heading (Optional) -->
                 @isset($header)
-                    <header class="border-b border-[#EAEAEA] dark:border-zinc-800 bg-white dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-10">
+                    <header class="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-10">
                         <div class="px-6 py-4 lg:px-8">
                             {{ $header }}
                         </div>
