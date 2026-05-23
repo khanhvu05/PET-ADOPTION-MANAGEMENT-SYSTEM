@@ -1,10 +1,9 @@
 <section class="space-y-6">
     <header>
-        <span class="font-mono text-[10px] uppercase tracking-widest text-[#9F2F2D] dark:text-red-400 block mb-1">[ Mục 03 ]</span>
-        <h2 class="text-xl font-serif text-[#9F2F2D] dark:text-red-400 tracking-tight">
+        <h2 class="text-lg font-bold text-red-600">
             Khu vực rủi ro
         </h2>
-        <p class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 font-sans font-light">
+        <p class="mt-1 text-sm text-slate-500">
             Một khi bạn xác nhận xóa tài khoản, toàn bộ dữ liệu cá nhân, lịch sử và thông tin liên quan sẽ bị xóa sạch vĩnh viễn khỏi máy chủ. Hãy cân nhắc kỹ.
         </p>
     </header>
@@ -23,11 +22,11 @@
             @csrf
             @method('delete')
 
-            <h2 class="text-lg font-serif text-[#18181B] dark:text-zinc-100 tracking-tight">
+            <h2 class="text-lg font-bold text-slate-900">
                 Xác nhận xóa tài khoản vĩnh viễn?
             </h2>
 
-            <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400 font-sans font-light leading-relaxed">
+            <p class="mt-2 text-sm text-slate-500 leading-relaxed">
                 Để đảm bảo đây là quyết định của chính bạn, vui lòng điền mật khẩu đăng nhập hiện tại vào trường bên dưới. Dữ liệu sẽ không thể khôi phục sau khi xóa.
             </p>
 

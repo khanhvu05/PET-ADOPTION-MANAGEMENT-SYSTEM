@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,12 +7,12 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Nunito', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-mono: 'Geist Mono', 'SF Mono', monospace;
 
     /* PETJAM Custom Tokens */
-    --color-orange-brand: #f08c50;
+    --color-orange-brand: #e8822a;
     --color-surface-strong: oklab(0 0 0 / 0.2);
     
     /* Dark Mode UI Tokens */

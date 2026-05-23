@@ -1,11 +1,10 @@
 <section>
     <header>
-        <span class="font-mono text-[10px] uppercase tracking-widest text-[#9F2F2D] dark:text-red-400 block mb-1">[ Mục 02 ]</span>
-        <h2 class="text-xl font-serif text-[#18181B] dark:text-zinc-100 tracking-tight">
-            Bảo mật mật khẩu
+        <h2 class="text-lg font-bold text-slate-900">
+            Cập nhật mật khẩu
         </h2>
-        <p class="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400 font-sans font-light">
-            Cập nhật mật khẩu định kỳ để duy trì tính bảo mật an toàn tối đa cho tài khoản của bạn.
+        <p class="mt-1 text-sm text-slate-500">
+            Đảm bảo tài khoản của bạn sử dụng mật khẩu dài, ngẫu nhiên để giữ an toàn.
         </p>
     </header>
 
@@ -32,7 +31,7 @@
         </div>
 
         <div class="flex items-center gap-4 pt-2">
-            <x-primary-button>Cập nhật mật khẩu</x-primary-button>
+            <x-primary-button>Lưu mật khẩu</x-primary-button>
 
             @if (session('status') === 'password-updated')
                 <p
@@ -40,8 +39,8 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2500)"
-                    class="px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider rounded-[4px] bg-[#EDF3EC] dark:bg-emerald-950/30 text-[#346538] dark:text-emerald-400 border border-[#D5E8D4]/60 dark:border-emerald-900/30"
-                >Đã đổi mật khẩu thành công</p>
+                    class="text-sm font-medium text-green-600"
+                >Đã cập nhật mật khẩu.</p>
             @endif
         </div>
     </form>
