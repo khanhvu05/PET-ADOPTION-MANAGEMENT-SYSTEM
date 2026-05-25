@@ -66,32 +66,31 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-### 6. Tạo Database MySQL & Cấu hình kết nối
-Dự án sử dụng **MySQL** làm cơ sở dữ liệu. Thực hiện các bước sau:
+### 6. Cấu Hình Kết Nối Database (Aiven Cloud)
+Dự án hiện đã được chuyển sang sử dụng hệ thống cơ sở dữ liệu đám mây **Aiven MySQL** dùng chung cho cả team. Bạn không cần phải cài đặt hay tạo database ở máy cá nhân nữa.
 
-**Bước 6.1 — Đảm bảo MySQL đang chạy**, sau đó đăng nhập vào MySQL CLI hoặc phpMyAdmin và tạo schema:
-```sql
-CREATE DATABASE pet_adoption_laravel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-**Bước 6.2 — Cấu hình file `.env`:**
-
-Mở file `.env` và điền thông tin kết nối MySQL của bạn:
+**Bước 6.1 — Cấu hình file `.env`:**
+Mở file `.env` và điền thông số kết nối do Admin/Team Leader cung cấp:
 ```dotenv
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=pet_adoption_laravel
-DB_USERNAME=root
-DB_PASSWORD=your_mysql_password
+DB_HOST=mysql-ac7c52b-petadoption-php.f.aivencloud.com
+DB_PORT=14399
+DB_DATABASE=defaultdb
+DB_USERNAME=avnadmin
+DB_PASSWORD="<Nhập_Password_Được_Cấp>"
 ```
-> [!NOTE]
-> Thay `your_mysql_password` bằng mật khẩu MySQL thực tế của bạn. Nếu MySQL không có mật khẩu (local), để trống `DB_PASSWORD=`.
 
-**Bước 6.3 — Chạy Migration & Seed dữ liệu mẫu:**
+**Bước 6.2 — Chạy lệnh dọn dẹp Cache & Cập nhật bảng (Nếu có sự thay đổi):**
+Vì Database là dùng chung, cấu trúc bảng thường đã được Admin tạo sẵn. Bạn chỉ cần chạy lệnh này để đảm bảo máy bạn nhận đúng cấu hình:
 ```bash
-php artisan migrate --seed
+php artisan config:clear
+php artisan migrate
 ```
+
+> [!TIP]
+> 🔍 **Muốn xem dữ liệu bên trong Database?**
+> Đừng dùng localhost phpMyAdmin mặc định nữa. Hãy xem hướng dẫn chi tiết cách cấu hình phpMyAdmin của bạn để soi thẳng vào Aiven tại đây:
+> 👉 **[Hướng dẫn kết nối XAMPP phpMyAdmin sang Aiven](docs/team/Aiven_deploy_mysql/HUONG_DAN_KET_NOI_AIVEN_PHPMYADMIN.md)**
 
 ### 7. Build tài nguyên giao diện (Vite & Tailwind v4)
 Chạy dev server của Vite để biên dịch CSS/JS thời gian thực:
