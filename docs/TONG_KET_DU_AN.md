@@ -202,7 +202,7 @@ Pet_Adoption_Management_System/
 | Frontend Styling | Tailwind CSS v4 |
 | JavaScript Reactivity | Alpine.js |
 | Build Tool | Vite |
-| Database | SQLite (development) |
+| Database | **MySQL** >= 5.7 (hoặc MariaDB >= 10.3) |
 | Charting | Chart.js (CDN) |
 | Typography | Instrument Serif · Geist · Geist Mono · Inter |
 | Email Testing | Log driver (`MAIL_MAILER=log`) |
@@ -248,10 +248,16 @@ composer install && npm install
 copy .env.example .env
 php artisan key:generate
 
-# 3. Khởi tạo database
+# 3. Tạo schema MySQL (chạy trong MySQL CLI hoặc phpMyAdmin)
+# CREATE DATABASE pet_adoption CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+# 4. Điền thông tin kết nối MySQL vào file .env
+# DB_DATABASE=pet_adoption  |  DB_USERNAME=root  |  DB_PASSWORD=your_password
+
+# 5. Khởi tạo bảng dữ liệu
 php artisan migrate --seed
 
-# 4. Chạy dev server (2 terminal)
+# 6. Chạy dev server (2 terminal)
 npm run dev
 php artisan serve
 ```

@@ -138,6 +138,22 @@
             </svg>
             <span class="text-[13px]" x-show="expanded">Quay về trang web</span>
         </a>
+
+        <!-- Logout Button -->
+        <form method="POST" action="{{ route('logout') }}" class="mt-2">
+            @csrf
+            <button
+                type="submit"
+                class="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-red-400/30 bg-red-500/10 hover:bg-red-500/25 text-red-300 hover:text-red-200 font-bold transition-colors group"
+                :class="!expanded && 'px-0'"
+                title="Đăng xuất"
+            >
+                <svg class="w-[22px] h-[22px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span class="text-[13px]" x-show="expanded">Đăng xuất</span>
+            </button>
+        </form>
     </div>
 </aside>
 
