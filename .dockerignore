@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.example
+.phpunit.result.cache
+docker-compose.yml
+node_modules
+npm-debug.log
+yarn-error.log
+/vendor
+/storage/framework/views/*.php
+/storage/framework/sessions/*
+/storage/logs/*.log
+docs/
+README.md
