@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# 1. Cài đặt các thư viện hệ thống cần thiết cho Laravel
+# 1. Cài đặt các thư viện hệ thống cần thiết cho Laravel và Node.js
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     libzip-dev \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip
 
@@ -27,12 +30,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# 6. Phân quyền cho www-data (Apache)
+# 6. Build giao diện (CSS/JS) bằng Node.js (Vite/Tailwind)
+RUN npm install && npm run build
+
+# 7. Phân quyền cho www-data (Apache)
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# 7. Cài đặt các thư viện PHP
+# 8. Cài đặt các thư viện PHP
 # (Chạy với user www-data để không bị lỗi quyền)
 USER www-data
 RUN composer install --no-interaction --optimize-autoloader --no-dev
