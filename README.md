@@ -79,6 +79,7 @@ DB_DATABASE=defaultdb
 DB_USERNAME=avnadmin
 DB_PASSWORD="<Nhập_Password_Được_Cấp>"
 ```
+**Lưu ý:** Để có thể dùng giao diện phpMyAdmin quản lý Database Aiven này, hãy xem tài liệu hướng dẫn: [Hướng dẫn kết nối Aiven với phpMyAdmin](docs/team/Aiven_deploy_mysql/HUONG_DAN_KET_NOI_AIVEN_PHPMYADMIN.md).
 
 **Bước 6.2 — Chạy lệnh dọn dẹp Cache & Cập nhật bảng (Nếu có sự thay đổi):**
 Vì Database là dùng chung, cấu trúc bảng thường đã được Admin tạo sẵn. Bạn chỉ cần chạy lệnh này để đảm bảo máy bạn nhận đúng cấu hình:
