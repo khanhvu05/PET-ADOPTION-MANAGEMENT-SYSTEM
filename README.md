@@ -75,7 +75,7 @@ Mở file `.env` và điền thông số kết nối do Admin/Team Leader cung c
 DB_CONNECTION=mysql
 DB_HOST=mysql-ac7c52b-petadoption-php.f.aivencloud.com
 DB_PORT=14399
-DB_DATABASE=defaultdb
+DB_DATABASE=pet_adoption_laravel
 DB_USERNAME=avnadmin
 DB_PASSWORD="<Nhập_Password_Được_Cấp>"
 ```
