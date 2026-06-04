@@ -7,6 +7,7 @@
 
         <title>{{ config('app.name', 'PetAdoption') }} - Bảng Điều Khiển</title>
 
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,13 +22,13 @@
     <body class="font-sans antialiased text-slate-900 bg-[#F4F7F6] overflow-hidden">
         
         <!-- Alpine State wrapper for layout -->
-        <div x-data="{ expanded: true }" class="flex h-screen overflow-hidden">
+        <div x-data="{ expanded: localStorage.getItem('sidebarExpanded') === 'false' ? false : true }" x-init="$watch('expanded', val => localStorage.setItem('sidebarExpanded', val))" class="flex h-screen overflow-hidden">
             
             <!-- Sidebar -->
             @include('layouts.partials.admin-sidebar')
 
             <!-- Main Content Area -->
-            <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+            <div class="flex-1 flex flex-col h-screen overflow-hidden relative min-w-0">
                 <!-- Mobile Header Overlay (if needed in future) -->
                 
                 <!-- Top Header -->
@@ -72,7 +73,7 @@
                 </header>
 
                 <!-- Main Scrollable Area -->
-                <main class="flex-1 overflow-y-auto p-6 lg:p-8">
+                <main class="flex-1 overflow-y-auto p-6 lg:p-8 min-w-0">
                     {{ $slot }}
                 </main>
             </div>

@@ -21,7 +21,7 @@
     @endif
 
     <div class="overflow-x-auto border border-slate-200 rounded-xl">
-        <table class="w-full text-left border-collapse text-sm">
+        <table class="w-full text-left border-collapse text-sm whitespace-nowrap">
             <thead>
                 <tr class="bg-slate-50/50 border-b border-slate-200">
                     <th class="py-3 px-4 font-bold text-xs uppercase tracking-widest text-slate-500">Người dùng</th>

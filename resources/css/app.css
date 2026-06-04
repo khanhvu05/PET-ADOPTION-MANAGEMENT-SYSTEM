@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -7,12 +7,21 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-mono: 'Geist Mono', 'SF Mono', monospace;
 
-    /* PETJAM Custom Tokens */
-    --color-orange-brand: #e8822a;
+    /* PETJAM Custom Tokens (Refined) */
+    --color-pet-primary: #F58A3C;
+    --color-pet-secondary: #0AA5C0;
+    
+    --color-pet-text: #1D2B53;
+    --color-pet-muted: #5A6474;
+    
+    --color-pet-bg: #FAFAFA;
+    --color-pet-bg-alt: #F5F8FA;
+
+    --color-orange-brand: #e8822a; /* Keep for legacy */
     --color-surface-strong: oklab(0 0 0 / 0.2);
     
     /* Dark Mode UI Tokens */
@@ -24,11 +33,13 @@
     /* Admin Dashboard Tokens */
     --color-sidebar-blue: #3f899a;
 
-    --shadow-soft: 0px 2px 10px 0px rgba(0, 0, 0, 0.05), 0px 1px 3px 0px rgba(0, 0, 0, 0.03) inset;
-    --shadow-glow: 0px 4px 14px 0px rgba(240, 140, 80, 0.39);
+    --shadow-soft: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0px 4px 14px 0px rgba(245, 138, 60, 0.39);
     
     --radius-xs: 8px;
-    --radius-sm: 33554400px; /* pill */
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-full: 33554400px; /* pill */
 
     /* Typography Scale Overrides */
     --text-xs: 12px;

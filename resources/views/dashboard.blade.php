@@ -3,102 +3,38 @@
     <div class="space-y-6">
         
         <!-- Metrics Grid (4 columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <!-- Metric Card 1 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Total Revenue</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">$124,500</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[40%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[30%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[70%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[85%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[95%] bg-orange-brand rounded-sm"></div>
-                    </div>
-                </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        12.5% vs last month
-                    </div>
-                </div>
-            </div>
+            <x-admin.kpi-card 
+                title="Tổng Doanh Thu" 
+                value="124,500" 
+                percent="12.5" 
+            />
 
             <!-- Metric Card 2 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Active Customers</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">1,432</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[50%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[40%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[60%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[75%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[90%] bg-orange-brand rounded-sm"></div>
-                    </div>
-                </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        4.2% vs last month
-                    </div>
-                </div>
-            </div>
+            <x-admin.kpi-card 
+                title="Khách Hàng Hoạt Động" 
+                value="1,432" 
+                percent="4.2" 
+            />
 
             <!-- Metric Card 3 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">New Signups</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">384</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[60%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[50%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[40%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[30%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[20%] bg-orange-brand rounded-sm"></div>
-                    </div>
-                </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-red-500">
-                        <svg class="w-3 h-3 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        -2.4% vs last month
-                    </div>
-                </div>
-            </div>
+            <x-admin.kpi-card 
+                title="Đăng Ký Mới" 
+                value="384" 
+                percent="-2.4" 
+            />
 
             <!-- Metric Card 4 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Conversion Rate</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">3.8%</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[30%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[45%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[65%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[70%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[85%] bg-orange-brand rounded-sm"></div>
-                    </div>
-                </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        1.1% vs last month
-                    </div>
-                </div>
-            </div>
+            <x-admin.kpi-card 
+                title="Tỷ Lệ Chuyển Đổi" 
+                value="3.8%" 
+                percent="1.1" 
+            />
         </div>
 
         <!-- Charts Section (12 columns) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
             <!-- Main Chart: Sales Trend -->
             <div class="lg:col-span-8 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
@@ -175,7 +111,7 @@
 
             <!-- Table -->
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr class="bg-slate-50/50">
                             <th class="py-3 px-5 border-b border-slate-100 w-12">

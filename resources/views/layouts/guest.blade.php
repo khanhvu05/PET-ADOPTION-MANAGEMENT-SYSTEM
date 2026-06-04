@@ -7,6 +7,8 @@
 
     <title>{{ config('app.name', 'PETJAM') }} - Xác thực</title>
 
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +32,8 @@
         <!-- Logo Area (Outside Card) -->
         <div class="mb-6 text-center flex flex-col items-center">
             <div class="flex items-center gap-2">
-                <!-- Geometric Logo Icon -->
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#F08C50"/>
-                    <path d="M2 17L12 22L22 17" stroke="#F08C50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2 12L12 17L22 12" stroke="#F08C50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <!-- Favicon Logo Icon -->
+                <img src="{{ asset('favicon.ico') }}" alt="Logo" class="w-7 h-7">
                 <h1 class="text-3xl font-black tracking-tight text-white leading-none">
                     Pet<span class="text-orange-brand">Jam</span>
                 </h1>

@@ -35,12 +35,7 @@
                     <span class="text-slate-400 w-8 font-bold text-xs tracking-wider">[03]</span>
                     <span>Khu vực rủi ro</span>
                 </a>
-                @if ($user->isAdmin())
-                    <a href="#roles" class="flex items-center py-2 text-slate-500 hover:text-orange-brand transition-colors border-t border-slate-100 mt-2 pt-2">
-                        <span class="text-slate-400 w-8 font-bold text-xs tracking-wider text-orange-brand">[04]</span>
-                        <span class="font-bold text-orange-brand">Quản lý vai trò (Admin)</span>
-                    </a>
-                @endif
+
             </nav>
         </div>
 
@@ -67,14 +62,7 @@
                 </div>
             </div>
 
-            <!-- Section 04: Admin RBAC controls (rendered only if Auth::user()->isAdmin()) -->
-            @if ($user->isAdmin())
-                <div id="roles" class="scroll-mt-24 p-6 sm:p-8 bg-white border border-slate-200 rounded-xl shadow-sm">
-                    <div class="max-w-full">
-                        @include('profile.partials.manage-roles-form')
-                    </div>
-                </div>
-            @endif
+
         </div>
     </div>
 </x-admin-layout>
