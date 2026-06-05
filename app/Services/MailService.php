@@ -24,12 +24,12 @@ class MailService
         try {
             // Cấu hình Server SMTP
             $mail->isSMTP();
-            $mail->Host       = env('MAIL_HOST', 'smtp.gmail.com');
+            $mail->Host       = config('mail.mailers.smtp.host', env('MAIL_HOST', 'smtp.gmail.com'));
             $mail->SMTPAuth   = true;
-            $mail->Username   = env('MAIL_USERNAME');
-            $mail->Password   = env('MAIL_PASSWORD');
+            $mail->Username   = config('mail.mailers.smtp.username', env('MAIL_USERNAME'));
+            $mail->Password   = config('mail.mailers.smtp.password', env('MAIL_PASSWORD'));
             
-            $encryption = env('MAIL_ENCRYPTION', 'tls');
+            $encryption = config('mail.mailers.smtp.encryption', env('MAIL_ENCRYPTION', 'tls'));
             if ($encryption === 'tls') {
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             } elseif ($encryption === 'ssl') {
@@ -38,7 +38,7 @@ class MailService
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // default fallback
             }
             
-            $mail->Port       = env('MAIL_PORT', 587);
+            $mail->Port       = config('mail.mailers.smtp.port', env('MAIL_PORT', 587));
             
             // Fix SSL issues on some local environments
             $mail->SMTPOptions = array(
@@ -50,7 +50,10 @@ class MailService
             );
 
             // Người gửi và Người nhận
-            $mail->setFrom(env('MAIL_FROM_ADDRESS', 'no-reply@petjam.com'), env('MAIL_FROM_NAME', 'PetJam'));
+            $fromAddress = config('mail.from.address', env('MAIL_FROM_ADDRESS', 'no-reply@petjam.com'));
+            $fromName = config('mail.from.name', env('MAIL_FROM_NAME', 'PetJam'));
+            
+            $mail->setFrom($fromAddress, $fromName);
             $mail->addAddress($to);
 
             // Nội dung - bọc trong template đẹp
