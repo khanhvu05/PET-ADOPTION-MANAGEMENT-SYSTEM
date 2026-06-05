@@ -106,8 +106,15 @@ class AdoptionController extends Controller
 
         $currentStatus = $application->Trang_thai;
 
-        if (!in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
+        // Chỉ kiểm tra transition nếu trạng thái thực sự thay đổi
+        if ($newStatus !== $currentStatus && !in_array($newStatus, $allowedTransitions[$currentStatus] ?? [])) {
             return back()->with('error', "Không thể chuyển từ trạng thái \"{$application->trang_thai_label}\" sang trạng thái mới này.");
+        }
+
+        // Nếu trạng thái không đổi (ví dụ: chỉ cập nhật ghi chú)
+        if ($newStatus === $currentStatus) {
+            $application->update(['Ghi_chu_admin' => $ghiChu]);
+            return back()->with('success', 'Đã cập nhật ghi chú thành công.');
         }
 
         // Yêu cầu ghi chú khi từ chối
