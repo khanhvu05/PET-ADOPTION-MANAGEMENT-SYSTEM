@@ -154,37 +154,41 @@ class AdoptionController extends Controller
 
         // Gửi email thông báo hủy/từ chối
         if (in_array($newStatus, ['rejected', 'cancelled'])) {
-            try {
-                $application->load(['nguoiDung', 'thuCung']);
-                if ($application->nguoiDung && $application->nguoiDung->email) {
-                    $mailService = app(MailService::class);
-                    $petName = $application->thuCung->Ten ?? 'thú cưng';
-                    
-                    $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
-                    $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                    $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
-                    
-                    if ($newStatus === 'rejected') {
-                        $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
-                    } else {
-                        $body .= "<p>Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên với lý do:</p>";
-                    }
+            $application->load(['nguoiDung', 'thuCung']);
+            $ghiChuEmail = $ghiChu; // Capture for closure
+            $newStatusEmail = $newStatus;
+            
+            app()->terminating(function () use ($application, $ghiChuEmail, $newStatusEmail) {
+                try {
+                    if ($application->nguoiDung && $application->nguoiDung->email) {
+                        $mailService = app(MailService::class);
+                        $petName = $application->thuCung->Ten ?? 'thú cưng';
+                        
+                        $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
+                        $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
+                        $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
+                        
+                        if ($newStatusEmail === 'rejected') {
+                            $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
+                        } else {
+                            $body .= "<p>Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên với lý do:</p>";
+                        }
 
-                    if ($ghiChu) {
-                        $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>{$ghiChu}</blockquote>";
-                    } else {
-                        $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Không đạt yêu cầu hoặc vi phạm quy định nhận nuôi.</blockquote>";
+                        if ($ghiChuEmail) {
+                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>{$ghiChuEmail}</blockquote>";
+                        } else {
+                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Không đạt yêu cầu hoặc vi phạm quy định nhận nuôi.</blockquote>";
+                        }
+                        
+                        $body .= "<p>Hy vọng bạn sẽ tìm được một người bạn đồng hành phù hợp khác trong tương lai.</p>";
+                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                        
+                        $mailService->send($application->nguoiDung->email, $subject, $body);
                     }
-                    
-                    $body .= "<p>Hy vọng bạn sẽ tìm được một người bạn đồng hành phù hợp khác trong tương lai.</p>";
-                    $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                    
-                    $mailService->send($application->nguoiDung->email, $subject, $body);
+                } catch (\Exception $e) {
+                    \Log::error('Lỗi gửi email từ chối/hủy: ' . $e->getMessage());
                 }
-            } catch (\Exception $e) {
-                // Log lỗi gửi mail nhưng vẫn tiếp tục vì DB đã update
-                \Log::error('Lỗi gửi email: ' . $e->getMessage());
-            }
+            });
         }
 
         return redirect()
@@ -229,22 +233,29 @@ class AdoptionController extends Controller
 
             // Gửi email chúc mừng sau khi transaction thành công
             $application->load(['nguoiDung', 'thuCung']);
-            if ($application->nguoiDung && $application->nguoiDung->email) {
-                $mailService = app(MailService::class);
-                $petName = $application->thuCung->Ten ?? 'thú cưng';
-                
-                $subject = "Chúc mừng! Đơn nhận nuôi bé {$petName} đã được phê duyệt";
-                $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                $body .= "<p>PetJam xin chúc mừng bạn! Đơn đăng ký nhận nuôi bé <strong>{$petName}</strong> của bạn đã chính thức được <strong>phê duyệt</strong>.</p>";
-                if ($ghiChu) {
-                    $body .= "<p><strong>Ghi chú từ quản trị viên:</strong> {$ghiChu}</p>";
+            $ghiChuEmail = $ghiChu; // Capture
+            app()->terminating(function () use ($application, $ghiChuEmail) {
+                try {
+                    if ($application->nguoiDung && $application->nguoiDung->email) {
+                        $mailService = app(MailService::class);
+                        $petName = $application->thuCung->Ten ?? 'thú cưng';
+                        
+                        $subject = "Chúc mừng! Đơn nhận nuôi bé {$petName} đã được phê duyệt";
+                        $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
+                        $body .= "<p>PetJam xin chúc mừng bạn! Đơn đăng ký nhận nuôi bé <strong>{$petName}</strong> của bạn đã chính thức được <strong>phê duyệt</strong>.</p>";
+                        if ($ghiChuEmail) {
+                            $body .= "<p><strong>Ghi chú từ quản trị viên:</strong> {$ghiChuEmail}</p>";
+                        }
+                        $body .= "<p>Để hoàn tất thủ tục, bạn vui lòng truy cập vào lịch sử nhận nuôi và chọn lịch phỏng vấn/đón bé với chúng tôi trong vòng 24 giờ tới. Nếu quá hạn, đơn của bạn sẽ bị hủy tự động.</p>";
+                        $body .= "<p><a href='" . route('frontend.user.adoptions.index') . "' style='display:inline-block;padding:10px 20px;background:#F58A3C;color:#fff;text-decoration:none;border-radius:5px;'>Chọn lịch phỏng vấn ngay</a></p>";
+                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                        
+                        $mailService->send($application->nguoiDung->email, $subject, $body);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Lỗi gửi email duyệt đơn: ' . $e->getMessage());
                 }
-                $body .= "<p>Để hoàn tất thủ tục, bạn vui lòng truy cập vào lịch sử nhận nuôi và chọn lịch phỏng vấn/đón bé với chúng tôi trong vòng 24 giờ tới. Nếu quá hạn, đơn của bạn sẽ bị hủy tự động.</p>";
-                $body .= "<p><a href='" . route('frontend.user.adoptions.index') . "' style='display:inline-block;padding:10px 20px;background:#F58A3C;color:#fff;text-decoration:none;border-radius:5px;'>Chọn lịch phỏng vấn ngay</a></p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                
-                $mailService->send($application->nguoiDung->email, $subject, $body);
-            }
+            });
 
             return redirect()
                 ->route('admin.adoptions.show', $application->Ma_don)
@@ -295,36 +306,48 @@ class AdoptionController extends Controller
                 }
             });
 
-            $mailService = app(MailService::class);
-            // Gửi email xác nhận hoàn tất
             $application->load(['nguoiDung', 'thuCung']);
-            if ($application->nguoiDung && $application->nguoiDung->email) {
-                $petName = $application->thuCung->Ten ?? 'thú cưng';
+            
+            app()->terminating(function () use ($application, $rejectedApps) {
+                $mailService = app(MailService::class);
                 
-                $subject = "Chúc mừng! Bạn đã chính thức nhận nuôi bé {$petName}";
-                $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                $body .= "<p>PetJam xin chúc mừng bạn đã hoàn tất thủ tục và đón bé <strong>{$petName}</strong> về nhà mới thành công!</p>";
-                $body .= "<p>Chúc bạn và bé có những khoảnh khắc tuyệt vời bên nhau. Nếu có bất kỳ thắc mắc hay cần hỗ trợ nào trong quá trình chăm sóc bé, đừng ngần ngại liên hệ với chúng tôi.</p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                
-                $mailService->send($application->nguoiDung->email, $subject, $body);
-            }
-
-            // Gửi email cho những người bị từ chối tự động
-            foreach ($rejectedApps as $app) {
-                if ($app->nguoiDung && $app->nguoiDung->email) {
-                    $petName = $app->thuCung->Ten ?? 'thú cưng';
-                    $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
-                    $body = "<h2>Xin chào {$app->nguoiDung->Ho_ten},</h2>";
-                    $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
-                    $body .= "<p>Rất tiếc, đơn nhận nuôi của bạn đã bị từ chối tự động với lý do:</p>";
-                    $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Bé đã được nhận nuôi thành công bởi một người khác nhanh tay hơn.</blockquote>";
-                    $body .= "<p>Hy vọng bạn sẽ tiếp tục theo dõi và tìm được một người bạn đồng hành phù hợp khác trong tương lai tại PetJam.</p>";
-                    $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                    
-                    $mailService->send($app->nguoiDung->email, $subject, $body);
+                // Gửi email xác nhận hoàn tất
+                try {
+                    if ($application->nguoiDung && $application->nguoiDung->email) {
+                        $petName = $application->thuCung->Ten ?? 'thú cưng';
+                        
+                        $subject = "Chúc mừng! Bạn đã chính thức nhận nuôi bé {$petName}";
+                        $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
+                        $body .= "<p>PetJam xin chúc mừng bạn đã hoàn tất thủ tục và đón bé <strong>{$petName}</strong> về nhà mới thành công!</p>";
+                        $body .= "<p>Chúc bạn và bé có những khoảnh khắc tuyệt vời bên nhau. Nếu có bất kỳ thắc mắc hay cần hỗ trợ nào trong quá trình chăm sóc bé, đừng ngần ngại liên hệ với chúng tôi.</p>";
+                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                        
+                        $mailService->send($application->nguoiDung->email, $subject, $body);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Lỗi gửi email hoàn tất: ' . $e->getMessage());
                 }
-            }
+
+                // Gửi email cho những người bị từ chối tự động
+                foreach ($rejectedApps as $app) {
+                    try {
+                        if ($app->nguoiDung && $app->nguoiDung->email) {
+                            $petName = $app->thuCung->Ten ?? 'thú cưng';
+                            $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
+                            $body = "<h2>Xin chào {$app->nguoiDung->Ho_ten},</h2>";
+                            $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
+                            $body .= "<p>Rất tiếc, đơn nhận nuôi của bạn đã bị từ chối tự động với lý do:</p>";
+                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Bé đã được nhận nuôi thành công bởi một người khác nhanh tay hơn.</blockquote>";
+                            $body .= "<p>Hy vọng bạn sẽ tiếp tục theo dõi và tìm được một người bạn đồng hành phù hợp khác trong tương lai tại PetJam.</p>";
+                            $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                            
+                            $mailService->send($app->nguoiDung->email, $subject, $body);
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error('Lỗi gửi email từ chối tự động: ' . $e->getMessage());
+                    }
+                }
+            });
 
             return redirect()
                 ->route('admin.adoptions.show', $application->Ma_don)
