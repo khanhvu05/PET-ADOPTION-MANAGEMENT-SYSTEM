@@ -502,6 +502,14 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng đợi trong giây lát. Hệ thống đang thực hiện và gửi email.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
                     document.getElementById('trang_thai_input').value = status;
                     document.getElementById('action-form').submit();
                 }

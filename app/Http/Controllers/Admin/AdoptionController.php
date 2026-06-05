@@ -152,22 +152,38 @@ class AdoptionController extends Controller
             default        => 'Đã cập nhật',
         };
 
-        // Gửi email từ chối nếu có
-        if ($newStatus === 'rejected') {
-            $application->load(['nguoiDung', 'thuCung']);
-            if ($application->nguoiDung && $application->nguoiDung->email) {
-                $mailService = app(MailService::class);
-                $petName = $application->thuCung->Ten ?? 'thú cưng';
-                
-                $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
-                $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
-                $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
-                $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>{$ghiChu}</blockquote>";
-                $body .= "<p>Hy vọng bạn sẽ tìm được một người bạn đồng hành phù hợp khác trong tương lai.</p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                
-                $mailService->send($application->nguoiDung->email, $subject, $body);
+        // Gửi email thông báo hủy/từ chối
+        if (in_array($newStatus, ['rejected', 'cancelled'])) {
+            try {
+                $application->load(['nguoiDung', 'thuCung']);
+                if ($application->nguoiDung && $application->nguoiDung->email) {
+                    $mailService = app(MailService::class);
+                    $petName = $application->thuCung->Ten ?? 'thú cưng';
+                    
+                    $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
+                    $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
+                    $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
+                    
+                    if ($newStatus === 'rejected') {
+                        $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
+                    } else {
+                        $body .= "<p>Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên với lý do:</p>";
+                    }
+
+                    if ($ghiChu) {
+                        $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>{$ghiChu}</blockquote>";
+                    } else {
+                        $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Không đạt yêu cầu hoặc vi phạm quy định nhận nuôi.</blockquote>";
+                    }
+                    
+                    $body .= "<p>Hy vọng bạn sẽ tìm được một người bạn đồng hành phù hợp khác trong tương lai.</p>";
+                    $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                    
+                    $mailService->send($application->nguoiDung->email, $subject, $body);
+                }
+            } catch (\Exception $e) {
+                // Log lỗi gửi mail nhưng vẫn tiếp tục vì DB đã update
+                \Log::error('Lỗi gửi email: ' . $e->getMessage());
             }
         }
 
