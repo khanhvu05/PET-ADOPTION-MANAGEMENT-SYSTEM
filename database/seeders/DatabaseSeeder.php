@@ -2,38 +2,35 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     * Thứ tự gọi theo phụ thuộc dữ liệu:
+     *   1. Roles & Permissions   (không phụ thuộc)
+     *   2. Users                 (phụ thuộc roles)
+     *   3. Pets                  (phụ thuộc users)
+     *   4. Rescue Cases          (phụ thuộc pets, users)
+     *   5. Vaccination History   (phụ thuộc pets, users)
+     *   6. Donation Campaigns    (không phụ thuộc)
+     *   7. Donations             (phụ thuộc users, campaigns)
+     *   8. Interview Slots       (phụ thuộc users)
+     *   9. Adoption Applications (phụ thuộc users, pets, slots)
      */
     public function run(): void
     {
-        // Seed Admin User
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'role' => 'admin',
-        ]);
-
-        // Seed Staff User
-        User::factory()->create([
-            'name' => 'Staff User',
-            'email' => 'staff@example.com',
-            'role' => 'staff',
-        ]);
-
-        // Seed Regular User
-        User::factory()->create([
-            'name' => 'Regular User',
-            'email' => 'user@example.com',
-            'role' => 'user',
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            UsersSeeder::class,
+            PetsSeeder::class,
+            RescueCasesSeeder::class,
+            VaccinationHistorySeeder::class,
+            DonationCampaignsSeeder::class,
+            DonationsSeeder::class,
+            InterviewSlotsSeeder::class,
+            AdoptionApplicationsSeeder::class,
         ]);
     }
 }

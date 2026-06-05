@@ -2,7 +2,7 @@
     $isHome = request()->is('/');
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="color-scheme: light;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -88,7 +88,7 @@
         }
 
         /* Navigation */
-        .nav-link { font-weight: 800; color: #1D2B53; font-size: 15px; position: relative; }
+        .nav-link { font-weight: 700; color: #1D2B53; font-size: 15px; position: relative; }
         .nav-link.active { color: #F58A3C; }
         .nav-link.active::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background-color: #F58A3C; border-radius: 2px; }
         .nav-link:hover { color: #F58A3C; }
@@ -110,21 +110,23 @@
         'bg-transparent border-transparent': !scrolled, 
         'bg-[#FAFAFA]/90 backdrop-blur-md border-gray-100 shadow-sm': scrolled 
     }"
-    class="w-full px-4 md:px-6 py-3 lg:px-16 flex justify-center md:justify-between items-center z-50 fixed top-0 left-0 transition-all duration-300 border-b border-transparent">
+    class="w-full px-4 md:px-6 py-3 lg:px-10 flex justify-between items-center z-50 fixed top-0 left-0 transition-all duration-300 border-b border-transparent">
     
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-3">
-        <img src="{{ asset('favicon.ico') }}" class="w-[50px] h-[50px] object-contain" alt="PETJAM">
-        <div class="flex flex-col justify-center">
-            <span class="font-black text-2xl tracking-tighter leading-none flex items-center">
-                <span class="text-primary">PET</span><span class="text-dark">JAM</span>
-            </span>
-            <span class="text-[8px] text-muted tracking-widest font-black mt-0.5 uppercase">Animal Adoption & Rescue</span>
-        </div>
-    </a>
+    <div class="flex-1 flex justify-start">
+        <a href="/" class="flex items-center gap-2.5">
+            <img src="{{ asset('favicon.ico') }}" class="w-[40px] h-[40px] object-contain" alt="PETJAM">
+            <div class="flex flex-col justify-center mt-0.5">
+                <span class="font-black text-xl tracking-tighter leading-none flex items-center">
+                    <span class="text-primary">PET</span><span class="text-dark">JAM</span>
+                </span>
+                <span class="text-[7px] text-muted tracking-widest font-black mt-0.5 uppercase">Animal Adoption & Rescue</span>
+            </div>
+        </a>
+    </div>
     
     <!-- Desktop Nav -->
-    <nav class="hidden lg:flex items-center gap-10">
+    <nav class="hidden lg:flex items-center gap-10 justify-center">
         <a href="/" class="nav-link {{ $isHome ? 'active' : '' }}">Trang Chủ</a>
         <a href="#" class="nav-link">Giới Thiệu</a>
         <a href="{{ route('frontend.adoptions.index') }}" class="nav-link {{ request()->routeIs('frontend.adoptions.*') ? 'active' : '' }}">Nhận Nuôi</a>
@@ -133,9 +135,50 @@
     </nav>
 
     <!-- Auth Actions -->
-    <div class="hidden md:flex items-center gap-4">
+    <div class="flex-1 hidden md:flex items-center justify-end gap-5">
         @auth
-            <a href="{{ url('/dashboard') }}" class="btn-primary">Dashboard</a>
+            <!-- Notification Bell -->
+            <button class="relative p-2 text-gray-400 hover:text-primary transition-colors mt-1">
+                <i data-lucide="bell" class="w-6 h-6"></i>
+                <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            
+            <!-- User Dropdown -->
+            <div class="relative" x-data="{ open: false }" @click.away="open = false">
+                <button @click="open = !open" class="flex items-center gap-2 focus:outline-none group">
+                    <img src="{{ auth()->user()->Anh_dai_dien ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->Ho_ten) . '&background=F58A3C&color=fff' }}" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-orange-200 transition-colors" alt="Avatar">
+                    <div class="hidden xl:block text-left">
+                        <p class="text-[13px] font-bold text-dark leading-tight group-hover:text-primary transition-colors">{{ auth()->user()->Ho_ten }}</p>
+                    </div>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors"></i>
+                </button>
+                
+                <div x-show="open" x-transition.opacity.duration.200ms x-cloak class="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                    <div class="px-4 py-2 border-b border-gray-50 mb-2">
+                        <p class="text-[13px] font-bold text-dark">{{ auth()->user()->Ho_ten }}</p>
+                        <p class="text-[11px] text-gray-500 truncate">{{ auth()->user()->Email }}</p>
+                    </div>
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 hover:bg-orange-50 hover:text-primary transition-colors">
+                        <i data-lucide="user" class="w-4 h-4"></i> Hồ sơ cá nhân
+                    </a>
+                    <a href="{{ route('frontend.user.adoptions.index') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 hover:bg-orange-50 hover:text-primary transition-colors">
+                        <i data-lucide="history" class="w-4 h-4"></i> Lịch sử nhận nuôi
+                    </a>
+                    @if(auth()->user()->isStaff())
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Quản trị viên
+                    </a>
+                    @endif
+                    <div class="border-t border-gray-50 mt-2 pt-2">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                <i data-lucide="log-out" class="w-4 h-4"></i> Đăng xuất
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         @else
             <a href="{{ route('login') }}" class="btn-outline-teal text-sm">Đăng Nhập</a>
             @if (Route::has('register'))
@@ -257,5 +300,6 @@
 <script>
     lucide.createIcons();
 </script>
+@yield('scripts')
 </body>
 </html>

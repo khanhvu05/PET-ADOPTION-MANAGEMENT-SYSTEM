@@ -7,11 +7,19 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
+
+    protected $primaryKey = 'Ma_nguoi_dung';
+    public $incrementing  = false;
+    protected $keyType    = 'string';
+
+    const CREATED_AT = 'Ngay_tao';
+    const UPDATED_AT = 'Ngay_cap_nhat';
 
     /**
      * The attributes that are mass assignable.
@@ -19,10 +27,18 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
+        'Ma_nguoi_dung',
+        'Ten_dang_nhap',
+        'Ho_ten',
+        'Email',
+        'Mat_khau_hash',
+        'So_dien_thoai',
+        'Dia_chi',
+        'Ngay_sinh',
+        'Loai_tai_khoan',
+        'Nguon_dang_ky',
+        'Anh_dai_dien',
+        'Trang_thai',
     ];
 
     /**
@@ -31,7 +47,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'Mat_khau_hash',
         'remember_token',
     ];
 
@@ -44,8 +60,32 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'Mat_khau_hash' => 'hashed',
         ];
+    }
+
+    // Tự sinh UUID khi tạo
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->Ma_nguoi_dung)) {
+                $model->Ma_nguoi_dung = \Illuminate\Support\Str::uuid()->toString();
+            }
+        });
+    }
+
+    /**
+     * Override method password field for authentication
+     */
+    public function getAuthPasswordName()
+    {
+        return 'Mat_khau_hash';
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->Mat_khau_hash;
     }
 
     /**
@@ -53,7 +93,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin');
     }
 
     /**
@@ -61,6 +101,14 @@ class User extends Authenticatable
      */
     public function isStaff(): bool
     {
-        return $this->role === 'staff' || $this->role === 'admin';
+        return $this->hasAnyRole(['admin', 'staff']);
+    }
+
+    /**
+     * Accessor for email (lowercase) to map to Email column
+     */
+    public function getEmailAttribute()
+    {
+        return $this->attributes['Email'] ?? null;
     }
 }

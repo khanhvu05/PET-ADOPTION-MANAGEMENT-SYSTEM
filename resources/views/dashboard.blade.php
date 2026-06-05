@@ -1,4 +1,6 @@
 <x-admin-layout>
+    @section('title', 'Tổng Quan')
+
     <!-- Main Content Area -->
     <div class="space-y-6">
         

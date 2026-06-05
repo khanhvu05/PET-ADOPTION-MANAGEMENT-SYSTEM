@@ -2,6 +2,7 @@
     'title',
     'value' => '0',
     'percent' => 0,
+    'footerText' => 'so với tháng trước'
 ])
 
 @php
@@ -27,8 +28,8 @@
 
 <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow hover:shadow-md transition-shadow">
     <span class="text-[10px] xl:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 truncate">{{ $title }}</span>
-    <div class="flex items-end justify-between mb-4">
-        <span class="text-2xl xl:text-4xl font-bold text-slate-800 leading-none mb-1">{{ $value }}</span>
+    <div class="flex items-end justify-between mb-4 gap-2">
+        <span class="text-2xl xl:text-3xl font-bold text-slate-800 leading-none mb-1 truncate min-w-0" title="{{ $value }}">{{ $value }}</span>
         
         <!-- Sparkline -->
         <div class="flex items-end gap-0.5 h-8 shrink-0">
@@ -44,7 +45,7 @@
             <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $iconPath }}"></path>
             </svg>
-            {{ $isNeutral ? '0' : abs($percent) }}% so với tháng trước
+            {{ $isNeutral ? '0' : abs($percent) }}% {{ $footerText }}
         </div>
     </div>
 </div>

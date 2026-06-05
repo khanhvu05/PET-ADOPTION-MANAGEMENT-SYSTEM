@@ -33,29 +33,29 @@
             <!-- Card 1: Tổng Người Dùng -->
             <x-admin.kpi-card 
                 title="Tổng Người Dùng" 
-                value="1,432" 
+                value="{{ \App\Models\User::count() }}" 
                 percent="12.5" 
             />
 
-            <!-- Card 2: Người Dùng Mới -->
+            <!-- Card 2: Admin -->
             <x-admin.kpi-card 
-                title="Người Dùng Mới" 
-                value="142" 
-                percent="8.3" 
+                title="Admin" 
+                value="{{ \App\Models\User::role('admin')->count() }}" 
+                percent="0" 
             />
 
-            <!-- Card 3: Đang Hoạt Động -->
+            <!-- Card 3: Staff -->
             <x-admin.kpi-card 
-                title="Đang Hoạt Động" 
-                value="1,290" 
-                percent="10.1" 
+                title="Staff" 
+                value="{{ \App\Models\User::role('staff')->count() }}" 
+                percent="5.2" 
             />
 
-            <!-- Card 4: Bị Khóa -->
+            <!-- Card 4: Người dùng thường -->
             <x-admin.kpi-card 
-                title="Bị Khóa" 
-                value="18" 
-                percent="-2.6" 
+                title="Người dùng thường" 
+                value="{{ \App\Models\User::whereDoesntHave('roles', fn($q) => $q->whereIn('name', ['admin', 'staff']))->count() }}" 
+                percent="15.1" 
             />
 
         </div>
@@ -132,239 +132,110 @@
                     </thead>
                     <tbody class="text-sm">
                         
-                        <!-- Row 1 -->
+                        @foreach($users as $user)
                         <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
                             <td class="py-4 px-6">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden">
-                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="w-full h-full object-cover">
+                                        <img src="{{ $user->Anh_dai_dien ?? 'https://ui-avatars.com/api/?name='.urlencode($user->Ho_ten) }}" alt="Avatar" class="w-full h-full object-cover">
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-900">Nguyễn Minh Anh</span>
-                                        <span class="text-xs text-slate-500 mt-0.5">minhanh@gmail.com</span>
+                                        <span class="font-semibold text-slate-900">{{ $user->Ho_ten }}</span>
+                                        <span class="text-xs text-slate-500 mt-0.5">{{ $user->Email }}</span>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-4 px-6">
-                                <!-- Note: If connected to backend, this could be a form matching the Route::patch('/admin/users/{user}/role') logic -->
-                                <span class="font-medium text-slate-600">Admin</span>
+                                <span class="font-medium text-slate-600 capitalize">
+                                    {{ $user->roles->pluck('name')->join(', ') ?: 'User' }}
+                                </span>
                             </td>
-                            <td class="py-4 px-6 text-slate-600">0901 234 567</td>
-                            <td class="py-4 px-6 text-slate-600">15/06/2024 10:30</td>
+                            <td class="py-4 px-6 text-slate-600">{{ $user->So_dien_thoai ?? '---' }}</td>
+                            <td class="py-4 px-6 text-slate-600">{{ $user->Ngay_tao->format('d/m/Y H:i') }}</td>
                             <td class="py-4 px-6">
+                                @if($user->Trang_thai === 'hoat_dong')
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     Hoạt động
                                 </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors tooltip-trigger" title="Xem chi tiết">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </button>
-                                    <!-- Edit Role button -->
-                                    <button class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors tooltip-trigger" title="Phân quyền">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors tooltip-trigger" title="Khóa/Xóa">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden">
-                                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-900">Trần Quang Huy</span>
-                                        <span class="text-xs text-slate-500 mt-0.5">quanghuy@gmail.com</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="font-medium text-slate-600">Nhân viên</span>
-                            </td>
-                            <td class="py-4 px-6 text-slate-600">0932 345 678</td>
-                            <td class="py-4 px-6 text-slate-600">14/06/2024 15:45</td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                    Hoạt động
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden">
-                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-900">Lê Hoàng Nam</span>
-                                        <span class="text-xs text-slate-500 mt-0.5">hoangnam@gmail.com</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="font-medium text-slate-600">Người dùng</span>
-                            </td>
-                            <td class="py-4 px-6 text-slate-600">0912 345 678</td>
-                            <td class="py-4 px-6 text-slate-600">13/06/2024 14:20</td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                    Hoạt động
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 4 (Bị khóa) -->
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden">
-                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-900">Phạm Thảo Vy</span>
-                                        <span class="text-xs text-slate-500 mt-0.5">thaovy@gmail.com</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="font-medium text-slate-600">Người dùng</span>
-                            </td>
-                            <td class="py-4 px-6 text-slate-600">0987 654 321</td>
-                            <td class="py-4 px-6 text-slate-600">12/06/2024 11:30</td>
-                            <td class="py-4 px-6">
+                                @else
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                     Bị khóa
                                 </span>
+                                @endif
                             </td>
                             <td class="py-4 px-6">
                                 <div class="flex items-center justify-center gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </button>
-                                    <!-- This one shows a lock unlock icon perhaps instead of edit for locked user -->
-                                    <button class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors">
+                                    <!-- Edit Role button -->
+                                    <button onclick="openRoleModal('{{ $user->Ma_nguoi_dung }}', '{{ $user->roles->first()->name ?? 'user' }}')" class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors tooltip-trigger" title="Phân quyền">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </div>
                             </td>
                         </tr>
-
-                        <!-- Row 5 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-slate-200 shrink-0 overflow-hidden">
-                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-900">Vũ Đức Mạnh</span>
-                                        <span class="text-xs text-slate-500 mt-0.5">ducmanh@gmail.com</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="font-medium text-slate-600">Nhân viên</span>
-                            </td>
-                            <td class="py-4 px-6 text-slate-600">0888 999 000</td>
-                            <td class="py-4 px-6 text-slate-600">11/06/2024 16:00</td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                    Hoạt động
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </button>
-                                    <button class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        @endforeach
 
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination (Mock) -->
-            <div class="p-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <span class="text-sm text-slate-500">Hiển thị 1 đến 5 của 1,432 kết quả</span>
-                
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2">
-                        <span class="text-sm text-slate-500">Hiển thị</span>
-                        <select class="px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-teal-500">
-                            <option>10</option>
-                            <option>20</option>
-                            <option>50</option>
-                        </select>
-                    </div>
-
-                    <div class="flex items-center gap-1">
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                        </button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-teal-700 text-white font-medium shadow-sm transition-all hover:bg-teal-800">1</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">2</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">3</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">4</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">5</button>
-                        <span class="px-1 text-slate-400">...</span>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium">144</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </button>
-                    </div>
-                </div>
+            <!-- Pagination -->
+            <div class="p-5 border-t border-slate-100">
+                {{ $users->links() }}
             </div>
+
+        </div>
+    </div>
+
+    <!-- Edit Role Modal -->
+    <div id="roleModal" class="fixed inset-0 bg-slate-900/50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Cập nhật Vai Trò</h3>
+                <button onclick="closeRoleModal()" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="roleForm" method="POST" action="" class="p-6">
+                @csrf
+                @method('PATCH')
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Chọn vai trò mới</label>
+                    <select name="role" id="roleSelect" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-brand/20 focus:border-orange-brand outline-none transition-all">
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
+                        <option value="user">User (Thường)</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="closeRoleModal()" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-orange-brand text-white rounded-lg hover:bg-orange-600 transition">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        function openRoleModal(userId, currentRole) {
+            document.getElementById('roleModal').classList.remove('hidden');
+            document.getElementById('roleForm').action = `/admin/users/${userId}/role`;
+            
+            let select = document.getElementById('roleSelect');
+            for(let i=0; i<select.options.length; i++) {
+                if(select.options[i].value === currentRole) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+        function closeRoleModal() {
+            document.getElementById('roleModal').classList.add('hidden');
+        }
+    </script>
+    @endpush
+
 
         </div>
     </div>

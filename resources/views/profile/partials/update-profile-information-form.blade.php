@@ -17,15 +17,15 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" value="Tên người dùng" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <x-input-label for="Ho_ten" value="Tên người dùng" />
+            <x-text-input id="Ho_ten" name="Ho_ten" type="text" class="mt-1 block w-full" :value="old('Ho_ten', $user->Ho_ten)" required autofocus autocomplete="name" />
+            <x-input-error class="mt-2" :messages="$errors->get('Ho_ten')" />
         </div>
 
         <div>
-            <x-input-label for="email" value="Địa chỉ Email" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-input-label for="Email" value="Địa chỉ Email" />
+            <x-text-input id="Email" name="Email" type="email" class="mt-1 block w-full" :value="old('Email', $user->Email)" required autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('Email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div class="mt-4 p-4 bg-orange-50/50 border border-orange-100 rounded-lg">

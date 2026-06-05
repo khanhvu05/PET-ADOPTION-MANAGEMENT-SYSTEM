@@ -111,25 +111,54 @@
                             </div>
                         </div>
 
-                        <!-- Chọn mục đích -->
-                        <div>
-                            <h3 class="font-bold text-[#1D2B53] mb-4 text-[15px]">2. Chọn mục đích ủng hộ <span class="text-gray-400 font-medium text-[13px]">(không bắt buộc)</span></h3>
-                            <p class="text-gray-500 text-[13px] mb-4">Khoản đóng góp của bạn sẽ được sử dụng đúng mục đích bạn chọn.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <template x-for="purp in purposes" :key="purp.id">
-                                    <div @click="purpose = purp.id" class="border rounded-xl p-4 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center relative bg-white group"
-                                         :class="purpose === purp.id ? 'border-[#F58A3C] shadow-sm' : 'border-gray-200 hover:border-gray-300'">
-                                        <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-colors"
-                                             :class="purpose === purp.id ? purp.activeBg : purp.bg">
-                                            <!-- Dynamically insert Lucide icon inside this container later, or we can use Alpine's x-html if we had SVG strings. Since we are using Lucide, we can render an <i> tag. Note: dynamically rendering <i data-lucide="..."> with Alpine requires re-running lucide.createIcons(). So we will use a computed approach or just use plain SVG if lucide fails. Wait, using standard SVGs for these 4 is safer with Alpine. Let's provide them. -->
-                                            <span x-html="purp.icon" class="w-6 h-6" :class="purpose === purp.id ? purp.activeColor : purp.color"></span>
-                                        </div>
-                                        <h4 class="font-bold text-[13px] text-[#1D2B53] mb-1 leading-tight" x-text="purp.title"></h4>
-                                        <p class="text-[11px] text-gray-500" x-text="purp.desc"></p>
-                                    </div>
-                                </template>
+                        <!-- Chọn mục đích / Chiến dịch -->
+                        <template x-if="hasCampaign">
+                            <div class="bg-teal-50 border border-teal-100 rounded-2xl p-5 mb-8 flex items-start gap-4 shadow-sm relative overflow-hidden">
+                                <!-- Abstract shape -->
+                                <div class="absolute -right-6 -top-6 w-24 h-24 bg-teal-500/10 rounded-full blur-xl"></div>
+                                
+                                <div class="w-12 h-12 rounded-xl bg-teal-500 text-white flex items-center justify-center shrink-0 shadow-md relative z-10">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                </div>
+                                <div class="relative z-10 flex-1">
+                                    <h3 class="text-[12px] font-bold text-teal-600 mb-1 uppercase tracking-wider">Bạn đang ủng hộ cho chiến dịch</h3>
+                                    <p class="text-[16px] font-black text-[#1D2B53] leading-tight mb-3" x-text="campaignName"></p>
+                                    <button type="button" @click="hasCampaign = false; purpose = 'cham_soc'" class="text-[13px] font-bold text-gray-500 hover:text-[#F58A3C] transition-colors inline-flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        Hủy, tôi muốn đóng góp quỹ chung
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+
+                        <template x-if="!hasCampaign">
+                            <div class="mb-8">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="font-bold text-[#1D2B53] text-[15px]">2. Chọn mục đích ủng hộ <span class="text-gray-400 font-medium text-[13px]">(không bắt buộc)</span></h3>
+                                        <p class="text-gray-500 text-[13px] mt-1">Khoản đóng góp của bạn sẽ được sử dụng đúng mục đích bạn chọn.</p>
+                                    </div>
+                                    <!-- Nút quay lại nếu trước đó là chiến dịch -->
+                                    <button type="button" x-show="campaignName !== ''" @click="hasCampaign = true" class="hidden md:inline-flex items-center gap-1.5 text-[12px] font-bold text-teal-600 hover:text-teal-700 transition-colors bg-teal-50 px-3 py-1.5 rounded-lg border border-teal-100">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                                        Trở lại chiến dịch
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <template x-for="purp in purposes" :key="purp.id">
+                                        <div @click="purpose = purp.id" class="border rounded-xl p-4 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center relative bg-white group"
+                                             :class="purpose === purp.id ? 'border-[#F58A3C] shadow-sm' : 'border-gray-200 hover:border-gray-300'">
+                                            <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-colors"
+                                                 :class="purpose === purp.id ? purp.activeBg : purp.bg">
+                                                <span x-html="purp.icon" class="w-6 h-6" :class="purpose === purp.id ? purp.activeColor : purp.color"></span>
+                                            </div>
+                                            <h4 class="font-bold text-[13px] text-[#1D2B53] mb-1 leading-tight" x-text="purp.title"></h4>
+                                            <p class="text-[11px] text-gray-500" x-text="purp.desc"></p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
 
                         <!-- Lời nhắn -->
                         <div>
@@ -176,13 +205,19 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="tel" x-model="phone" placeholder="Nhập số điện thoại" class="form-input">
                                 </div>
-                                <label class="flex items-start gap-3 mt-4 cursor-pointer group w-max">
-                                    <input type="checkbox" x-model="isAnonymous" class="form-checkbox mt-0.5">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 mt-6 cursor-pointer hover:border-orange-200 transition-colors" @click="isAnonymous = !isAnonymous">
                                     <div>
-                                        <p class="font-bold text-[#1D2B53] text-[14px] group-hover:text-[#F58A3C] transition-colors">Ủng hộ ẩn danh</p>
-                                        <p class="text-[12px] text-gray-500">Tên của bạn sẽ không hiển thị công khai</p>
+                                        <p class="font-bold text-[#1D2B53] text-[14px] mb-0.5" :class="isAnonymous ? 'text-[#F58A3C]' : ''">Ủng hộ ẩn danh</p>
+                                        <p class="text-[12px] text-gray-500">Tên của bạn sẽ không hiển thị công khai trên danh sách quyên góp</p>
                                     </div>
-                                </label>
+                                    <!-- Toggle Switch -->
+                                    <button type="button" 
+                                            class="relative inline-flex flex-shrink-0 cursor-pointer rounded-full focus:outline-none"
+                                            :style="isAnonymous ? 'width: 44px; height: 24px; background-color: #F58A3C; transition: background-color 0.2s;' : 'width: 44px; height: 24px; background-color: #e5e7eb; transition: background-color 0.2s;'">
+                                        <span class="pointer-events-none inline-block rounded-full bg-white shadow"
+                                              :style="isAnonymous ? 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(23px); transition: transform 0.2s;' : 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(3px); transition: transform 0.2s;'"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -513,6 +548,10 @@
             ],
             
             // Step 1 Data
+            hasCampaign: {{ request('campaign_id') ? 'true' : 'false' }},
+            campaignId: '{{ request('campaign_id') ?? '' }}',
+            campaignName: 'Cứu trợ Lucky bị viêm phổi nặng', // Tạm thời mockup tên chiến dịch khi có ID
+            
             suggestedAmounts: [50000, 100000, 200000, 500000, 1000000],
             amount: 100000,
             customAmount: '',
@@ -556,6 +595,9 @@
             },
             
             getPurposeTitle() {
+                if (this.hasCampaign) {
+                    return this.campaignName;
+                }
                 let p = this.purposes.find(x => x.id === this.purpose);
                 return p ? p.title : '';
             },

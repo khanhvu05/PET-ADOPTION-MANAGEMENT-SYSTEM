@@ -1,4 +1,5 @@
 @extends('layouts.frontend')
+@section('title', 'Nhận nuôi')
 @section('content')
     <!-- Hero Banner -->
     <section class="w-full max-w-[1500px] mx-auto px-4 md:px-6 pt-20 md:pt-24 pb-4 md:pb-6 flex justify-center">
@@ -11,64 +12,77 @@
         
         <!-- Left Sidebar: Filters -->
         <aside class="w-full xl:w-[260px] shrink-0">
-            <div class="bg-white rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50">
+            <form id="filter-form" action="{{ route('frontend.adoptions.index') }}" method="GET" class="bg-white rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50">
                 <div class="flex justify-between items-center mb-5">
                     <h3 class="font-bold text-[#1D2B53] text-sm flex items-center gap-2">
                         <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                         Bộ lọc tìm kiếm
                     </h3>
-                    <button class="text-[#F58A3C] text-[11px] font-medium hover:underline">Xóa bộ lọc</button>
+                    <a href="{{ route('frontend.adoptions.index') }}" class="text-[#F58A3C] text-[11px] font-medium hover:underline">Xóa bộ lọc</a>
                 </div>
 
                 <!-- Pet Type -->
                 <div class="mb-6">
                     <label class="block text-[12px] font-bold text-[#1D2B53] mb-3">Loại thú cưng</label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button class="border-[1.5px] border-[#F58A3C] bg-[#FFF5EF] text-[#F58A3C] rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium shadow-sm">
-                            <i data-lucide="dog" class="w-7 h-7 mb-0.5"></i>
-                            <span class="text-[11px]">Chó</span>
-                        </button>
-                        <button class="border-[1.5px] border-gray-100 hover:border-gray-200 text-gray-500 rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium transition bg-white">
-                            <i data-lucide="cat" class="w-7 h-7 mb-0.5"></i>
-                            <span class="text-[11px]">Mèo</span>
-                        </button>
-                        <button class="border-[1.5px] border-gray-100 hover:border-gray-200 text-gray-500 rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium transition bg-white">
-                            <i data-lucide="paw-print" class="w-7 h-7 mb-0.5"></i>
-                            <span class="text-[11px]">Khác</span>
-                        </button>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="loai" value="cho" class="peer hidden" {{ request('loai') == 'cho' ? 'checked' : '' }}>
+                            <div class="border-[1.5px] border-gray-100 peer-checked:border-[#F58A3C] peer-checked:bg-[#FFF5EF] peer-checked:text-[#F58A3C] text-gray-500 rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium transition bg-white hover:border-gray-200">
+                                <i data-lucide="dog" class="w-7 h-7 mb-0.5"></i>
+                                <span class="text-[11px]">Chó</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="loai" value="meo" class="peer hidden" {{ request('loai') == 'meo' ? 'checked' : '' }}>
+                            <div class="border-[1.5px] border-gray-100 peer-checked:border-[#F58A3C] peer-checked:bg-[#FFF5EF] peer-checked:text-[#F58A3C] text-gray-500 rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium transition bg-white hover:border-gray-200">
+                                <i data-lucide="cat" class="w-7 h-7 mb-0.5"></i>
+                                <span class="text-[11px]">Mèo</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="loai" value="khac" class="peer hidden" {{ request('loai') == 'khac' ? 'checked' : '' }}>
+                            <div class="border-[1.5px] border-gray-100 peer-checked:border-[#F58A3C] peer-checked:bg-[#FFF5EF] peer-checked:text-[#F58A3C] text-gray-500 rounded-lg py-3 flex flex-col items-center gap-1.5 font-medium transition bg-white hover:border-gray-200">
+                                <i data-lucide="paw-print" class="w-7 h-7 mb-0.5"></i>
+                                <span class="text-[11px]">Khác</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
                 <!-- Age Dropdown -->
-                <div class="mb-6" x-data="{ open: false, selected: 'Tất cả độ tuổi' }">
+                <div class="mb-6">
                     <label class="block text-[12px] font-bold text-[#1D2B53] mb-2">Độ tuổi</label>
-                    <div class="relative">
-                        <button @click="open = !open" @click.away="open = false" type="button" class="w-full flex items-center justify-between bg-white border border-gray-100 text-[#1D2B53] rounded-lg px-4 py-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#F58A3C] font-medium cursor-pointer transition-all">
-                            <span x-text="selected"></span>
-                            <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        
-                        <div x-show="open" x-transition.opacity.duration.200ms style="display: none;" class="absolute z-50 w-full mt-2 bg-white border border-gray-100 rounded-lg shadow-xl overflow-hidden py-1">
-                            <template x-for="option in ['Tất cả độ tuổi', 'Dưới 1 tuổi', '1 - 3 tuổi', 'Trên 3 tuổi']">
-                                <button @click="selected = option; open = false" type="button" class="w-full text-left px-4 py-2.5 text-xs font-medium hover:bg-orange-50 transition-colors" :class="{'bg-orange-50 text-[#F58A3C]': selected === option, 'text-[#1D2B53]': selected !== option}" x-text="option"></button>
-                            </template>
-                        </div>
-                    </div>
+                    <select name="nhom_tuoi" class="w-full bg-white border border-gray-200 text-[#1D2B53] rounded-lg px-4 py-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#F58A3C] font-medium transition-all appearance-none cursor-pointer">
+                        <option value="">Tất cả độ tuổi</option>
+                        <option value="so_sinh" {{ request('nhom_tuoi') == 'so_sinh' ? 'selected' : '' }}>Sơ sinh</option>
+                        <option value="nho" {{ request('nhom_tuoi') == 'nho' ? 'selected' : '' }}>Nhỏ</option>
+                        <option value="truong_thanh" {{ request('nhom_tuoi') == 'truong_thanh' ? 'selected' : '' }}>Trưởng thành</option>
+                        <option value="gia" {{ request('nhom_tuoi') == 'gia' ? 'selected' : '' }}>Già</option>
+                    </select>
                 </div>
 
                 <!-- Size Chips -->
                 <div class="mb-6">
                     <label class="block text-[12px] font-bold text-[#1D2B53] mb-2">Kích thước</label>
                     <div class="flex flex-wrap gap-2">
-                        <button class="flex-1 bg-white border border-gray-100 text-gray-500 hover:border-[#F58A3C] hover:text-[#F58A3C] font-medium py-2 rounded-lg text-xs transition">
-                            Nhỏ
-                        </button>
-                        <button class="flex-1 bg-white border border-gray-100 text-gray-500 hover:border-[#F58A3C] hover:text-[#F58A3C] font-medium py-2 rounded-lg text-xs transition">
-                            Trung bình
-                        </button>
-                        <button class="flex-1 bg-white border border-gray-100 text-gray-500 hover:border-[#F58A3C] hover:text-[#F58A3C] font-medium py-2 rounded-lg text-xs transition">
-                            Lớn
-                        </button>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="kich_thuoc" value="nho" class="peer hidden" {{ request('kich_thuoc') == 'nho' ? 'checked' : '' }}>
+                            <div class="bg-white border border-gray-100 text-gray-500 peer-checked:border-[#F58A3C] peer-checked:text-[#F58A3C] peer-checked:bg-[#FFF5EF] font-medium py-2 rounded-lg text-xs transition text-center hover:border-[#F58A3C] hover:text-[#F58A3C]">
+                                Nhỏ
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="kich_thuoc" value="trung_binh" class="peer hidden" {{ request('kich_thuoc') == 'trung_binh' ? 'checked' : '' }}>
+                            <div class="bg-white border border-gray-100 text-gray-500 peer-checked:border-[#F58A3C] peer-checked:text-[#F58A3C] peer-checked:bg-[#FFF5EF] font-medium py-2 rounded-lg text-xs transition text-center hover:border-[#F58A3C] hover:text-[#F58A3C]">
+                                Trung bình
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="kich_thuoc" value="lon" class="peer hidden" {{ request('kich_thuoc') == 'lon' ? 'checked' : '' }}>
+                            <div class="bg-white border border-gray-100 text-gray-500 peer-checked:border-[#F58A3C] peer-checked:text-[#F58A3C] peer-checked:bg-[#FFF5EF] font-medium py-2 rounded-lg text-xs transition text-center hover:border-[#F58A3C] hover:text-[#F58A3C]">
+                                Lớn
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -76,12 +90,18 @@
                 <div class="mb-6">
                     <label class="block text-[12px] font-bold text-[#1D2B53] mb-2">Giới tính</label>
                     <div class="flex flex-wrap gap-2">
-                        <button class="flex-1 bg-white border border-gray-100 text-gray-500 hover:border-[#F58A3C] hover:text-[#F58A3C] font-medium py-2 rounded-[14px] text-xs transition">
-                            Đực
-                        </button>
-                        <button class="flex-1 bg-white border border-gray-100 text-gray-500 hover:border-[#F58A3C] hover:text-[#F58A3C] font-medium py-2 rounded-[14px] text-xs transition">
-                            Cái
-                        </button>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="gioi_tinh" value="duc" class="peer hidden" {{ request('gioi_tinh') == 'duc' ? 'checked' : '' }}>
+                            <div class="bg-white border border-gray-100 text-gray-500 peer-checked:border-[#F58A3C] peer-checked:text-[#F58A3C] peer-checked:bg-[#FFF5EF] font-medium py-2 rounded-[14px] text-xs transition text-center hover:border-[#F58A3C] hover:text-[#F58A3C]">
+                                Đực
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="gioi_tinh" value="cai" class="peer hidden" {{ request('gioi_tinh') == 'cai' ? 'checked' : '' }}>
+                            <div class="bg-white border border-gray-100 text-gray-500 peer-checked:border-[#F58A3C] peer-checked:text-[#F58A3C] peer-checked:bg-[#FFF5EF] font-medium py-2 rounded-[14px] text-xs transition text-center hover:border-[#F58A3C] hover:text-[#F58A3C]">
+                                Cái
+                            </div>
+                        </label>
                     </div>
                 </div>
                 
@@ -89,66 +109,50 @@
                 <div class="mb-6 space-y-3">
                     <label class="block text-[12px] font-bold text-[#1D2B53] mb-2">Tình trạng sức khỏe</label>
                     <label class="flex items-center gap-3 text-gray-600 text-xs font-medium cursor-pointer hover:text-[#F58A3C] transition">
-                        <input type="checkbox" class="w-4 h-4 text-[#F58A3C] border-gray-200 rounded focus:ring-[#F58A3C] focus:ring-offset-0">
-                        Khỏe mạnh
-                    </label>
-                    <label class="flex items-center gap-3 text-gray-600 text-xs font-medium cursor-pointer hover:text-[#F58A3C] transition">
-                        <input type="checkbox" class="w-4 h-4 text-[#F58A3C] border-gray-200 rounded focus:ring-[#F58A3C] focus:ring-offset-0">
+                        <input type="checkbox" name="da_tiem_phong" value="1" class="w-4 h-4 text-[#F58A3C] border-gray-200 rounded focus:ring-[#F58A3C] focus:ring-offset-0" {{ request('da_tiem_phong') ? 'checked' : '' }}>
                         Đã tiêm phòng
                     </label>
                     <label class="flex items-center gap-3 text-gray-600 text-xs font-medium cursor-pointer hover:text-[#F58A3C] transition">
-                        <input type="checkbox" class="w-4 h-4 text-[#F58A3C] border-gray-200 rounded focus:ring-[#F58A3C] focus:ring-offset-0">
+                        <input type="checkbox" name="da_triet_san" value="1" class="w-4 h-4 text-[#F58A3C] border-gray-200 rounded focus:ring-[#F58A3C] focus:ring-offset-0" {{ request('da_triet_san') ? 'checked' : '' }}>
                         Đã triệt sản
                     </label>
                 </div>
 
-                <button class="w-full bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3.5 px-3 text-[13px] rounded-2xl transition flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(245,138,60,0.3)] hover:shadow-[0_8px_25px_rgba(245,138,60,0.4)] hover:-translate-y-0.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-                    Áp dụng bộ lọc
-                </button>
-            </div>
+                <input type="hidden" name="sap_xep" value="{{ request('sap_xep', 'moi_nhat') }}">
+
+            </form>
         </aside>
 
         <!-- Center: Pet Grid -->
-        <div class="flex-1 min-w-0 bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50">
+        <div id="pet-grid-container" class="flex-1 min-w-0 bg-white rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50 relative flex flex-col">
+            
+            <!-- Optional: Loading overlay (hidden by default) -->
+            <div id="loading-overlay" class="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 hidden flex items-center justify-center rounded-2xl">
+                <div class="w-10 h-10 border-4 border-[#F58A3C] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
             <div class="flex flex-row justify-between items-center mb-6">
-                <p class="font-black text-[#1D2B53] text-[13px] md:text-sm">Tìm thấy <span class="text-[#F58A3C]">236</span> thú cưng</p>
-                <div class="relative w-[160px] md:w-[190px]" x-data="{ open: false, selected: 'Sắp xếp: Mới nhất' }">
-                    <button @click="open = !open" @click.away="open = false" type="button" class="w-full flex items-center justify-between bg-white border border-gray-100 rounded-lg px-4 py-2.5 text-[#1D2B53] font-bold text-[11px] md:text-xs focus:outline-none shadow-[0_2px_10px_rgb(0,0,0,0.02)] cursor-pointer transition-all">
-                        <span x-text="selected"></span>
-                        <svg class="w-4 h-4 text-[#1D2B53] transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    
-                    <div x-show="open" x-transition.opacity.duration.200ms style="display: none;" class="absolute z-50 w-full mt-2 bg-white border border-gray-100 rounded-lg shadow-xl overflow-hidden py-1">
-                        <button @click="selected = 'Sắp xếp: Mới nhất'; open = false" type="button" class="w-full text-left px-4 py-2.5 text-[11px] md:text-xs font-bold hover:bg-orange-50 transition-colors" :class="{'bg-orange-50 text-[#F58A3C]': selected === 'Sắp xếp: Mới nhất', 'text-[#1D2B53]': selected !== 'Sắp xếp: Mới nhất'}">Sắp xếp: Mới nhất</button>
-                        <button @click="selected = 'Sắp xếp: Cũ nhất'; open = false" type="button" class="w-full text-left px-4 py-2.5 text-[11px] md:text-xs font-bold hover:bg-orange-50 transition-colors" :class="{'bg-orange-50 text-[#F58A3C]': selected === 'Sắp xếp: Cũ nhất', 'text-[#1D2B53]': selected !== 'Sắp xếp: Cũ nhất'}">Sắp xếp: Cũ nhất</button>
-                    </div>
+                <p class="font-black text-[#1D2B53] text-[13px] md:text-sm">Tìm thấy <span class="text-[#F58A3C]">{{ $pets->total() }}</span> thú cưng</p>
+                
+                <div class="relative w-[160px] md:w-[190px]">
+                    <select id="sort-select" name="sap_xep" class="w-full bg-white border border-gray-100 rounded-lg px-4 py-2.5 text-[#1D2B53] font-bold text-[11px] md:text-xs focus:outline-none focus:ring-1 focus:ring-[#F58A3C] shadow-[0_2px_10px_rgb(0,0,0,0.02)] cursor-pointer transition-all appearance-none">
+                        <option value="moi_nhat" {{ request('sap_xep', 'moi_nhat') == 'moi_nhat' ? 'selected' : '' }}>Sắp xếp: Mới nhất</option>
+                        <option value="cu_nhat" {{ request('sap_xep') == 'cu_nhat' ? 'selected' : '' }}>Sắp xếp: Cũ nhất</option>
+                    </select>
+                    <svg class="w-4 h-4 text-[#1D2B53] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
             </div>
 
             <!-- Grid Container -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
                 
-                @php
-                    $dummyPets = [
-                        ['name' => 'Lucky', 'type' => 'Chó', 'age' => '2 tuổi', 'gender' => 'Đực', 'size' => 'Lớn', 'location' => 'Hà Nội', 'status' => 'Đã tiêm phòng', 'img' => 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500&h=400&fit=crop'],
-                        ['name' => 'Corgi', 'type' => 'Chó', 'age' => '1 tuổi', 'gender' => 'Cái', 'size' => 'Trung bình', 'location' => 'TP. Hồ Chí Minh', 'status' => 'Đã tiêm phòng', 'img' => 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=500&h=400&fit=crop'],
-                        ['name' => 'Mimi', 'type' => 'Mèo', 'age' => '8 tháng', 'gender' => 'Cái', 'size' => 'Nhỏ', 'location' => 'Đà Nẵng', 'status' => 'Đã triệt sản', 'img' => 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500&h=400&fit=crop'],
-                        ['name' => 'Max', 'type' => 'Chó', 'age' => '6 tháng', 'gender' => 'Đực', 'size' => 'Trung bình', 'location' => 'Hải Phòng', 'status' => 'Đã tiêm phòng', 'img' => 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=500&h=400&fit=crop'],
-                        ['name' => 'Luna', 'type' => 'Mèo', 'age' => '1 tuổi', 'gender' => 'Cái', 'size' => 'Nhỏ', 'location' => 'Hà Nội', 'status' => 'Đã triệt sản', 'img' => 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=500&h=400&fit=crop'],
-                        ['name' => 'Bông', 'type' => 'Chó', 'age' => '3 tuổi', 'gender' => 'Cái', 'size' => 'Nhỏ', 'location' => 'Cần Thơ', 'status' => 'Đã tiêm phòng', 'img' => 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&h=400&fit=crop'],
-                        ['name' => 'Tommy', 'type' => 'Chó', 'age' => '1.5 tuổi', 'gender' => 'Đực', 'size' => 'Lớn', 'location' => 'Đà Lạt', 'status' => 'Đã tiêm phòng', 'img' => 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=500&h=400&fit=crop'],
-                        ['name' => 'Mèo Ú', 'type' => 'Mèo', 'age' => '5 tháng', 'gender' => 'Cái', 'size' => 'Nhỏ', 'location' => 'Huế', 'status' => 'Khỏe mạnh', 'img' => 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=500&h=400&fit=crop'],
-                    ];
-                @endphp
-
-                @foreach($dummyPets as $pet)
+                @forelse($pets as $pet)
                 <!-- Pet Card -->
                 <div class="bg-white rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgb(0,0,0,0.08)] transition-all duration-300 border border-gray-100 flex flex-col hover:-translate-y-1">
                     <div class="relative h-44 sm:h-40 overflow-hidden">
-                        <img src="{{ $pet['img'] }}" alt="{{ $pet['name'] }}" class="w-full h-full object-cover">
-                        <div class="absolute top-3 left-3 {{ $pet['type'] == 'Chó' ? 'bg-[#40C057]' : 'bg-[#FCC419]' }} text-white text-[11px] font-medium px-3 py-1 rounded-lg shadow-sm">
-                            {{ $pet['type'] }}
+                        <img src="{{ $pet->AnhUrl }}" alt="{{ $pet->Ten }}" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-medium px-3 py-1 rounded-lg shadow-sm">
+                            {{ $pet->LoaiLabel }}
                         </div>
                         <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-500 border border-red-100 hover:bg-red-50 shadow-sm transition group">
                             <i data-lucide="heart" class="w-4 h-4"></i>
@@ -156,42 +160,55 @@
                     </div>
                     
                     <div class="p-4 flex-1 flex flex-col">
-                        <h4 class="font-bold text-[15px] text-[#1D2B53] mb-3">{{ $pet['name'] }}</h4>
+                        <h4 class="font-bold text-[15px] text-[#1D2B53] mb-3">{{ $pet->Ten }}</h4>
                         
                         <div class="flex items-center justify-between text-[11px] font-medium text-gray-500 mb-4 gap-1">
-                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="calendar" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet['age'] }}</span></div>
-                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="paw-print" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet['gender'] }}</span></div>
-                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="box" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet['size'] }}</span></div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="calendar" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->NhomTuoiLabel }}</span></div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="paw-print" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->GioiTinhLabel }}</span></div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="box" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> 
+                                <span class="truncate">
+                                    {{ $pet->Can_nang < 5 ? 'Nhỏ' : ($pet->Can_nang > 15 ? 'Lớn' : 'Trung bình') }}
+                                </span>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between mt-auto pt-4">
                             <div class="flex items-center gap-1 text-[11px] text-gray-500 font-medium truncate max-w-[50%]">
                                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0"></i>
-                                <span class="truncate">{{ $pet['location'] }}</span>
+                                <span class="truncate">{{ $pet->ViTriLabel }}</span>
                             </div>
-                            <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                {{ $pet['status'] }}
-                            </div>
+                            @if($pet->Da_tiem_phong)
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Đã tiêm phòng
+                                </div>
+                            @elseif($pet->Da_triet_san)
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Đã triệt sản
+                                </div>
+                            @else
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Khỏe mạnh
+                                </div>
+                            @endif
                         </div>
 
-                        <button class="w-full mt-4 bg-[#FFF5EF] hover:bg-orange-100 text-[#F58A3C] font-semibold py-2.5 rounded-lg transition text-[12px]">
+                        <a href="{{ route('frontend.adoptions.show', $pet->Ma_thu_cung) }}" class="w-full mt-4 bg-[#FFF5EF] hover:bg-orange-100 text-[#F58A3C] font-semibold py-2.5 rounded-lg transition text-[12px] text-center block">
                             Xem chi tiết
-                        </button>
+                        </a>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 xl:col-span-3 2xl:col-span-4 text-center py-10 mb-10">
+                    <img src="{{ asset('images/no-data.png') }}" alt="Không tìm thấy kết quả" class="w-32 h-32 object-contain mx-auto mb-4 opacity-50">
+                    <p class="text-gray-500 font-medium text-sm">Không tìm thấy thú cưng nào phù hợp với bộ lọc.</p>
+                </div>
+                @endforelse
 
             </div>
 
             <!-- Pagination -->
-            <div class="flex items-center justify-center gap-2 mt-12">
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white border border-gray-100 text-gray-400 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600 transition shadow-sm"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg></button>
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-[#F58A3C] text-white font-black shadow-[0_4px_10px_rgba(245,138,60,0.3)] text-xs md:text-sm">1</button>
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white border border-gray-100 text-[#1D2B53] font-black hover:bg-gray-50 transition shadow-sm text-xs md:text-sm">2</button>
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white border border-gray-100 text-[#1D2B53] font-black hover:bg-gray-50 transition shadow-sm text-xs md:text-sm">3</button>
-                <span class="text-gray-400 px-1 font-bold text-xs md:text-sm">...</span>
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white border border-gray-100 text-[#1D2B53] font-black hover:bg-gray-50 transition shadow-sm text-xs md:text-sm">12</button>
-                <button class="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-white border border-gray-100 text-gray-400 flex items-center justify-center hover:bg-gray-50 hover:text-gray-600 transition shadow-sm"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg></button>
+            <div class="mt-auto border-t border-gray-50 pt-8">
+                {{ $pets->appends(request()->query())->links('frontend.pagination.custom') }}
             </div>
         </div>
 
@@ -289,4 +306,84 @@
     </main>
 @endsection
 
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filter-form');
+    const container = document.getElementById('pet-grid-container');
 
+    function fetchResults(url) {
+        const loading = document.getElementById('loading-overlay');
+        if (loading) loading.classList.remove('hidden');
+
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContainer = doc.getElementById('pet-grid-container');
+                if (newContainer) {
+                    container.innerHTML = newContainer.innerHTML;
+                    if (window.lucide) {
+                        lucide.createIcons();
+                    }
+                }
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+                const loadingNow = document.getElementById('loading-overlay');
+                if (loadingNow) loadingNow.classList.add('hidden');
+            });
+    }
+
+    // Lắng nghe sự kiện change trên toàn bộ form lọc
+    filterForm.addEventListener('change', function(e) {
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams(formData);
+        const url = `${filterForm.action}?${params.toString()}`;
+        
+        fetchResults(url);
+        window.history.pushState({}, '', url);
+    });
+
+    // Event delegation cho sort-select (vì nó bị thay thế khi AJAX load)
+    document.addEventListener('change', function(e) {
+        if (e.target.matches('#sort-select')) {
+            const sap_xep = e.target.value;
+            const formData = new FormData(filterForm);
+            formData.set('sap_xep', sap_xep);
+            
+            // Cập nhật hidden input trong filterForm
+            const hiddenSort = filterForm.querySelector('input[name="sap_xep"]');
+            if (hiddenSort) hiddenSort.value = sap_xep;
+
+            const params = new URLSearchParams(formData);
+            const url = `${filterForm.action}?${params.toString()}`;
+            
+            fetchResults(url);
+            window.history.pushState({}, '', url);
+        }
+    });
+
+    // Intercept pagination clicks
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('#pet-grid-container nav a'); // 'nav a' is usually the pagination links
+        if (link) {
+            e.preventDefault();
+            fetchResults(link.href);
+            window.history.pushState({}, '', link.href);
+            
+            // Optional: scroll to top of grid
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        fetchResults(window.location.href);
+        // We'd also ideally update form inputs to match the URL, 
+        // but since reloading the container might be enough for now.
+    });
+});
+</script>
+@endsection

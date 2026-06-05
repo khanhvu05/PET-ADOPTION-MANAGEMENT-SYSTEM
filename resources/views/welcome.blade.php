@@ -1,4 +1,5 @@
 @extends('layouts.frontend')
+@section('title', 'Trang chủ')
 @section('content')
 <section class="relative pt-24 lg:pt-40 pb-10 lg:pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-6 lg:gap-12">
     <!-- Left Text Content -->
@@ -19,8 +20,8 @@
         </p>
 
         <div class="flex flex-row items-center justify-center lg:justify-start gap-2 sm:gap-4 mb-8 lg:mb-12 w-full lg:w-max">
-            <a href="#" class="btn-primary text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 border border-primary flex-1 lg:flex-none justify-center whitespace-nowrap">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-white" viewBox="0 0 512 512"><path d="M226.5 92.9c14.3 42.9-.3 86.4-32.6 96.8s-70.1-15.6-84.4-58.5c-14.3-42.9.3-86.4 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-1.2-78.5-33.6c-18.9-32.4-14.3-70.1 10.2-84.1s59.6 1.2 78.5 33.6zM225.4 212.3c3.5 1.5 7.1 2.9 10.7 4.1 43.6 14.2 92.5 13.9 135.9-2.9 3.8-1.5 7.4-3.1 11-4.9 31.9-15.7 62-42.4 82.5-76.3 35.8-59.4 14.2-132-48.4-162.2-50.6-24.4-107.5-12.7-145 23.3-37.5-36-94.4-47.7-145-23.3-62.6 30.2-84.2 102.8-48.4 162.2 20.4 33.9 50.5 60.5 82.4 76.2 1.4.7 2.8 1.4 4.3 2.1zM495.2 284c-24.5-14.1-61.9-2.4-80.8 30s-14.3 71.9 10.2 86 61.9 2.4 80.8-30c18.9-32.4 14.3-71.9-10.2-86zM418.7 189.7c-32.3-10.4-64.9 13.2-79.2 56.1s-4.9 88.5 27.4 98.9c32.3 10.4 64.9-13.2 79.2-56.1s4.9-88.5-27.4-98.9z"/></svg>
+            <a href="{{ route('frontend.adoptions.index') }}" class="btn-primary text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 border border-primary flex-1 lg:flex-none justify-center whitespace-nowrap">
+                <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 Nhận nuôi ngay
             </a>
             <a href="#" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
@@ -531,8 +532,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- News 1 -->
         <a href="#" class="pet-card group p-4 flex flex-col">
-            <div class="relative h-40 mb-4">
-                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600&auto=format&fit=crop" class="pet-card-img h-full group-hover:scale-105 transition-transform duration-500" alt="News">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
                 <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Chăm sóc thú cưng</div>
             </div>
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">5 lưu ý khi đưa chó mèo mới về nhà</h3>
@@ -543,8 +544,8 @@
         </a>
         <!-- News 2 -->
         <a href="#" class="pet-card group p-4 flex flex-col">
-            <div class="relative h-40 mb-4">
-                <img src="https://images.unsplash.com/photo-1522276498395-f4f68f7f8454?q=80&w=600&auto=format&fit=crop" class="pet-card-img h-full group-hover:scale-105 transition-transform duration-500" alt="News">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1522276498395-f4f68f7f8454?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
                 <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Tin tức</div>
             </div>
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Ngày hội nhận nuôi thú cưng tháng 6/2026</h3>
@@ -555,8 +556,8 @@
         </a>
         <!-- News 3 -->
         <a href="#" class="pet-card group p-4 flex flex-col">
-            <div class="relative h-40 mb-4">
-                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?q=80&w=600&auto=format&fit=crop" class="pet-card-img h-full group-hover:scale-105 transition-transform duration-500" alt="News">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
                 <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Câu chuyện</div>
             </div>
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Hành trình giải cứu bé mèo kẹt trong cống</h3>
@@ -567,8 +568,8 @@
         </a>
         <!-- News 4 -->
         <a href="#" class="pet-card group p-4 flex flex-col">
-            <div class="relative h-40 mb-4">
-                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="pet-card-img h-full group-hover:scale-105 transition-transform duration-500" alt="News">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
                 <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Hoạt động</div>
             </div>
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Chúng tôi đã tổ chức buổi tiêm phòng miễn phí</h3>

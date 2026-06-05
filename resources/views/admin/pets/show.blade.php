@@ -54,12 +54,12 @@
                     <div class="flex items-start justify-between mb-4">
                         <div>
                             <div class="flex items-center gap-3 mb-1">
-                                <h1 class="text-3xl font-bold text-slate-900">Lucky</h1>
+                                <h1 class="text-3xl font-bold text-slate-900">{{ $pet->Ten }}</h1>
                                 <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border border-green-200">
                                     <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Có sẵn
                                 </span>
                             </div>
-                            <p class="text-sm font-medium text-slate-500">#PET-001</p>
+                            <p class="text-sm font-medium text-slate-500">#{{ $pet->Ma_hien_thi }}</p>
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Loài</p>
-                                <p class="text-sm font-semibold text-slate-800">Chó</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->loai_label }}</p>
                             </div>
                         </div>
                         <!-- Giống -->
@@ -82,17 +82,17 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Giống</p>
-                                <p class="text-sm font-semibold text-slate-800">Golden Retriever</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Giong }}</p>
                             </div>
                         </div>
                         <!-- Giới tính -->
                         <div class="flex items-start gap-3">
                             <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v4h-2zm0 6h2v2h-2z" transform="matrix(0 1 -1 0 24 0)"></path></svg>
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="10" cy="14" r="5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 3l-7.5 7.5M21 3v6M21 3h-6"/></svg>
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Giới tính</p>
-                                <p class="text-sm font-semibold text-slate-800">Đực</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->gioi_tinh_label }}</p>
                             </div>
                         </div>
                         <!-- Tuổi -->
@@ -102,7 +102,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tuổi</p>
-                                <p class="text-sm font-semibold text-slate-800">2 tuổi 3 tháng</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->nhom_tuoi_label }}</p>
                             </div>
                         </div>
                         <!-- Cân nặng -->
@@ -112,7 +112,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Cân nặng</p>
-                                <p class="text-sm font-semibold text-slate-800">25 kg</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Can_nang }} kg</p>
                             </div>
                         </div>
                         <!-- Màu lông -->
@@ -132,7 +132,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Vị trí</p>
-                                <p class="text-sm font-semibold text-slate-800">Hà Nội</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->vi_tri_label }}</p>
                             </div>
                         </div>
                         <!-- Ngày tạo -->
@@ -142,7 +142,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ngày tạo</p>
-                                <p class="text-sm font-semibold text-slate-800">15/06/2024 10:30</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Ngay_tao->format('d/m/Y H:i') }}</p>
                             </div>
                         </div>
                     </div>
@@ -224,6 +224,10 @@
                 <button @click="activeTab = 'notes'" :class="activeTab === 'notes' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Ghi chú
+                </button>
+                <button @click="activeTab = 'rescue'" :class="activeTab === 'rescue' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    Ca cứu hộ
                 </button>
             </div>
 
@@ -420,8 +424,56 @@
             <div x-show="activeTab === 'health'" x-cloak>
                 <div class="space-y-6">
                     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                        <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch sử sức khỏe</h3>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                            <h3 class="text-sm font-bold text-slate-800">Lịch sử sức khỏe & Tiêm phòng</h3>
+                            <button x-data @click="$dispatch('open-modal', 'add-health-record')" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                Thêm bản ghi mới
+                            </button>
+                        </div>
                         
+                        <!-- Form Thêm mới ẩn/hiện (Có thể dùng Modal hoặc thả xuống) -->
+                        <div x-data="{ open: false }" @open-modal.window="if ($event.detail === 'add-health-record') open = true" class="mb-6">
+                            <div x-show="open" x-transition class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                                <h4 class="text-[13px] font-bold text-slate-800 mb-4">Nhập thông tin khám/tiêm phòng</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Loại</label>
+                                        <select class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                            <option>Tiêm phòng</option>
+                                            <option>Khám sức khỏe</option>
+                                            <option>Tẩy giun</option>
+                                            <option>Điều trị bệnh</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày thực hiện</label>
+                                        <input type="date" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nội dung / Tên Vaccine</label>
+                                        <input type="text" placeholder="VD: Vaccine Care 5 bệnh..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Bác sĩ / Phòng khám</label>
+                                        <input type="text" placeholder="Tên phòng khám" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí (VNĐ)</label>
+                                        <input type="number" placeholder="VD: 150000" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ghi chú thêm</label>
+                                        <textarea rows="2" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end gap-3">
+                                    <button @click="open = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
+                                    <button class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu bản ghi</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
                                 <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
@@ -738,6 +790,109 @@
                 </div>
             </div>
         </div>
-    </div>
+            <!-- 5. Tab: Ca cứu hộ -->
+            <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Thông tin ca cứu hộ -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-base font-bold text-slate-800">Thông tin ca cứu hộ</h3>
+                            <button class="px-4 py-2 bg-orange-500 text-white font-bold text-[13px] rounded-xl hover:bg-orange-600 transition-colors shadow-sm flex items-center gap-2">
+                                Cập nhật
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã ca cứu hộ</p>
+                                <p class="text-sm font-bold text-slate-800">#RES-0105</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
+                                <p class="text-sm font-bold text-slate-800">10/06/2024</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
+                                <p class="text-sm font-medium text-slate-800">Khu vực công viên Thống Nhất, phát hiện bị bỏ rơi trong hộp giấy.</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tình trạng ban đầu</p>
+                                <p class="text-sm font-medium text-slate-800">Suy dinh dưỡng nặng, viêm da, có ve rận. Rụt rè và sợ hãi con người.</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người/Tổ chức cứu hộ</p>
+                                <p class="text-sm font-medium text-slate-800">Tình nguyện viên: Nguyễn Văn A</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Trạng thái xử lý</p>
+                                <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-md border border-green-200">Đã phục hồi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng Chi phí cứu hộ -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-bold text-slate-800">Chi phí y tế & Cứu hộ</h3>
+                            <button class="text-sm font-bold text-teal-600 hover:text-teal-700">+ Thêm chi phí</button>
+                        </div>
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">Hạng mục</th>
+                                    <th class="px-4 py-3">Ngày</th>
+                                    <th class="px-4 py-3 text-right rounded-r-lg">Số tiền (VNĐ)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-4 py-3">Khám tổng quát ban đầu</td>
+                                    <td class="px-4 py-3 text-slate-500">10/06/2024</td>
+                                    <td class="px-4 py-3 font-bold text-right">300,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3">Thuốc trị ve rận & viêm da</td>
+                                    <td class="px-4 py-3 text-slate-500">10/06/2024</td>
+                                    <td class="px-4 py-3 font-bold text-right">450,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3">Thức ăn bồi bổ phục hồi</td>
+                                    <td class="px-4 py-3 text-slate-500">11/06/2024</td>
+                                    <td class="px-4 py-3 font-bold text-right">200,000</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="border-t-2 border-slate-100">
+                                <tr>
+                                    <td colspan="2" class="px-4 py-4 text-right font-bold text-slate-800">Tổng chi phí:</td>
+                                    <td class="px-4 py-4 font-bold text-orange-600 text-right text-base">950,000 đ</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Hình ảnh cứu hộ ban đầu -->
+                <div>
+                    <h3 class="text-base font-bold text-slate-800 mb-4 px-2">Hình ảnh ban đầu</h3>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-4">
+                        <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 relative group">
+                            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" alt="Lúc mới cứu">
+                            <div class="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded">10/06/2024</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                             <div class="aspect-square rounded-lg overflow-hidden bg-slate-100">
+                                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" class="w-full h-full object-cover grayscale opacity-80" alt="Vet">
+                             </div>
+                             <button class="aspect-square rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-colors">
+                                 <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                 <span class="text-[10px] font-bold">Thêm ảnh</span>
+                             </button>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic text-center mt-2">* Hình ảnh lúc mới đưa về trạm.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </x-admin-layout>

@@ -1,5 +1,5 @@
 @extends('layouts.frontend')
-@section('title', 'Ủng hộ quỹ - ' . config('app.name'))
+@section('title', 'Ủng hộ')
 
 @section('content')
 <!-- HERO SECTION -->
@@ -192,6 +192,162 @@
                     Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHIẾN DỊCH GÂY QUỸ -->
+<div class="py-20 bg-white">
+    <div class="max-w-[1200px] mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+                <h2 class="text-3xl font-black text-[#1D2B53] mb-4">Chiến dịch đang gây quỹ</h2>
+                <p class="text-gray-500 font-medium text-[15px] max-w-2xl">Chung tay giúp đỡ các bé thú cưng đang gặp hoàn cảnh khó khăn cần được chăm sóc y tế khẩn cấp hoặc những dự án xây dựng mái ấm tốt hơn.</p>
+            </div>
+            <a href="#" class="inline-flex items-center gap-2 text-[#F58A3C] font-bold hover:text-orange-600 transition-colors">
+                Xem tất cả chiến dịch <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Campaign Card 1 -->
+            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80" alt="Lucky" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 bg-teal-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Chi phí y tế</div>
+                </div>
+                
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-teal-600 transition-colors">
+                        <a href="#">Cứu trợ Lucky bị viêm phổi nặng</a>
+                    </h3>
+                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Lucky được phát hiện trong tình trạng nguy kịch, cần chi phí lớn để điều trị viêm phổi và phục hồi sức khỏe.</p>
+                    
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-end mb-2">
+                            <div>
+                                <span class="text-[18px] font-black text-teal-600 leading-none">32.450.000đ</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 50.000.000đ</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-full" style="width: 65%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">128 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">15 <span class="font-normal text-gray-400">ngày còn lại</span></span>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 1]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
+                            Ủng hộ ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Card 2 -->
+            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Mèo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 bg-orange-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Thức ăn</div>
+                </div>
+                
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-orange-500 transition-colors">
+                        <a href="#">Quỹ thức ăn tháng 6 cho trạm cứu hộ</a>
+                    </h3>
+                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Hơn 150 bé chó mèo đang cần sự chung tay để đảm bảo những bữa ăn dinh dưỡng trong tháng tới.</p>
+                    
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-end mb-2">
+                            <div>
+                                <span class="text-[18px] font-black text-orange-500 leading-none">12.500.000đ</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 20.000.000đ</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-orange-400 to-[#F58A3C] rounded-full" style="width: 62.5%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">85 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">5 <span class="font-normal text-gray-400">ngày còn lại</span></span>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 2]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
+                            Ủng hộ ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Card 3 -->
+            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
+                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="Chó" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 bg-pink-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Xây dựng</div>
+                </div>
+                
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-pink-500 transition-colors">
+                        <a href="#">Sửa chữa mái che mùa mưa bão</a>
+                    </h3>
+                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Mái che của trạm đã xuống cấp trầm trọng, cần sửa chữa gấp để các bé có nơi trú ẩn an toàn.</p>
+                    
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-end mb-2">
+                            <div>
+                                <span class="text-[18px] font-black text-pink-500 leading-none">5.200.000đ</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 15.000.000đ</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full" style="width: 34%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">32 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                                <span class="text-[13px] font-bold text-gray-600">20 <span class="font-normal text-gray-400">ngày còn lại</span></span>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 3]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
+                            Ủng hộ ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

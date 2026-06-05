@@ -46,60 +46,39 @@
                 <span class="text-[12px] truncate" x-show="expanded">Dashboard</span>
             </a>
 
-            <!-- Thú Cưng with Dropdown -->
-            <div x-data="{ openPetMenu: {{ request()->routeIs('admin.pets.*') ? 'true' : 'false' }} }">
-                <div class="flex items-center justify-between w-full rounded-lg transition-colors group {{ request()->routeIs('admin.pets.*') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <a href="{{ route('admin.pets.index') }}" 
-                       class="flex items-center gap-2.5 px-2 py-1.5 flex-1 {{ request()->routeIs('admin.pets.*') ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium' }}"
-                       :class="!expanded && 'justify-center px-0'">
-                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.pets.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M11 5h2a6 6 0 0 1 6 6v2a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-2a6 6 0 0 1 6 -6z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M11 15h2M10 11h.01M14 11h.01"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 13c-1.657 0 -3 -1.343 -3 -3c0 -1.657 1.343 -3 3 -3"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M19 13c1.657 0 3 -1.343 3 -3c0 -1.657 -1.343 -3 -3 -3"></path>
-                        </svg>
-                        <span class="text-[12px] truncate" x-show="expanded">Thú Cưng</span>
-                    </a>
-                    <button @click="openPetMenu = !openPetMenu" class="px-2 py-1.5" x-show="expanded">
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openPetMenu ? 'rotate-90 text-orange-brand' : 'text-white/50 hover:text-white'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-                
-                <!-- Submenu -->
-                <div x-show="openPetMenu && expanded" x-transition.opacity class="mt-1 flex flex-col gap-0.5 relative before:absolute before:left-[17px] before:top-0 before:bottom-3 before:w-[1px] before:bg-white/10">
-                    <a href="{{ route('admin.pets.create') }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.pets.create') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Thêm thú cưng
-                    </a>
-                    <a href="{{ route('admin.pets.show', 1) }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.pets.show') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Chi tiết thú cưng
-                    </a>
-                </div>
-            </div>
+            <!-- Thú Cưng -->
+            <a href="{{ route('admin.pets.index') }}" 
+               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.pets.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+               :class="!expanded && 'justify-center px-0'"
+            >
+                <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.pets.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M11 5h2a6 6 0 0 1 6 6v2a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-2a6 6 0 0 1 6 -6z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M11 15h2M10 11h.01M14 11h.01"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M5 13c-1.657 0 -3 -1.343 -3 -3c0 -1.657 1.343 -3 3 -3"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M19 13c1.657 0 3 -1.343 3 -3c0 -1.657 -1.343 -3 -3 -3"></path>
+                </svg>
+                <span class="text-[12px] truncate" x-show="expanded">Thú Cưng</span>
+            </a>
 
-            <!-- Đơn Nhận Nuôi with Dropdown -->
-            <div x-data="{ openAdoptionMenu: {{ request()->routeIs('admin.adoptions.*') ? 'true' : 'false' }} }">
-                <div class="flex items-center justify-between w-full rounded-lg transition-colors group {{ request()->routeIs('admin.adoptions.*') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <a href="{{ route('admin.adoptions.index') }}" 
-                       class="flex items-center gap-2.5 px-2 py-1.5 flex-1 {{ request()->routeIs('admin.adoptions.*') ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium' }}"
-                       :class="!expanded && 'justify-center px-0'">
-                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.adoptions.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <!-- Đơn Nhận Nuôi Dropdown -->
+            <div x-data="{ open: {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.interview_schedules.*') ? 'true' : 'false' }} }" class="space-y-0.5">
+                <button @click="open = !open; if(!expanded) expanded = true" 
+                   class="w-full flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.interview_schedules.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+                   :class="!expanded && 'justify-center px-0'"
+                >
+                    <div class="flex items-center gap-2.5">
+                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.interview_schedules.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                         </svg>
                         <span class="text-[12px] truncate" x-show="expanded">Đơn Nhận Nuôi</span>
-                    </a>
-                    <button @click="openAdoptionMenu = !openAdoptionMenu" class="px-2 py-1.5" x-show="expanded">
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openAdoptionMenu ? 'rotate-90 text-orange-brand' : 'text-white/50 hover:text-white'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-                
-                <!-- Submenu -->
-                <div x-show="openAdoptionMenu && expanded" x-transition.opacity class="mt-1 flex flex-col gap-0.5 relative before:absolute before:left-[17px] before:top-0 before:bottom-3 before:w-[1px] before:bg-white/10">
-                    <a href="{{ route('admin.adoptions.create') ?? '#' }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.adoptions.create') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Thêm đơn mới
-                    </a>
-                    <a href="{{ route('admin.adoptions.show', 1) ?? '#' }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.adoptions.show') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Chi tiết đơn
-                    </a>
+                    </div>
+                    <svg x-show="expanded" class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open && expanded" 
+                     x-collapse
+                     class="pl-7 pr-2 space-y-0.5 pt-0.5">
+                     <a href="{{ route('admin.adoptions.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.adoptions.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Đơn</a>
+                     <a href="{{ route('admin.interview_schedules.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.interview_schedules.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Lịch phỏng vấn</a>
                 </div>
             </div>
         </div>
@@ -111,56 +90,38 @@
         </div>
 
         <div class="space-y-0.5">
-            <!-- Quyên Góp with Dropdown -->
-            <div x-data="{ openDonationMenu: {{ request()->routeIs('admin.donations.*') ? 'true' : 'false' }} }">
-                <div class="flex items-center justify-between w-full rounded-lg transition-colors group {{ request()->routeIs('admin.donations.*') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <a href="{{ route('admin.donations.index') }}" 
-                       class="flex items-center gap-2.5 px-2 py-1.5 flex-1 {{ request()->routeIs('admin.donations.*') ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium' }}"
-                       :class="!expanded && 'justify-center px-0'">
-                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.donations.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ủng Hộ Dropdown -->
+            <div x-data="{ open: {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'true' : 'false' }} }" class="space-y-0.5">
+                <button @click="open = !open; if(!expanded) expanded = true" 
+                   class="w-full flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+                   :class="!expanded && 'justify-center px-0'"
+                >
+                    <div class="flex items-center gap-2.5">
+                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
-                        <span class="text-[12px] truncate" x-show="expanded">Quyên Góp</span>
-                    </a>
-                    <button @click="openDonationMenu = !openDonationMenu" class="px-2 py-1.5" x-show="expanded">
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openDonationMenu ? 'rotate-90 text-orange-brand' : 'text-white/50 hover:text-white'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-                
-                <!-- Submenu -->
-                <div x-show="openDonationMenu && expanded" x-transition.opacity class="mt-1 flex flex-col gap-0.5 relative before:absolute before:left-[17px] before:top-0 before:bottom-3 before:w-[1px] before:bg-white/10">
-                    <a href="{{ route('admin.donations.show', 1) }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.donations.show') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Chi tiết quyên góp
-                    </a>
+                        <span class="text-[12px] truncate" x-show="expanded">Ủng Hộ</span>
+                    </div>
+                    <svg x-show="expanded" class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open && expanded" 
+                     x-collapse
+                     class="pl-7 pr-2 space-y-0.5 pt-0.5">
+                     <a href="{{ route('admin.donations.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donations.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Ủng hộ</a>
+                     <a href="{{ route('admin.donation_campaigns.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Chiến dịch Gây quỹ</a>
                 </div>
             </div>
 
-            <!-- Bài Viết with Dropdown -->
-            <div x-data="{ openPostMenu: {{ request()->routeIs('admin.posts.*') ? 'true' : 'false' }} }">
-                <div class="flex items-center justify-between w-full rounded-lg transition-colors group {{ request()->routeIs('admin.posts.*') ? 'bg-white/15' : 'hover:bg-white/10' }}">
-                    <a href="{{ route('admin.posts.index') }}" 
-                       class="flex items-center gap-2.5 px-2 py-1.5 flex-1 {{ request()->routeIs('admin.posts.*') ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium' }}"
-                       :class="!expanded && 'justify-center px-0'">
-                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.posts.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <span class="text-[12px] truncate" x-show="expanded">Bài Viết</span>
-                    </a>
-                    <button @click="openPostMenu = !openPostMenu" class="px-2 py-1.5" x-show="expanded">
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openPostMenu ? 'rotate-90 text-orange-brand' : 'text-white/50 hover:text-white'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-                
-                <!-- Submenu -->
-                <div x-show="openPostMenu && expanded" x-transition.opacity class="mt-1 flex flex-col gap-0.5 relative before:absolute before:left-[17px] before:top-0 before:bottom-3 before:w-[1px] before:bg-white/10">
-                    <a href="{{ route('admin.posts.create') }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.posts.create') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Thêm bài viết
-                    </a>
-                    <a href="{{ route('admin.posts.show', 1) }}" class="flex items-center gap-2 pl-[34px] pr-2 py-1.5 rounded-lg text-[11px] font-medium transition-colors relative before:absolute before:left-[17px] before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-[1px] {{ request()->routeIs('admin.posts.show') ? 'text-white bg-white/10 before:bg-orange-brand' : 'text-white/60 hover:text-white hover:bg-white/5 before:bg-white/10' }}">
-                        Chi tiết bài viết
-                    </a>
-                </div>
-            </div>
+            <!-- Bài Viết -->
+            <a href="{{ route('admin.posts.index') }}" 
+               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.posts.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+               :class="!expanded && 'justify-center px-0'"
+            >
+                <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.posts.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-[12px] truncate" x-show="expanded">Bài Viết</span>
+            </a>
 
             <!-- Quản Lý Người Dùng -->
             <a href="{{ route('admin.users.index') }}" 
@@ -180,6 +141,16 @@
         </div>
 
         <div class="space-y-0.5">
+            <!-- Quản Lý Phân Quyền -->
+            <a href="{{ route('admin.roles.index') }}" 
+               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.roles.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+               :class="!expanded ? 'justify-center px-0' : ''">
+                <div class="relative flex items-center justify-center">
+                    <svg class="w-[18px] h-[18px] shrink-0 transition-transform duration-300 group-hover:scale-110 {{ request()->routeIs('admin.roles.*') ? 'text-white' : 'text-white/70 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Phân Quyền</span>
+            </a>
+            
             <!-- Cài Đặt Hệ Thống -->
             <a href="{{ route('admin.settings.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.settings.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
