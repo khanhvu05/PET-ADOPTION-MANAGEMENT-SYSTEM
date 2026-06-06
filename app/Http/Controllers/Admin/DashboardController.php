@@ -24,33 +24,40 @@ class DashboardController extends Controller
 
         $kpiStats = [];
 
-        $calcMetric = function($query, $isSum = false, $sumCol = '') use ($currentMonth, $currentYear) {
+        $calcMetric = function($query, $isSum = false, $sumCol = '') use ($currentMonth, $currentYear, $lastMonth, $lastMonthYear) {
             if ($isSum) {
                 $totalCurrent = (clone $query)->sum($sumCol);
                 $newThisMonth = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->sum($sumCol);
+                $newLastMonth = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->sum($sumCol);
             } else {
                 $totalCurrent = (clone $query)->count();
                 $newThisMonth = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->count();
+                $newLastMonth = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->count();
             }
             
-            return [$totalCurrent, $newThisMonth];
+            if ($newLastMonth > 0) {
+                $pct = round((($newThisMonth - $newLastMonth) / $newLastMonth) * 100, 1);
+            } else {
+                $pct = $newThisMonth > 0 ? 100 : 0;
+            }
+            return [$totalCurrent, $pct];
         };
 
-        list($petsTotal, $petsNew) = $calcMetric(Pet::query());
-        $kpiStats[] = ['label' => 'TỔNG THÚ CƯNG', 'count' => number_format($petsTotal), 'new' => number_format($petsNew), 'is_positive' => true];
+        list($petsTotal, $petsPct) = $calcMetric(Pet::query());
+        $kpiStats[] = ['label' => 'TỔNG THÚ CƯNG', 'count' => number_format($petsTotal), 'percent' => $petsPct, 'is_positive' => $petsPct >= 0];
 
-        list($adoptionsTotal, $adoptionsNew) = $calcMetric(AdoptionApplication::query());
-        $kpiStats[] = ['label' => 'ĐƠN NHẬN NUÔI', 'count' => number_format($adoptionsTotal), 'new' => number_format($adoptionsNew), 'is_positive' => true];
+        list($adoptionsTotal, $adoptionsPct) = $calcMetric(AdoptionApplication::query());
+        $kpiStats[] = ['label' => 'ĐƠN NHẬN NUÔI', 'count' => number_format($adoptionsTotal), 'percent' => $adoptionsPct, 'is_positive' => $adoptionsPct >= 0];
 
-        list($donationsTotal, $donationsNew) = $calcMetric(Donation::where('Trang_thai', 'success'), true, 'So_tien');
+        list($donationsTotal, $donationsPct) = $calcMetric(Donation::where('Trang_thai', 'success'), true, 'So_tien');
         // Format without decimals for VND
-        $kpiStats[] = ['label' => 'TỔNG QUYÊN GÓP', 'count' => number_format($donationsTotal, 0, ',', '.') . 'đ', 'new' => number_format($donationsNew, 0, ',', '.') . 'đ', 'is_positive' => true];
+        $kpiStats[] = ['label' => 'TỔNG QUYÊN GÓP', 'count' => number_format($donationsTotal, 0, ',', '.') . 'đ', 'percent' => $donationsPct, 'is_positive' => $donationsPct >= 0];
 
-        list($campaignsTotal, $campaignsNew) = $calcMetric(DonationCampaign::query());
-        $kpiStats[] = ['label' => 'CHIẾN DỊCH', 'count' => number_format($campaignsTotal), 'new' => number_format($campaignsNew), 'is_positive' => true];
+        list($campaignsTotal, $campaignsPct) = $calcMetric(DonationCampaign::query());
+        $kpiStats[] = ['label' => 'CHIẾN DỊCH', 'count' => number_format($campaignsTotal), 'percent' => $campaignsPct, 'is_positive' => $campaignsPct >= 0];
 
-        list($usersTotal, $usersNew) = $calcMetric(User::query());
-        $kpiStats[] = ['label' => 'NGƯỜI DÙNG', 'count' => number_format($usersTotal), 'new' => number_format($usersNew), 'is_positive' => true];
+        list($usersTotal, $usersPct) = $calcMetric(User::query());
+        $kpiStats[] = ['label' => 'NGƯỜI DÙNG', 'count' => number_format($usersTotal), 'percent' => $usersPct, 'is_positive' => $usersPct >= 0];
 
         // 2. Dữ liệu Biểu đồ (Charts)
         // Main Chart: Adoption Trends (Last 6 Months)
