@@ -9,14 +9,6 @@
                 <svg class="w-4 h-4 mx-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 <span class="text-slate-700 font-bold">Phân Quyền</span>
             </div>
-            
-            <!-- User profile header right mock -->
-            <div class="flex items-center gap-4">
-                <div class="relative">
-                    <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-orange-500 rounded-full"></span>
-                </div>
-            </div>
         </div>
     </x-slot>
 
@@ -55,10 +47,12 @@
             'admin' => 'Toàn quyền',
             'staff' => 'Quyền quản lý',
             'user' => 'Người dùng',
+            'customer' => 'Khách hàng',
+            'customers' => 'Khách hàng',
         ];
     @endphp
 
-    <div class="space-y-6 max-w-[1400px] mx-auto pb-10">
+    <div x-data="{ activeTab: 'roles' }" class="space-y-6 max-w-[1400px] mx-auto pb-10">
         <!-- Header Section -->
         <div class="flex flex-col">
             <h2 class="text-[28px] font-black text-slate-900 tracking-tight">Phân quyền & Vai trò</h2>
@@ -77,22 +71,43 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div x-data="{ show: true }" x-show="show" class="bg-red-50 text-red-700 px-4 py-3 rounded-xl border border-red-100 flex justify-between items-center shadow-sm">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <p class="text-sm font-bold">{{ session('error') }}</p>
+                </div>
+                <button @click="show = false" class="text-red-600 hover:text-red-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        @endif
+
         <!-- Tabs & Add Button -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-0">
             <div class="flex space-x-8">
-                <a href="#" class="pb-3 border-b-2 border-orange-500 text-[15px] font-bold text-orange-600">Vai trò</a>
-                <a href="#" class="pb-3 text-[15px] font-medium text-slate-500 hover:text-slate-800 transition-colors">Nhóm quyền</a>
+                <button @click="activeTab = 'roles'" :class="{'border-orange-500 text-orange-600 font-bold': activeTab === 'roles', 'border-transparent text-slate-500 hover:text-slate-800 font-medium': activeTab !== 'roles'}" class="pb-3 border-b-2 text-[15px] transition-colors">
+                    Vai trò
+                </button>
+                <button @click="activeTab = 'permissions'" :class="{'border-orange-500 text-orange-600 font-bold': activeTab === 'permissions', 'border-transparent text-slate-500 hover:text-slate-800 font-medium': activeTab !== 'permissions'}" class="pb-3 border-b-2 text-[15px] transition-colors">
+                    Nhóm quyền
+                </button>
             </div>
             
-            <div class="pb-3">
-                <button onclick="document.getElementById('createRoleModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-teal-700 transition-all shrink-0">
+            <div class="pb-3 flex gap-3">
+                <button x-show="activeTab === 'permissions'" style="display: none;" onclick="document.getElementById('createPermissionModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-indigo-700 transition-all shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                    Thêm quyền mới
+                </button>
+                <button x-show="activeTab === 'roles'" onclick="document.getElementById('createRoleModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-teal-700 transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Thêm vai trò mới
                 </button>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden w-full">
+        <!-- ROLES TAB CONTENT -->
+        <div x-show="activeTab === 'roles'" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden w-full">
             <div class="overflow-x-auto custom-scrollbar p-0">
                 <table class="w-full text-left border-collapse min-w-[1000px] whitespace-nowrap">
                     <thead>
@@ -109,7 +124,6 @@
                                     <div class="flex flex-col items-center justify-center">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-full {{ $color['icon_bg'] }} {{ $color['icon_color'] }} flex items-center justify-center">
-                                                <!-- Custom user icon per role (simplified to one dynamic colored icon) -->
                                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                                             </div>
                                             <div class="text-left">
@@ -126,8 +140,8 @@
                                         </button>
                                         <div x-show="open" style="display: none;" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-slate-100 z-10 text-left py-1">
                                             <button type="submit" form="form-role-{{ $role->id }}" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-teal-600 font-medium">Lưu quyền</button>
-                                            @if($role->name !== 'admin')
-                                                <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">Xóa vai trò</button>
+                                            @if(!in_array($role->name, ['admin', 'staff']))
+                                                <button type="submit" form="form-delete-role-{{ $role->id }}" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">Xóa vai trò</button>
                                             @endif
                                         </div>
                                     </div>
@@ -135,6 +149,13 @@
                                     <form action="{{ route('admin.roles.permissions.update', $role) }}" method="POST" id="form-role-{{ $role->id }}">
                                         @csrf
                                     </form>
+
+                                    @if(!in_array($role->name, ['admin', 'staff']))
+                                        <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" id="form-delete-role-{{ $role->id }}" onsubmit="return confirm('Bạn có chắc chắn muốn xóa vai trò này không? Hành động này không thể hoàn tác.');">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    @endif
                                 </th>
                             @endforeach
                         </tr>
@@ -204,6 +225,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- PERMISSIONS TAB CONTENT -->
+        <div x-show="activeTab === 'permissions'" style="display: none;" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden w-full p-6">
+            <h3 class="text-lg font-black text-slate-800 mb-6">Quản lý danh sách quyền hạn (Permissions)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($groupedPermissions as $groupName => $perms)
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                        <h4 class="font-bold text-slate-800 text-[14px] uppercase border-b border-slate-200 pb-2 mb-4">{{ $groupName }}</h4>
+                        <ul class="space-y-3">
+                            @forelse($perms as $permission)
+                                <li class="flex items-start justify-between group">
+                                    <div class="flex flex-col">
+                                        <span class="font-semibold text-slate-700 text-sm">{{ $permission->name }}</span>
+                                        <span class="text-xs text-slate-500">{{ $permissionDescriptions[$permission->name] ?? 'Mô tả quyền hạn truy cập' }}</span>
+                                    </div>
+                                    <form action="{{ route('admin.permissions.destroy', $permission) }}" method="POST" onsubmit="return confirm('Xóa quyền này có thể ảnh hưởng đến hệ thống. Bạn có chắc chắn?');" class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-slate-400 hover:text-red-500 transition-colors p-1" title="Xóa quyền">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </form>
+                                </li>
+                            @empty
+                                <li class="text-sm text-slate-500 italic">Không có quyền nào trong nhóm này.</li>
+                            @endforelse
+                        </ul>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
     </div>
 
     <!-- Modal Tạo Vai Trò -->
@@ -231,6 +284,38 @@
                     <button type="submit"
                         class="px-5 py-2.5 bg-teal-600 text-white rounded-xl font-bold shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all">
                         Lưu Vai Trò
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tạo Quyền -->
+    <div id="createPermissionModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-black text-slate-900 tracking-tight">Thêm Quyền Mới</h3>
+                <button type="button" onclick="document.getElementById('createPermissionModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form action="{{ route('admin.permissions.store') }}" method="POST" class="p-6">
+                @csrf
+                <div class="mb-6">
+                    <label for="permission_name" class="block text-sm font-bold text-slate-700 mb-2">Tên Quyền (Tiếng Anh, không dấu)</label>
+                    <input type="text" name="name" id="permission_name" required
+                        class="w-full border-slate-200 rounded-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3 bg-slate-50 focus:bg-white transition-colors"
+                        placeholder="Ví dụ: manage reports, view users...">
+                    <p class="mt-2 text-xs text-slate-500">Quyền mới sẽ tự động được thêm vào nhóm "Khác". Bạn có thể gán quyền này cho các vai trò ở tab Vai trò.</p>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="document.getElementById('createPermissionModal').classList.add('hidden')"
+                        class="px-5 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl font-bold hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                        Hủy
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all">
+                        Lưu Quyền
                     </button>
                 </div>
             </form>

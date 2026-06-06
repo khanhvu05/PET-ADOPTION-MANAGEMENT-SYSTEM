@@ -24,6 +24,15 @@ class RolePermissionController extends Controller
             'M5 - Trợ lý AI' => $permissions->filter(fn($p) => in_array($p->name, ['view tokens', 'manage tokens'])),
             'M6 - Bài viết' => $permissions->filter(fn($p) => in_array($p->name, ['manage posts'])),
             'M7 - Hệ thống' => $permissions->filter(fn($p) => in_array($p->name, ['manage settings'])),
+            'M8 - Khác' => $permissions->filter(fn($p) => !in_array($p->name, [
+                'view pets', 'manage pets', 'delete pets', 'manage rescue cases', 'manage vaccination history',
+                'view any adoptions', 'approve adoptions', 'pre-approve adoptions', 'manage interview slots',
+                'manage campaigns', 'view any donations',
+                'manage users', 'manage roles', 'view activity logs',
+                'view tokens', 'manage tokens',
+                'manage posts',
+                'manage settings'
+            ])),
         ];
 
         return view('admin.roles.index', compact('roles', 'groupedPermissions'));
@@ -46,5 +55,39 @@ class RolePermissionController extends Controller
         Role::create(['name' => $validated['name']]);
 
         return back()->with('success', 'Đã tạo vai trò mới!');
+    }
+
+    public function destroyRole(Role $role)
+    {
+        if ($role->name === 'admin' || $role->name === 'staff') {
+            return back()->with('error', 'Không thể xóa vai trò hệ thống (admin/staff).');
+        }
+
+        // Kiểm tra xem có user nào đang giữ role này không, nếu có thì không cho xoá (tuỳ logic)
+        $usersCount = User::role($role->name)->count();
+        if ($usersCount > 0) {
+            return back()->with('error', "Không thể xóa vai trò đang được gán cho $usersCount người dùng. Vui lòng chuyển vai trò của họ trước.");
+        }
+
+        $role->delete();
+
+        return back()->with('success', 'Đã xóa vai trò thành công!');
+    }
+
+    public function storePermission(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|unique:permissions,name',
+        ]);
+
+        Permission::create(['name' => $validated['name']]);
+
+        return back()->with('success', 'Đã thêm quyền mới!');
+    }
+
+    public function destroyPermission(Permission $permission)
+    {
+        $permission->delete();
+        return back()->with('success', 'Đã xóa quyền thành công!');
     }
 }
