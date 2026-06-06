@@ -316,6 +316,28 @@
             };
         </script>
 
+        <script>
+            document.addEventListener('submit', function(e) {
+                if (e.target && e.target.classList.contains('confirm-delete')) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Bạn có chắc chắn?',
+                        text: "Hành động này không thể hoàn tác!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#0f766e', // teal-700
+                        cancelButtonColor: '#dc2626', // red-600
+                        confirmButtonText: 'Vâng, xóa nó!',
+                        cancelButtonText: 'Hủy'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            e.target.submit();
+                        }
+                    });
+                }
+            });
+        </script>
+
         @stack('scripts')
     </body>
 </html>
