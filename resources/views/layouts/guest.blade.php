@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    @if (auth()->check() && !request()->routeIs('login', 'register'))
+    @if (!request()->routeIs('login', 'register'))
         @include('components.chatbox-widget')
     @endif
 </body>
