@@ -133,17 +133,16 @@
                                         </div>
                                     </div>
 
-                                    <!-- 3 dots menu -->
-                                    <div class="absolute top-4 right-4" x-data="{ open: false }" @click.away="open = false">
-                                        <button @click="open = !open" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full p-1 transition-colors">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                                    <!-- Action buttons instead of dropdown to prevent overflow -->
+                                    <div class="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button type="submit" form="form-role-{{ $role->id }}" class="text-[11px] font-bold bg-white text-teal-600 border border-teal-200 hover:bg-teal-50 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                                            Lưu quyền
                                         </button>
-                                        <div x-show="open" style="display: none;" class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-slate-100 z-10 text-left py-1">
-                                            <button type="submit" form="form-role-{{ $role->id }}" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-teal-600 font-medium">Lưu quyền</button>
-                                            @if(!in_array($role->name, ['admin', 'staff']))
-                                                <button type="submit" form="form-delete-role-{{ $role->id }}" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">Xóa vai trò</button>
-                                            @endif
-                                        </div>
+                                        @if(!in_array($role->name, ['admin', 'staff']))
+                                            <button type="submit" form="form-delete-role-{{ $role->id }}" class="text-[11px] font-bold bg-white text-red-600 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                                                Xóa
+                                            </button>
+                                        @endif
                                     </div>
                                     
                                     <form action="{{ route('admin.roles.permissions.update', $role) }}" method="POST" id="form-role-{{ $role->id }}">
