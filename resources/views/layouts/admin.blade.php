@@ -321,21 +321,27 @@
                 if (e.target && e.target.classList.contains('confirm-delete')) {
                     e.preventDefault();
                     Swal.fire({
-                        title: 'Xóa dữ liệu này?',
-                        text: "Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?",
-                        icon: 'warning',
+                        html: `
+                            <div class="text-center pt-8 pb-4 px-6">
+                                <div class="mx-auto w-14 h-14 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-5 ring-4 ring-red-50/50">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </div>
+                                <h3 class="text-[17px] font-bold text-slate-800 mb-2 tracking-tight">Xóa dữ liệu này?</h3>
+                                <p class="text-[13.5px] text-slate-500 font-medium leading-relaxed">Hành động này không thể hoàn tác. Dữ liệu sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
+                            </div>
+                        `,
                         showCancelButton: true,
-                        confirmButtonText: 'Vâng, Xóa',
-                        cancelButtonText: 'Hủy',
+                        confirmButtonText: 'Xóa dữ liệu',
+                        cancelButtonText: 'Hủy bỏ',
                         buttonsStyling: false,
+                        showCloseButton: false,
+                        focusCancel: true,
                         customClass: {
-                            popup: 'bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 max-w-sm',
-                            title: 'text-xl font-black text-slate-900 tracking-tight mb-2',
-                            htmlContainer: 'text-sm font-medium text-slate-500 m-0',
-                            icon: 'border-red-500 text-red-500 scale-75 mt-0 mb-4',
-                            actions: 'flex items-center gap-3 w-full mt-8',
-                            confirmButton: 'flex-1 bg-red-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-red-700 transition-all m-0',
-                            cancelButton: 'flex-1 bg-white text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-all m-0'
+                            popup: 'bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden !p-0 !w-[380px]',
+                            htmlContainer: '!m-0 !p-0',
+                            actions: '!flex !gap-3 !p-6 !pt-2 !m-0 !w-full',
+                            confirmButton: 'flex-1 bg-red-600 text-white border border-transparent px-4 py-2.5 rounded-lg text-[13px] font-bold shadow-sm hover:bg-red-700 hover:shadow transition-all !m-0 outline-none ring-2 ring-transparent focus:ring-red-500 focus:ring-offset-2',
+                            cancelButton: 'flex-1 bg-white text-slate-700 border border-slate-300 px-4 py-2.5 rounded-lg text-[13px] font-bold shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-all !m-0 outline-none ring-2 ring-transparent focus:ring-slate-200 focus:ring-offset-2'
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
