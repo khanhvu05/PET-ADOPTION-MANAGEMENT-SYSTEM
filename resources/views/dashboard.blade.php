@@ -11,7 +11,7 @@
                 <div class="flex justify-between items-end mb-3">
                     <div>
                         <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">{{ $stat['label'] }}</p>
-                        <h3 class="text-[28px] leading-none font-bold text-slate-800">{{ number_format($stat['count']) }}</h3>
+                        <h3 class="text-[28px] leading-none font-bold text-slate-800">{{ $stat['count'] }}</h3>
                     </div>
                     <!-- Sparkline Bars matching image -->
                     <div class="flex gap-1 items-end h-6 pb-0.5">
@@ -66,6 +66,18 @@
                 <div class="mt-auto bg-slate-50 border border-slate-200 rounded-lg p-3 flex items-center gap-3">
                     <svg class="w-4 h-4 text-orange-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-[11px] text-slate-600 font-medium leading-tight">Biểu đồ thể hiện tỷ lệ số lượng thú cưng theo giống loài hiện có trong hệ thống.</span>
+                </div>
+            </div>
+
+            <!-- Third Chart: Campaign Donations -->
+            <div class="lg:col-span-12 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-base font-semibold text-slate-900">Quyên Góp Theo Chiến Dịch (Top 5)</h3>
+                </div>
+                
+                <!-- Chart Area -->
+                <div class="relative w-full h-[280px] mt-4">
+                    <canvas id="campaignChart"></canvas>
                 </div>
             </div>
         </div>
@@ -168,6 +180,8 @@
             let chartLabels = {!! json_encode($chartLabels) !!};
             let adoptionsData = {!! json_encode($adoptionsTrendData) !!};
             let petBreakdownData = {!! json_encode($petBreakdownData) !!};
+            let campaignLabels = {!! json_encode($campaignLabels) !!};
+            let campaignData = {!! json_encode($campaignData) !!};
 
             // Chart Defaults for Premium Look
             Chart.defaults.font.family = "'General Sans', 'Nunito', ui-sans-serif, system-ui, sans-serif";
@@ -302,6 +316,68 @@
                                     return ' ' + context.label + ': ' + context.parsed + ' thú cưng';
                                 }
                             }
+                        }
+                    }
+                }
+            });
+
+            // 3. Campaign Donations Chart (Bar)
+            const campaignCtx = document.getElementById('campaignChart').getContext('2d');
+            new Chart(campaignCtx, {
+                type: 'bar',
+                data: {
+                    labels: campaignLabels,
+                    datasets: [{
+                        label: 'Số tiền quyên góp',
+                        data: campaignData,
+                        backgroundColor: '#e8822a', // orange-brand
+                        hoverBackgroundColor: '#d97706',
+                        borderRadius: 6,
+                        barPercentage: 0.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 13, family: "'General Sans', sans-serif" },
+                            bodyFont: { size: 14, weight: 'bold', family: "'General Sans', sans-serif" },
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    // Format as currency
+                                    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)',
+                                drawBorder: false,
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
+                                },
+                                padding: 10
+                            },
+                            border: { display: false }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 11, weight: '600' },
+                                color: '#64748b'
+                            },
+                            border: { display: false }
                         }
                     }
                 }
