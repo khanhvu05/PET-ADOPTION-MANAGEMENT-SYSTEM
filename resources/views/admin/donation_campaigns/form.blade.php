@@ -26,7 +26,7 @@
     <div class="flex flex-col lg:flex-row gap-6 items-start">
         <!-- Cột Trái: Form nhập liệu -->
         <div class="flex-1 min-w-0 space-y-6">
-            <form id="campaignForm" method="POST" action="{{ $action }}" class="space-y-6">
+            <form id="campaignForm" method="POST" action="{{ $action }}" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 @if($isEdit)
                     @method('PUT')
@@ -45,41 +45,6 @@
                             <x-input-error :messages="$errors->get('Tieu_de')" class="mt-2" />
                         </div>
 
-                        <!-- Thú cưng (Mockup) -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <x-input-label value="Thú cưng *" />
-                                <div class="relative mt-1.5">
-                                    <select class="block w-full border-slate-200 rounded-xl focus:border-teal-500 focus:ring-teal-500 shadow-sm text-sm text-slate-700 h-11 appearance-none" style="padding: 10px 32px 10px 44px;">
-                                        <option value="" disabled selected>-- Chọn thú cưng --</option>
-                                        <option>Lucky - Golden Retriever (2 tuổi)</option>
-                                        <option>Bông - Mèo ta (3 tháng)</option>
-                                    </select>
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <div class="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 overflow-hidden shadow-sm">
-                                            <svg class="w-3.5 h-3.5 mt-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                                        </div>
-                                    </div>
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Danh mục (Mockup) -->
-                            <div>
-                                <x-input-label value="Danh mục *" />
-                                <div class="relative mt-1.5">
-                                    <select class="block w-full border-slate-200 rounded-xl focus:border-teal-500 focus:ring-teal-500 shadow-sm text-sm text-slate-700 h-11 appearance-none" style="padding: 10px 32px 10px 16px;">
-                                        <option value="" disabled selected>-- Chọn danh mục --</option>
-                                        <option>Chi phí y tế</option>
-                                        <option>Thức ăn & Lưu chuồng</option>
-                                    </select>
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Mục tiêu gây quỹ -->
                         <div>
@@ -117,39 +82,30 @@ Chúng tôi rất mong nhận được sự chung tay giúp đỡ từ cộng đ
                         <h3 class="text-lg font-black text-slate-800">2. Hình ảnh</h3>
                     </div>
                     <div class="p-6 space-y-6">
+                        <!-- Ảnh đại diện -->
                         <div>
-                            <x-input-label for="Anh_dai_dien" value="Ảnh đại diện *" class="mb-1.5" />
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <div class="rounded-xl border border-slate-200 overflow-hidden relative group" style="width: 200px; height: 140px;">
-                                    <img src="{{ old('Anh_dai_dien', $campaign->Anh_dai_dien ?? 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80') }}" class="w-full h-full object-cover">
-                                    <div class="absolute top-2 left-2 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">Ảnh đại diện</div>
-                                </div>
-                                <button type="button" class="rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 hover:border-teal-500 hover:text-teal-600 transition-colors" style="width: 120px; height: 140px;">
-                                    <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                    <span class="text-xs font-medium">Thêm ảnh</span>
-                                </button>
-                            </div>
-                            <!-- Hidden input for real logic if needed, but for mockup we use text -->
-                            <x-text-input id="Anh_dai_dien" class="mt-3 w-full border-slate-200 rounded-xl focus:border-teal-500 focus:ring-teal-500 shadow-sm text-sm" type="url" name="Anh_dai_dien" value="{{ old('Anh_dai_dien', $campaign->Anh_dai_dien ?? '') }}" placeholder="URL Ảnh đại diện..." style="padding: 10px 16px;" />
-                        </div>
-
-                        <div>
-                            <x-input-label value="Thư viện ảnh" class="mb-1.5" />
-                            <div class="flex flex-wrap gap-3">
-                                @for($i = 1; $i <= 4; $i++)
-                                <div class="rounded-xl border border-slate-200 overflow-hidden relative group" style="width: 80px; height: 80px;">
-                                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=150" class="w-full h-full object-cover">
-                                    <button type="button" class="absolute top-1 right-1 w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-slate-600 hover:text-red-500 shadow-sm">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <x-input-label value="Ảnh đại diện *" class="mb-3 font-bold" />
+                            <div class="flex flex-wrap gap-4">
+                                <label for="anh_dai_dien_upload" class="w-40 h-40 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center cursor-pointer group">
+                                    <svg class="w-8 h-8 text-slate-400 group-hover:text-teal-600 transition-colors mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                    <span class="text-xs font-medium text-slate-500 text-center">Ảnh đại diện<br><span class="font-normal">hoặc</span></span>
+                                    <span class="mt-2 text-[11px] font-bold text-teal-700 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">Chọn ảnh</span>
+                                    <input type="file" id="anh_dai_dien_upload" name="anh_dai_dien_upload" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(this, 'preview-dai-dien', 'img-dai-dien')">
+                                </label>
+                                
+                                <div id="preview-dai-dien" class="{{ isset($campaign) && $campaign->Anh_dai_dien ? '' : 'hidden' }} w-40 h-40 rounded-2xl overflow-hidden relative group shadow-sm border border-slate-200">
+                                    <img id="img-dai-dien" src="{{ $campaign->Anh_dai_dien ?? '' }}" class="w-full h-full object-cover" alt="Preview">
+                                    <button type="button" onclick="clearImage('anh_dai_dien_upload', 'preview-dai-dien')" class="absolute top-2 right-2 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                                     </button>
                                 </div>
-                                @endfor
-                                <button type="button" class="rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 hover:border-teal-500 hover:text-teal-600 transition-colors" style="width: 80px; height: 80px;">
-                                    <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                    <span class="text-[10px] font-medium">Thêm ảnh</span>
-                                </button>
                             </div>
+                            @error('anh_dai_dien_upload')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                            <input type="hidden" name="Anh_dai_dien" value="{{ old('Anh_dai_dien', $campaign->Anh_dai_dien ?? '') }}">
                         </div>
+
                     </div>
                 </div>
 
@@ -237,40 +193,40 @@ Chúng tôi rất mong nhận được sự chung tay giúp đỡ từ cộng đ
                         <span class="absolute top-2 left-2 bg-teal-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm">Đang hoạt động</span>
                     </div>
                     
-                    <h4 class="text-lg font-black text-slate-800 leading-tight mb-2">Cứu trợ Lucky bị viêm phổi nặng</h4>
-                    <p class="text-sm text-slate-500 mb-6 line-clamp-2">Giúp Lucky có cơ hội điều trị và khỏe mạnh trở lại.</p>
+                    <h4 id="preview-title" class="text-lg font-black text-slate-800 leading-tight mb-2">{{ old('Tieu_de', $campaign->Tieu_de ?? 'Tên chiến dịch') }}</h4>
+                    <p id="preview-desc" class="text-sm text-slate-500 mb-6 line-clamp-2">{{ old('Mo_ta', $campaign->Mo_ta ?? 'Mô tả ngắn về chiến dịch...') }}</p>
 
                     <div class="flex justify-between items-end mb-2">
                         <div>
-                            <span class="text-lg font-black text-slate-800 block leading-none mb-1">32.450.000đ</span>
+                            @php
+                                $raised = $campaign->So_tien_hien_tai ?? 0;
+                                $target = old('So_tien_muc_tieu', $campaign->So_tien_muc_tieu ?? 0);
+                                $percent = $target > 0 ? min(100, round(($raised / $target) * 100, 1)) : 0;
+                            @endphp
+                            <span id="preview-raised" class="text-lg font-black text-slate-800 block leading-none mb-1">{{ number_format($raised, 0, ',', '.') }}đ</span>
                             <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">đã gây quỹ</span>
                         </div>
                         <div class="text-right">
-                            <span class="text-sm font-bold text-slate-800 block leading-none mb-1">50.000.000đ</span>
+                            <span id="preview-target" class="text-sm font-bold text-slate-800 block leading-none mb-1">{{ number_format((float)$target, 0, ',', '.') }}đ</span>
                             <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wide">mục tiêu</span>
                         </div>
                     </div>
 
                     <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-2">
-                        <div class="h-full bg-teal-600 rounded-full" style="width: 64.9%"></div>
+                        <div id="preview-progress-bar" class="h-full bg-teal-600 rounded-full transition-all duration-300" style="width: {{ $percent }}%"></div>
                     </div>
-                    <div class="text-right text-xs font-bold text-teal-700 mb-6">64.9%</div>
+                    <div id="preview-progress-text" class="text-right text-xs font-bold text-teal-700 mb-6">{{ $percent }}%</div>
 
                     <div class="flex items-center justify-between pt-4 border-t border-slate-100 mb-6">
                         <div class="flex flex-col">
-                            <span class="text-sm font-bold text-slate-800 flex items-center gap-1.5"><svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> 128</span>
+                            <span class="text-sm font-bold text-slate-800 flex items-center gap-1.5"><svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg> {{ $donorsCount ?? 0 }}</span>
                             <span class="text-[11px] text-slate-500 mt-0.5">Lượt ủng hộ</span>
                         </div>
                         <div class="flex flex-col text-right">
-                            <span class="text-sm font-bold text-slate-800 flex items-center justify-end gap-1.5"><svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> 10/06/2026</span>
+                            <span id="preview-end-date" class="text-sm font-bold text-slate-800 flex items-center justify-end gap-1.5"><svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> {{ old('Ngay_ket_thuc', isset($campaign->Ngay_ket_thuc) ? \Carbon\Carbon::parse($campaign->Ngay_ket_thuc)->format('d/m/Y') : 'dd/mm/yyyy') }}</span>
                             <span class="text-[11px] text-slate-500 mt-0.5">Ngày kết thúc</span>
                         </div>
                     </div>
-
-                    <button type="button" class="w-full h-11 bg-orange-brand text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                        Chia sẻ chiến dịch
-                    </button>
                 </div>
             </div>
 
@@ -299,51 +255,8 @@ Chúng tôi rất mong nhận được sự chung tay giúp đỡ từ cộng đ
                     </li>
                 </ul>
             </div>
-
-            <!-- Card Thống kê nhanh (If Edit) -->
-            @if($isEdit)
-            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
-                <h4 class="font-bold text-slate-800 mb-4 text-sm">Thống kê nhanh</h4>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <div class="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            </div>
-                            Lượt truy cập
-                        </div>
-                        <span class="font-bold text-slate-800">1.842</span>
-                    </div>
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <div class="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                            </div>
-                            Lượt chia sẻ
-                        </div>
-                        <span class="font-bold text-slate-800">236</span>
-                    </div>
-                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <div class="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            </div>
-                            Lượt quyên góp
-                        </div>
-                        <span class="font-bold text-slate-800">128</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <div class="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            Số tiền trung bình/lượt
-                        </div>
-                        <span class="font-bold text-slate-800">253.516đ</span>
-                    </div>
-                </div>
-            </div>
             
+            @if($isEdit && isset($activities) && $activities->count() > 0)
             <!-- Card History -->
             <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
                 <h4 class="font-bold text-slate-800 mb-5 text-sm">Lịch sử hoạt động</h4>
@@ -351,28 +264,100 @@ Chúng tôi rất mong nhận được sự chung tay giúp đỡ từ cộng đ
                     <!-- Line -->
                     <div class="absolute left-[7px] top-2 bottom-2 w-px bg-slate-200"></div>
                     
+                    @foreach($activities as $activity)
                     <div class="relative">
-                        <div class="absolute -left-5 top-1 w-3 h-3 bg-white border-2 border-teal-500 rounded-full z-10"></div>
-                        <p class="text-xs font-bold text-slate-500 mb-0.5">10/05/2026 09:15</p>
-                        <p class="text-sm font-bold text-slate-800">Tạo chiến dịch</p>
-                        <p class="text-xs text-slate-500 mt-1">Nguyễn Thị Mai</p>
+                        @if($loop->first)
+                            <div class="absolute -left-5 top-1 w-4 h-4 bg-teal-50 -ml-0.5 border border-teal-200 text-teal-600 rounded-full z-10 flex items-center justify-center">
+                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            </div>
+                        @else
+                            <div class="absolute -left-5 top-1 w-3 h-3 bg-white border-2 border-slate-300 rounded-full z-10"></div>
+                        @endif
+                        <p class="text-xs font-bold text-slate-500 mb-0.5">{{ $activity->created_at->format('d/m/Y H:i') }}</p>
+                        <p class="text-sm font-bold text-slate-800">{{ $activity->action }}</p>
+                        @if($activity->user)
+                            <p class="text-xs text-slate-500 mt-1">{{ $activity->user->Ho_ten }}</p>
+                        @endif
                     </div>
-                    <div class="relative">
-                        <div class="absolute -left-5 top-1 w-3 h-3 bg-white border-2 border-slate-300 rounded-full z-10"></div>
-                        <p class="text-xs font-bold text-slate-500 mb-0.5">10/05/2026 09:30</p>
-                        <p class="text-sm font-bold text-slate-800">Cập nhật thông tin chiến dịch</p>
-                    </div>
-                    <div class="relative">
-                        <div class="absolute -left-5 top-1 w-4 h-4 bg-teal-50 -ml-0.5 border border-teal-200 text-teal-600 rounded-full z-10 flex items-center justify-center">
-                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <p class="text-xs font-bold text-slate-500 mb-0.5">10/05/2026 10:00</p>
-                        <p class="text-sm font-bold text-slate-800">Đăng chiến dịch</p>
-                        <p class="text-xs text-slate-500 mt-1">Chiến dịch đã được công khai</p>
-                    </div>
+                    @endforeach
                 </div>
             </div>
             @endif
         </div>
     </div>
+
+    <script>
+        function previewImage(input, previewDivId, imgId) {
+            const previewDiv = document.getElementById(previewDivId);
+            const img = document.getElementById(imgId);
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    previewDiv.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImage(inputId, previewDivId) {
+            document.getElementById(inputId).value = '';
+            document.getElementById(previewDivId).classList.add('hidden');
+        }
+
+        // Live Preview Binding
+        document.addEventListener('DOMContentLoaded', function() {
+            const tieuDeInput = document.getElementById('Tieu_de');
+            const moTaInput = document.getElementById('Mo_ta');
+            const targetInput = document.getElementById('So_tien_muc_tieu');
+            const endDateInput = document.getElementById('Ngay_ket_thuc');
+
+            const previewTitle = document.getElementById('preview-title');
+            const previewDesc = document.getElementById('preview-desc');
+            const previewTarget = document.getElementById('preview-target');
+            const previewEndDate = document.getElementById('preview-end-date');
+            const previewProgressBar = document.getElementById('preview-progress-bar');
+            const previewProgressText = document.getElementById('preview-progress-text');
+            
+            const raisedAmount = {{ $campaign->So_tien_hien_tai ?? 0 }};
+
+            function updatePreview() {
+                // Tên & mô tả
+                previewTitle.textContent = tieuDeInput.value || 'Tên chiến dịch';
+                previewDesc.textContent = moTaInput.value || 'Mô tả ngắn về chiến dịch...';
+
+                // Target & percent
+                let targetStr = targetInput.value;
+                let target = parseInt(targetStr);
+                if (isNaN(target) || target < 0) target = 0;
+                
+                previewTarget.textContent = new Intl.NumberFormat('vi-VN').format(target) + 'đ';
+
+                let percent = 0;
+                if (target > 0) {
+                    percent = Math.min(100, Math.round((raisedAmount / target) * 1000) / 10);
+                }
+                previewProgressBar.style.width = percent + '%';
+                previewProgressText.textContent = percent + '%';
+
+                // End Date
+                let dateStr = endDateInput.value;
+                if (dateStr) {
+                    let dateObj = new Date(dateStr);
+                    if (!isNaN(dateObj.getTime())) {
+                        let dd = String(dateObj.getDate()).padStart(2, '0');
+                        let mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        let yyyy = dateObj.getFullYear();
+                        previewEndDate.innerHTML = `<svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> ${dd}/${mm}/${yyyy}`;
+                    }
+                }
+            }
+
+            tieuDeInput.addEventListener('input', updatePreview);
+            moTaInput.addEventListener('input', updatePreview);
+            targetInput.addEventListener('input', updatePreview);
+            endDateInput.addEventListener('change', updatePreview);
+        });
+    </script>
 </x-admin-layout>

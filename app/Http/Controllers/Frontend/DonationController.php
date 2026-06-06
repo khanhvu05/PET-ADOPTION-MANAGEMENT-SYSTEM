@@ -9,6 +9,7 @@ use App\Services\MailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class DonationController extends Controller
 {
@@ -18,6 +19,10 @@ class DonationController extends Controller
     public function index()
     {
         $campaigns = DonationCampaign::where('Trang_thai', 'active')
+            ->where(function ($query) {
+                $query->whereNull('Ngay_ket_thuc')
+                      ->orWhereDate('Ngay_ket_thuc', '>=', now()->toDateString());
+            })
             ->orderByDesc('Ngay_bat_dau')
             ->get()
             ->map(function ($campaign) {
@@ -28,7 +33,17 @@ class DonationController extends Controller
                 return $campaign;
             });
 
-        return view('frontend.donations.index', compact('campaigns'));
+        // Lấy tổng số tiền ủng hộ toàn thời gian
+        $totalAmount = Donation::where('Trang_thai', 'success')->sum('So_tien');
+
+        // Lấy danh sách 10 giao dịch vinh danh gần nhất
+        $recentDonations = Donation::where('Trang_thai', 'success')
+            ->with('chienDich')
+            ->orderByDesc('Thoi_diem_thanh_toan')
+            ->take(10)
+            ->get();
+
+        return view('frontend.donations.index', compact('campaigns', 'totalAmount', 'recentDonations'));
     }
 
     /**
@@ -41,15 +56,22 @@ class DonationController extends Controller
         if ($campaignId) {
             $campaign = DonationCampaign::findOrFail($campaignId);
 
-            // Kiểm tra campaign còn active không
-            if ($campaign->Trang_thai !== 'active') {
+            // Kiểm tra campaign còn active và chưa hết hạn không
+            if ($campaign->Trang_thai !== 'active' || 
+                ($campaign->Ngay_ket_thuc && $campaign->Ngay_ket_thuc->startOfDay() < now()->startOfDay())) {
                 return redirect()
                     ->route('frontend.donations.index')
                     ->with('warning', 'Chiến dịch này đã kết thúc. Vui lòng chọn chiến dịch khác.');
             }
         }
 
-        $campaigns = DonationCampaign::where('Trang_thai', 'active')->orderByDesc('Ngay_bat_dau')->get();
+        $campaigns = DonationCampaign::where('Trang_thai', 'active')
+            ->where(function ($query) {
+                $query->whereNull('Ngay_ket_thuc')
+                      ->orWhereDate('Ngay_ket_thuc', '>=', now()->toDateString());
+            })
+            ->orderByDesc('Ngay_bat_dau')
+            ->get();
 
         return view('frontend.donations.process', compact('campaign', 'campaigns'));
     }
@@ -105,7 +127,7 @@ class DonationController extends Controller
     }
 
     /**
-     * Xử lý callback từ VNPAY
+     * Xử lý callback từ VNPAY (Hiển thị trang kết quả)
      */
     public function vnpayReturn(Request $request)
     {
@@ -119,12 +141,114 @@ class DonationController extends Controller
         }
 
         $maGiaoDich = $params['vnp_TxnRef'] ?? null;
-        $donation = Donation::where('Ma_giao_dich_he_thong', $maGiaoDich)->first();
+        $donation = Donation::where('Ma_giao_dich_he_thong', $maGiaoDich)->with('chienDich')->first();
 
         if (!$donation) {
             return redirect()->route('frontend.donations.index')->with('error', 'Không tìm thấy giao dịch.');
         }
 
+        $responseCode = $params['vnp_ResponseCode'] ?? '99';
+
+        if ($responseCode === '00') {
+            // Thanh toán thành công (Chỉ cập nhật nếu chưa được cập nhật bởi IPN để tránh race condition)
+            if ($donation->Trang_thai !== 'success') {
+                $donation->update([
+                    'Trang_thai'         => 'success',
+                    'Ma_giao_dich_vnpay' => $params['vnp_TransactionNo'] ?? null,
+                    'Ma_phan_hoi_vnpay'  => $responseCode,
+                    'Ma_ngan_hang'       => $params['vnp_BankCode'] ?? null,
+                    'Thoi_diem_thanh_toan' => now(),
+                ]);
+
+                // Cộng tiền vào chiến dịch
+                if ($donation->Ma_chien_dich) {
+                    DonationCampaign::where('Ma_chien_dich', $donation->Ma_chien_dich)
+                        ->increment('So_tien_hien_tai', $donation->So_tien);
+                }
+
+                // Gửi email cảm ơn nếu user có email
+                $donation->load('nguoiDung');
+                if ($donation->nguoiDung && $donation->nguoiDung->email) {
+                    try {
+                        $mailService = app(MailService::class);
+                        $subject = 'Cảm ơn bạn đã đóng góp cho PetJam';
+                        $formattedAmount = number_format($donation->So_tien, 0, ',', '.') . 'đ';
+                        
+                        $body = "<h2>Xin chào {$donation->Ten_nguoi_ung_ho},</h2>";
+                        $body .= "<p>PetJam xin chân thành cảm ơn bạn đã đóng góp số tiền <strong>{$formattedAmount}</strong>.</p>";
+                        $body .= "<p>Mã giao dịch của bạn là: <strong>{$donation->Ma_giao_dich_he_thong}</strong>.</p>";
+                        if ($donation->Ma_chien_dich) {
+                            $campaignName = $donation->chienDich->Tieu_de ?? 'Quỹ chung';
+                            $body .= "<p>Đóng góp của bạn đã được ghi nhận vào chiến dịch: <strong>{$campaignName}</strong>.</p>";
+                        }
+                        $body .= "<p>Sự ủng hộ của bạn sẽ giúp chúng tôi mang lại cuộc sống tốt đẹp hơn cho các bé thú cưng.</p>";
+                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+
+                        $mailService->send($donation->nguoiDung->email, $subject, $body);
+                    } catch (\Exception $e) {
+                        Log::error("Send mail failed: " . $e->getMessage());
+                    }
+                }
+            }
+
+            return view('frontend.donations.result', compact('donation'));
+        } else {
+            // Thanh toán thất bại
+            if ($donation->Trang_thai === 'pending') {
+                $donation->update([
+                    'Trang_thai'         => 'failed',
+                    'Ma_phan_hoi_vnpay'  => $responseCode,
+                ]);
+            }
+
+            return view('frontend.donations.result', compact('donation'));
+        }
+    }
+
+    /**
+     * Xử lý webhook server-to-server (IPN Callback từ VNPAY)
+     */
+    public function vnpayIpn(Request $request)
+    {
+        $params = $request->all();
+
+        // 1. Xác minh chữ ký
+        if (!$this->verifyVNPaySignature($params)) {
+            return response()->json([
+                'RspCode' => '97',
+                'Message' => 'Invalid signature'
+            ]);
+        }
+
+        $maGiaoDich = $params['vnp_TxnRef'] ?? null;
+        $donation = Donation::where('Ma_giao_dich_he_thong', $maGiaoDich)->first();
+
+        // 2. Kiểm tra đơn hàng có tồn tại không
+        if (!$donation) {
+            return response()->json([
+                'RspCode' => '01',
+                'Message' => 'Order not found'
+            ]);
+        }
+
+        // 3. Kiểm tra số tiền (vnp_Amount nhân 100 nên cần chia 100)
+        $vnpAmount = intval($params['vnp_Amount'] ?? 0) / 100;
+        if (intval($donation->So_tien) !== intval($vnpAmount)) {
+            return response()->json([
+                'RspCode' => '04',
+                'Message' => 'Invalid amount'
+            ]);
+        }
+
+        // 4. Kiểm tra trạng thái đơn hàng (phải là pending mới xử lý tiếp)
+        if ($donation->Trang_thai !== 'pending') {
+            return response()->json([
+                'RspCode' => '02',
+                'Message' => 'Order already confirmed'
+            ]);
+        }
+
+        // 5. Cập nhật trạng thái giao dịch
         $responseCode = $params['vnp_ResponseCode'] ?? '99';
 
         if ($responseCode === '00') {
@@ -146,37 +270,51 @@ class DonationController extends Controller
             // Gửi email cảm ơn nếu user có email
             $donation->load('nguoiDung');
             if ($donation->nguoiDung && $donation->nguoiDung->email) {
-                $mailService = app(MailService::class);
-                $subject = 'Cảm ơn bạn đã đóng góp cho PetJam';
-                $formattedAmount = number_format($donation->So_tien, 0, ',', '.') . 'đ';
-                
-                $body = "<h2>Xin chào {$donation->Ten_nguoi_ung_ho},</h2>";
-                $body .= "<p>PetJam xin chân thành cảm ơn bạn đã đóng góp số tiền <strong>{$formattedAmount}</strong>.</p>";
-                $body .= "<p>Mã giao dịch của bạn là: <strong>{$donation->Ma_giao_dich_he_thong}</strong>.</p>";
-                if ($donation->Ma_chien_dich) {
-                    $campaignName = $donation->chienDich->Ten_chien_dich ?? 'Quỹ chung';
-                    $body .= "<p>Đóng góp của bạn đã được ghi nhận vào chiến dịch: <strong>{$campaignName}</strong>.</p>";
+                try {
+                    $mailService = app(MailService::class);
+                    $subject = 'Cảm ơn bạn đã đóng góp cho PetJam';
+                    $formattedAmount = number_format($donation->So_tien, 0, ',', '.') . 'đ';
+                    
+                    $body = "<h2>Xin chào {$donation->Ten_nguoi_ung_ho},</h2>";
+                    $body .= "<p>PetJam xin chân thành cảm ơn bạn đã đóng góp số tiền <strong>{$formattedAmount}</strong>.</p>";
+                    $body .= "<p>Mã giao dịch của bạn là: <strong>{$donation->Ma_giao_dich_he_thong}</strong>.</p>";
+                    if ($donation->Ma_chien_dich) {
+                        $campaignName = $donation->chienDich->Tieu_de ?? 'Quỹ chung';
+                        $body .= "<p>Đóng góp của bạn đã được ghi nhận vào chiến dịch: <strong>{$campaignName}</strong>.</p>";
+                    }
+                    $body .= "<p>Sự ủng hộ của bạn sẽ giúp chúng tôi mang lại cuộc sống tốt đẹp hơn cho các bé thú cưng.</p>";
+                    $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+
+                    $mailService->send($donation->nguoiDung->email, $subject, $body);
+                } catch (\Exception $e) {
+                    Log::error("IPN: Send mail failed: " . $e->getMessage());
                 }
-                $body .= "<p>Sự ủng hộ của bạn sẽ giúp chúng tôi mang lại cuộc sống tốt đẹp hơn cho các bé thú cưng.</p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-
-                $mailService->send($donation->nguoiDung->email, $subject, $body);
             }
-
-            return redirect()
-                ->route('frontend.donations.index')
-                ->with('success', 'Cảm ơn bạn đã ủng hộ! Giao dịch của bạn đã được ghi nhận thành công.');
         } else {
             // Thanh toán thất bại
             $donation->update([
                 'Trang_thai'         => 'failed',
                 'Ma_phan_hoi_vnpay'  => $responseCode,
             ]);
-
-            return redirect()
-                ->route('frontend.donations.index')
-                ->with('error', 'Giao dịch thất bại. Vui lòng thử lại.');
         }
+
+        return response()->json([
+            'RspCode' => '00',
+            'Message' => 'Confirm success'
+        ]);
+    }
+
+    /**
+     * Lịch sử quyên góp của người dùng đã đăng nhập
+     */
+    public function history()
+    {
+        $donations = Donation::where('Ma_nguoi_dung', Auth::id())
+            ->with('chienDich')
+            ->orderByDesc('Ngay_tao')
+            ->paginate(10);
+
+        return view('frontend.users.donations.index', compact('donations'));
     }
 
     /**
@@ -187,7 +325,8 @@ class DonationController extends Controller
         $vnpUrl = config('services.vnpay.url');
         $vnpTmnCode = config('services.vnpay.tmn_code');
         $vnpHashSecret = config('services.vnpay.hash_secret');
-        $vnpReturnUrl = config('services.vnpay.return_url');
+        // Sử dụng route() để tự động sinh đúng URL dựa trên môi trường hiện tại (XAMPP hoặc serve)
+        $vnpReturnUrl = route('frontend.donations.vnpay.return');
 
         $inputData = [
             'vnp_Version'    => '2.1.0',

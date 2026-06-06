@@ -107,7 +107,7 @@
                 <div x-show="open && expanded" 
                      x-collapse
                      class="pl-7 pr-2 space-y-0.5 pt-0.5">
-                     <a href="{{ route('admin.donations.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donations.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Ủng hộ</a>
+                     <a href="{{ route('admin.donations.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donations.index') || request()->routeIs('admin.donations.show') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Ủng hộ</a>
                      <a href="{{ route('admin.donation_campaigns.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Chiến dịch Gây quỹ</a>
                 </div>
             </div>

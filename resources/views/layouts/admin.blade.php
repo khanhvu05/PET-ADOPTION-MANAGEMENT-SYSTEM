@@ -8,6 +8,16 @@
         <title>{{ config('app.name', 'PETJAM') }} - @yield('title', 'Bảng Điều Khiển')</title>
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        
+        <!-- Trix Editor -->
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+        
+        <!-- Flatpickr (Date Range Picker) -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -15,15 +15,19 @@
                 <h2 class="text-2xl font-bold text-slate-900 mb-1">Quản Lý Quyên Góp</h2>
                 <p class="text-sm text-slate-500">Theo dõi và quản lý các khoản quyên góp ủng hộ cho thú cưng.</p>
             </div>
-            <div class="flex items-center gap-3">
-                <button class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <button type="button" onclick="exportExcel()" class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
                     Xuất Excel
                 </button>
-                <button class="bg-[#41859c] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#32697b] hover:shadow-md transition-all shadow-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Thêm Quyên Góp
-                </button>
+                <script>
+                    function exportExcel() {
+                        const form = document.getElementById('filter-form');
+                        const formData = new FormData(form);
+                        formData.append('export', 'excel');
+                        const params = new URLSearchParams(formData);
+                        window.location.href = window.location.pathname + '?' + params.toString();
+                    }
+                </script>
             </div>
         </div>
 
@@ -71,8 +75,15 @@
         <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden">
             
             <!-- Filters Section -->
-            <!-- Filters Section -->
-            <form id="filter-form" action="{{ route('admin.donations.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
+            <form id="filter-form" x-data="{
+                submit() {
+                    // Xóa parameter 'export' nếu có trước khi submit để tránh lỗi luôn tải file
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('export');
+                    this.$el.action = url.pathname;
+                    this.$el.submit();
+                }
+            }" action="{{ route('admin.donations.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
                 <div class="flex gap-4 min-w-max items-end">
                     <!-- Search -->
                     <div class="w-64">
@@ -80,29 +91,37 @@
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm giao dịch, email..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] transition-colors shadow-sm">
+                            <input @input.debounce.500ms="submit()" type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm giao dịch, email..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] transition-colors shadow-sm">
+                        </div>
+                    </div>
+
+                    <!-- Date Range Filter -->
+                    <div class="w-64">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <input type="text" id="date_range" name="date_range" value="{{ request('date_range') }}" placeholder="Thời gian (Từ - Đến)" class="w-full pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] transition-colors shadow-sm" x-init="
+                                flatpickr($el, {
+                                    mode: 'range',
+                                    dateFormat: 'd/m/Y',
+                                    onChange: function(selectedDates, dateStr, instance) {
+                                        if (selectedDates.length === 2 || selectedDates.length === 0) {
+                                            submit();
+                                        }
+                                    }
+                                });
+                            ">
                         </div>
                     </div>
 
                     <!-- Dropdowns -->
                     <div class="w-40">
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Trạng thái</label>
-                        <select name="status" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] appearance-none shadow-sm text-slate-700">
-                            <option value="all">Tất cả</option>
-                            <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>Thành công</option>
-                            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
-                            <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>Thất bại</option>
-                            <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>Hết hạn</option>
-                        </select>
-                    </div>
-
-                    <div class="w-40">
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Phương thức</label>
-                        <select name="method" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] appearance-none shadow-sm text-slate-700">
-                            <option value="all">Tất cả</option>
-                            <option value="Banking" {{ request('method') == 'Banking' ? 'selected' : '' }}>Chuyển khoản</option>
-                            <option value="MOMO" {{ request('method') == 'MOMO' ? 'selected' : '' }}>MoMo</option>
-                            <option value="VNPAY" {{ request('method') == 'VNPAY' ? 'selected' : '' }}>VNPay</option>
+                        <select @change="submit()" name="method" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] appearance-none shadow-sm text-slate-700">
+                            <option value="all">Tất cả phương thức</option>
+                            <option value="VNPAYQR" {{ request('method') == 'VNPAYQR' ? 'selected' : '' }}>Quét mã QR (VNPAYQR)</option>
+                            <option value="VNBANK" {{ request('method') == 'VNBANK' ? 'selected' : '' }}>Thẻ ATM / VNBANK</option>
+                            <option value="INTCARD" {{ request('method') == 'INTCARD' ? 'selected' : '' }}>Thẻ Quốc Tế</option>
                         </select>
                     </div>
 
@@ -137,7 +156,6 @@
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Phương Thức</th>
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Mục Đích</th>
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Thời Gian</th>
-                            <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Trạng Thái</th>
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 text-center">Thao Tác</th>
                         </tr>
                     </thead>
@@ -166,23 +184,6 @@
                                     <span class="text-xs text-slate-400 mt-0.5">{{ $donation->Ngay_tao->format('H:i') }}</span>
                                 </div>
                             </td>
-                            <td class="py-4 px-6">
-                                @if($donation->Trang_thai === 'success')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                    Thành công
-                                </span>
-                                @elseif($donation->Trang_thai === 'pending')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    Chờ xác nhận
-                                </span>
-                                @else
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    Thất bại
-                                </span>
-                                @endif
                             </td>
                             <td class="py-4 px-6">
                                 <div class="flex items-center justify-center relative" x-data="{ open: false }" @click.away="open = false">
