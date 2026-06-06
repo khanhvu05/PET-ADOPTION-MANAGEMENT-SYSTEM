@@ -1,4 +1,6 @@
 <x-guest-layout>
+    @section('title', 'Đặt lại mật khẩu')
+
     <!-- Header/Title inside card -->
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-black tracking-tight text-white">Đặt lại mật khẩu</h2>

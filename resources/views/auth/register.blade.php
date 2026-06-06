@@ -1,4 +1,6 @@
 <x-guest-layout>
+    @section('title', 'Đăng ký')
+
     <!-- Header/Title inside card -->
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-black tracking-tight text-white">Tạo tài khoản mới</h2>

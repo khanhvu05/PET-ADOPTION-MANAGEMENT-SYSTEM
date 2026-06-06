@@ -1,173 +1,638 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PETJAM - Animal Adoption & Rescue</title>
+@extends('layouts.frontend')
+@section('title', 'Trang chủ')
+@section('content')
+<section class="relative pt-24 lg:pt-40 pb-10 lg:pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-6 lg:gap-12">
+    <!-- Left Text Content -->
+    <div class="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left relative z-10 pt-4 lg:pt-0">
+        <!-- Floating paw decorative left behind text -->
+        <svg class="absolute -top-10 -left-10 w-24 h-24 text-[#E8F6F8] fill-current -z-10 transform -rotate-12" viewBox="0 0 512 512"><path d="M226.5 92.9c14.3 42.9-.3 86.4-32.6 96.8s-70.1-15.6-84.4-58.5c-14.3-42.9.3-86.4 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-1.2-78.5-33.6c-18.9-32.4-14.3-70.1 10.2-84.1s59.6 1.2 78.5 33.6zM225.4 212.3c3.5 1.5 7.1 2.9 10.7 4.1 43.6 14.2 92.5 13.9 135.9-2.9 3.8-1.5 7.4-3.1 11-4.9 31.9-15.7 62-42.4 82.5-76.3 35.8-59.4 14.2-132-48.4-162.2-50.6-24.4-107.5-12.7-145 23.3-37.5-36-94.4-47.7-145-23.3-62.6 30.2-84.2 102.8-48.4 162.2 20.4 33.9 50.5 60.5 82.4 76.2 1.4.7 2.8 1.4 4.3 2.1zM495.2 284c-24.5-14.1-61.9-2.4-80.8 30s-14.3 71.9 10.2 86 61.9 2.4 80.8-30c18.9-32.4 14.3-71.9-10.2-86zM418.7 189.7c-32.3-10.4-64.9 13.2-79.2 56.1s-4.9 88.5 27.4 98.9c32.3 10.4 64.9-13.2 79.2-56.1s4.9-88.5-27.4-98.9z"/></svg>
 
-    <!-- Google Fonts: Nunito mang lại cảm giác thân thiện, bo tròn giống chữ trong ảnh -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+        <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-[72px] font-black leading-[1.05] tracking-tight mb-2 lg:mb-4 relative max-w-full">
+            <span class="text-dark">Looking for a</span><br />
+            <span class="text-primary relative inline-block pr-12 lg:pr-14 mt-1 lg:mt-0">
+                Best friend?
+                <svg class="absolute right-0 top-1 w-8 h-8 lg:w-10 lg:h-10 text-primary transform rotate-[15deg]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </span>
+        </h1>
+        
+        <p class="text-base lg:text-lg text-dark font-bold mb-6 lg:mb-10">
+            Our best beauties are waiting for a home
+        </p>
 
-    <style>
-        /* Tạo hình dạng khối nền ngẫu nhiên (Blob) giống trong ảnh */
-        .blob-shape {
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-        }
-    </style>
+        <div class="flex flex-row items-center justify-center lg:justify-start gap-2 sm:gap-4 mb-8 lg:mb-12 w-full lg:w-max">
+            <a href="{{ route('frontend.adoptions.index') }}" class="btn-primary text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 border border-primary flex-1 lg:flex-none justify-center whitespace-nowrap">
+                <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                Nhận nuôi ngay
+            </a>
+            <a href="#" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
+                Xem thú cưng
+            </a>
+        </div>
 
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
-</head>
-<body class="bg-white text-slate-800 font-['Nunito',sans-serif] antialiased min-h-screen flex flex-col overflow-x-hidden">
-    
-    <!-- Navigation (Header) -->
-    <header class="w-full px-6 py-6 lg:px-16 flex justify-between items-center z-20 bg-white">
-        <!-- Logo -->
-        <div class="flex items-center gap-3">
-            <div class="w-[52px] h-[52px] relative flex items-center justify-center text-[#f48c46]">
-                <svg viewBox="0 0 100 100" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Heart Background -->
-                    <path d="M50 90 C 20 65, 5 40, 5 25 C 5 10, 30 5, 50 25 C 70 5, 95 10, 95 25 C 95 40, 80 65, 50 90 Z" />
-                    <!-- Dog Face (Left) -->
-                    <path d="M45 40 C 45 25, 20 25, 20 40 C 20 55, 45 55, 45 40 Z" fill="white" />
-                    <circle cx="28" cy="38" r="2" fill="#3b2c28" />
-                    <path d="M35 43 Q 32 45 29 43" stroke="#3b2c28" stroke-width="1.5" fill="none" />
-                    <path d="M20 25 Q 15 20 25 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <path d="M45 25 Q 50 20 40 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <!-- Cat Face (Right) -->
-                    <path d="M80 55 C 80 40, 55 40, 55 55 C 55 70, 80 70, 80 55 Z" fill="#d4b49c" />
-                    <circle cx="63" cy="53" r="2" fill="#3b2c28" />
-                    <circle cx="73" cy="53" r="2" fill="#3b2c28" />
-                    <path d="M55 40 L 60 50 L 65 40 Z" fill="#d4b49c" />
-                    <path d="M80 40 L 75 50 L 70 40 Z" fill="#d4b49c" />
-                    <!-- Paw print hint -->
-                    <path d="M85 20 C 85 20 95 15 90 25 Z" fill="#3b2c28" opacity="0.8"/>
-                    <circle cx="82" cy="18" r="3" fill="#3b2c28" opacity="0.8" />
-                    <circle cx="88" cy="15" r="3" fill="#3b2c28" opacity="0.8" />
-                    <circle cx="94" cy="18" r="3" fill="#3b2c28" opacity="0.8" />
-                </svg>
+        <!-- KPIs row -->
+        <div class="grid grid-cols-2 md:flex items-start md:items-center justify-items-start justify-center lg:justify-start gap-4 lg:gap-8 mx-auto lg:mx-0 w-full lg:w-max">
+            <!-- KPI 1 -->
+            <div class="flex flex-col gap-2 w-max">
+                <div class="flex items-center gap-3">
+                    <div class="w-[56px] h-[56px] flex items-center justify-center">
+                        <svg class="w-10 h-10" fill="#0E7490" viewBox="0 0 24 24">
+                            <circle cx="4.5" cy="9.5" r="2.5" />
+                            <circle cx="9" cy="5.5" r="2.5" />
+                            <circle cx="15" cy="5.5" r="2.5" />
+                            <circle cx="19.5" cy="9.5" r="2.5" />
+                            <path d="M17.34 14.86c-.87-1.02-1.6-1.89-2.48-2.91-.46-.54-1.05-1.08-1.75-1.32-.11-.04-.22-.07-.33-.09-.25-.04-.52-.04-.78-.04s-.53 0-.79.05c-.11.02-.22.05-.33.09-.7.24-1.28.78-1.75 1.32-.87 1.02-1.6 1.89-2.48 2.91-1.31 1.31-2.92 2.76-2.62 4.79.29 1.02 1.02 2.03 2.33 2.32.73.15 3.06-.44 5.54-.44h.18c2.48 0 4.81.58 5.54.44 1.31-.29 2.04-1.31 2.33-2.32.31-2.04-1.3-3.49-2.61-4.8z" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[20px] font-black text-[#0E7490] leading-none">2,300+</span>
+                        <span class="text-[13px] font-bold text-[#F58A3C] leading-tight mt-1">Pets</span>
+                        <span class="text-muted font-semibold text-[11px]">Được cứu hộ</span>
+                    </div>
+                </div>
+                <div class="flex items-center mt-1">
+                    <div class="w-[6px] h-[6px] rounded-full bg-[#0E7490]"></div>
+                    <div class="w-16 h-[2px] ml-1" style="background-image: linear-gradient(to right, #0E7490 50%, transparent 50%); background-size: 6px 2px; background-repeat: repeat-x; opacity: 0.3;"></div>
+                </div>
             </div>
-            <div class="flex flex-col justify-center">
-                <span class="font-black text-[28px] tracking-tight leading-none flex items-center">
-                    <span class="text-[#3b2c28]">PET</span><span class="text-[#0489a9]">JAM</span>
-                </span>
-                <span class="text-[9px] text-gray-400 tracking-widest font-bold mt-1 uppercase">Animal Adoption & Rescue</span>
+            <!-- KPI 2 -->
+            <div class="flex flex-col gap-2 w-max">
+                <div class="flex items-center gap-3">
+                    <div class="w-[56px] h-[56px] flex items-center justify-center">
+                        <svg class="w-10 h-10" fill="#FA7226" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[20px] font-black text-[#0E7490] leading-none">3,452+</span>
+                        <span class="text-[13px] font-bold text-[#F58A3C] leading-tight mt-1">Thú cưng</span>
+                        <span class="text-muted font-semibold text-[11px]">Đã nhận nuôi</span>
+                    </div>
+                </div>
+                <div class="flex items-center mt-1">
+                    <div class="w-[6px] h-[6px] rounded-full bg-[#0E7490]"></div>
+                    <div class="w-16 h-[2px] ml-1" style="background-image: linear-gradient(to right, #0E7490 50%, transparent 50%); background-size: 6px 2px; background-repeat: repeat-x; opacity: 0.3;"></div>
+                </div>
+            </div>
+            <!-- KPI 3 -->
+            <div class="flex flex-col gap-2 w-max">
+                <div class="flex items-center gap-3">
+                    <div class="w-[56px] h-[56px] flex items-center justify-center">
+                        <svg class="w-10 h-10" fill="#0E7490" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[20px] font-black text-[#0E7490] leading-none">1,980+</span>
+                        <span class="text-[13px] font-bold text-[#F58A3C] leading-tight mt-1">Khách hàng</span>
+                        <span class="text-muted font-semibold text-[11px]">Hài lòng</span>
+                    </div>
+                </div>
+                <div class="flex items-center mt-1">
+                    <div class="w-[6px] h-[6px] rounded-full bg-[#F58A3C]"></div>
+                    <div class="w-16 h-[2px] ml-1" style="background-image: linear-gradient(to right, #F58A3C 50%, transparent 50%); background-size: 6px 2px; background-repeat: repeat-x; opacity: 0.3;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="w-full lg:w-1/2 relative flex justify-center items-center mt-2 lg:mt-0 lg:mr-10">
+        <!-- Main Dogs & Cat Image (Using the hero-img.png uploaded by user) -->
+        <img src="{{ asset('images/hero-img.png') }}" class="relative z-30 w-full lg:w-[135%] scale-100 lg:scale-[1.3] h-auto object-contain" alt="Dogs and Cat Waiting for Adoption">
+    </div>
+</section>
+
+<!-- Featured Pets Section -->
+<section class="py-16 lg:py-40 px-6 lg:px-16 max-w-[1400px] mx-auto relative bg-cute-pattern">
+    <div class="flex justify-center md:justify-between items-center mb-8 text-center md:text-left">
+        <h2 class="text-3xl font-black text-dark flex items-center gap-2">
+            Thú cưng đang chờ một mái nhà 
+            <span class="text-primary text-2xl">🐾</span>
+        </h2>
+        <a href="#" class="text-sm font-bold text-secondary hidden md:flex items-center gap-1 hover:underline">
+            Xem tất cả <span>&rarr;</span>
+        </a>
+    </div>
+
+    <!-- Cards container with arrows -->
+    <div class="relative flex items-center gap-4">
+        <button class="arrow-button hidden md:flex absolute -left-5 z-10"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+            <!-- Card 1 -->
+            <div class="pet-card group">
+                <div class="relative mb-4">
+                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=600&auto=format&fit=crop" class="pet-card-img group-hover:scale-105 transition-transform duration-300" alt="Dog">
+                    <div class="absolute -bottom-3 left-4 badge-orange border-2 border-white">Chó</div>
+                </div>
+                <div class="flex justify-between items-start mt-5 px-1">
+                    <div>
+                        <h3 class="text-xl font-black text-dark mb-1">Max</h3>
+                        <p class="text-xs font-bold text-muted mb-2">2 tuổi • Đực</p>
+                        <p class="text-xs font-bold text-dark flex items-center gap-1">
+                            <svg class="w-3 h-3 text-secondary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg> Hà Nội
+                        </p>
+                    </div>
+                    <button class="text-primary hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="#" class="btn-outline-teal text-xs py-1.5 px-6 w-max mx-auto border-[1.5px]">Xem chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="pet-card group">
+                <div class="relative mb-4">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=600&auto=format&fit=crop" class="pet-card-img group-hover:scale-105 transition-transform duration-300" alt="Cat">
+                    <div class="absolute -bottom-3 left-4 badge-teal border-2 border-white">Mèo</div>
+                </div>
+                <div class="flex justify-between items-start mt-5 px-1">
+                    <div>
+                        <h3 class="text-xl font-black text-dark mb-1">Bella</h3>
+                        <p class="text-xs font-bold text-muted mb-2">1.5 tuổi • Cái</p>
+                        <p class="text-xs font-bold text-dark flex items-center gap-1">
+                            <svg class="w-3 h-3 text-secondary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg> Hà Nội
+                        </p>
+                    </div>
+                    <button class="text-primary hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="#" class="btn-outline-teal text-xs py-1.5 px-6 w-max mx-auto border-[1.5px]">Xem chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="pet-card group">
+                <div class="relative mb-4">
+                    <img src="https://images.unsplash.com/photo-1537151608804-ea6f1103033e?q=80&w=600&auto=format&fit=crop" class="pet-card-img group-hover:scale-105 transition-transform duration-300" alt="Dog">
+                    <div class="absolute -bottom-3 left-4 badge-orange border-2 border-white">Chó</div>
+                </div>
+                <div class="flex justify-between items-start mt-5 px-1">
+                    <div>
+                        <h3 class="text-xl font-black text-dark mb-1">Lucky</h3>
+                        <p class="text-xs font-bold text-muted mb-2">3 tuổi • Đực</p>
+                        <p class="text-xs font-bold text-dark flex items-center gap-1">
+                            <svg class="w-3 h-3 text-secondary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg> Đà Nẵng
+                        </p>
+                    </div>
+                    <button class="text-primary hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="#" class="btn-outline-teal text-xs py-1.5 px-6 w-max mx-auto border-[1.5px]">Xem chi tiết</a>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="pet-card group">
+                <div class="relative mb-4">
+                    <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=600&auto=format&fit=crop" class="pet-card-img group-hover:scale-105 transition-transform duration-300" alt="Cat">
+                    <div class="absolute -bottom-3 left-4 badge-teal border-2 border-white">Mèo</div>
+                </div>
+                <div class="flex justify-between items-start mt-5 px-1">
+                    <div>
+                        <h3 class="text-xl font-black text-dark mb-1">Coco</h3>
+                        <p class="text-xs font-bold text-muted mb-2">4 tuổi • Cái</p>
+                        <p class="text-xs font-bold text-dark flex items-center gap-1">
+                            <svg class="w-3 h-3 text-secondary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg> Hải Phòng
+                        </p>
+                    </div>
+                    <button class="text-primary hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="#" class="btn-outline-teal text-xs py-1.5 px-6 w-max mx-auto border-[1.5px]">Xem chi tiết</a>
+                </div>
             </div>
         </div>
         
-        <!-- Desktop Nav -->
-        <nav class="hidden lg:flex items-center gap-8 text-[15px] font-bold text-slate-600">
-            <a href="#" class="px-5 py-2 bg-[#f48c46] text-white rounded-md shadow-sm hover:bg-[#e07b35] transition">Trang Chủ</a>
-            <a href="#" class="hover:text-[#f48c46] transition">Giới Thiệu</a>
-            <a href="#" class="hover:text-[#f48c46] transition">Nhận Nuôi</a>
-            <a href="#" class="hover:text-[#f48c46] transition">Ủng Hộ</a>
-            <a href="#" class="hover:text-[#f48c46] transition">Tình Nguyện</a>
-            <a href="#" class="hover:text-[#f48c46] transition">Tin Tức</a>
-        </nav>
+        <button class="arrow-button hidden md:flex absolute -right-5 z-10"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+    </div>
 
-        <!-- Auth Actions -->
-        @if (Route::has('login'))
-            <div class="hidden md:flex items-center gap-4 text-[14px] font-bold">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 border border-[#f48c46] text-[#f48c46] rounded-md hover:bg-[#f48c46] hover:text-white transition">
-                        Bảng điều khiển
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="px-6 py-2.5 border border-[#f48c46] text-slate-700 rounded-md hover:bg-[#f48c46] hover:text-white transition">
-                        Đăng Nhập
-                    </a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="px-6 py-2.5 bg-[#f48c46] text-white rounded-md hover:bg-[#e07b35] shadow-md shadow-orange-500/20 transition">
-                            Đăng ký
-                        </a>
-                    @endif
-                @endauth
+    <!-- Dots -->
+    <div class="flex justify-center gap-2 mt-8">
+        <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+    </div>
+</section>
+
+<!-- Adoption Process -->
+<section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto relative mt-6 lg:mt-10">
+    <h2 class="text-3xl lg:text-4xl font-black text-dark mb-12 lg:mb-24 flex justify-center md:justify-start items-center gap-3 text-center md:text-left">
+        Quy trình nhận nuôi 
+        <!-- Lucide paw-print outline -->
+        <svg class="w-8 h-8 text-[#0AA5C0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>
+          <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>
+        </svg>
+    </h2>
+    
+    <div class="relative w-full">
+        <!-- Background wavy dashed line -->
+        <div class="absolute top-[55px] left-0 w-full h-[60px] z-0 hidden md:block">
+            <!-- Left Loop Decorative -->
+            <svg class="absolute top-[14px] -left-[24px] w-10 h-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 100,50 C 60,50 30,10 10,30 C -10,50 10,90 40,70 C 70,50 40,30 20,60" stroke="#0AA5C0" stroke-width="5" stroke-dasharray="6 8" stroke-linecap="round" opacity="0.4"/>
+            </svg>
+            <!-- Right Loop Decorative -->
+            <svg class="absolute top-[14px] -right-[24px] w-10 h-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0,50 C 40,50 70,10 90,30 C 110,50 90,90 60,70 C 30,50 60,30 80,60" stroke="#0AA5C0" stroke-width="5" stroke-dasharray="6 8" stroke-linecap="round" opacity="0.4"/>
+            </svg>
+            <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 1000 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-50,100 Q0,0 100,50 T300,50 T500,50 T700,50 T900,50 T1050,100" stroke="#0AA5C0" stroke-width="2.5" stroke-dasharray="6 8" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity="0.4"/>
+            </svg>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-4 relative z-10">
+            <!-- Step 1 -->
+            <div class="flex flex-col items-center text-center relative">
+                <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#FFF5ED] to-[#FFE6D1] shadow-[0_8px_20px_rgba(245,138,60,0.15)] flex items-center justify-center mb-6 relative">
+                    <!-- Heart Search Icon (Lucide Custom) -->
+                    <svg class="w-12 h-12 text-[#F58A3C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15.5 3.5a4.5 4.5 0 0 0-6.36 0L8.5 4.14 7.86 3.5a4.5 4.5 0 0 0-6.36 6.36l7 7 7-7a4.5 4.5 0 0 0 0-6.36Z" transform="translate(1, 1)"/>
+                        <line x1="21" y1="21" x2="15" y2="15" stroke-width="2.5"/>
+                    </svg>
+                </div>
+                <span class="font-black text-[#F58A3C] text-3xl mb-2">01</span>
+                <span class="font-black text-dark text-lg mb-2">Chọn thú cưng</span>
+                <p class="text-sm font-bold text-muted leading-tight px-2">Tìm người bạn phù hợp<br>với bạn</p>
             </div>
-        @endif
-    </header>
-
-    <!-- Main Hero Section -->
-    <main class="flex-grow flex items-center justify-center relative px-6 lg:px-16 py-12 lg:py-0">
-        <div class="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
             
-            <!-- Left: Text Content -->
-            <div class="lg:col-span-5 flex flex-col gap-6">
-                <h1 class="text-6xl lg:text-[76px] font-black leading-[1.1] tracking-tight">
-                    <span class="text-slate-800">Looking for a</span><br />
-                    <span class="text-[#f48c46]">Best friend ?</span>
-                </h1>
-                
-                <p class="text-[17px] text-slate-500 font-semibold mt-2">
-                    Our best beauties are waiting for a home
-                </p>
-
-                <div class="mt-4">
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="inline-flex px-8 py-3.5 bg-[#f48c46] text-white rounded-[10px] text-[17px] font-bold hover:bg-[#e07b35] shadow-lg shadow-orange-500/30 transition transform hover:-translate-y-0.5">
-                            Truy cập hệ thống
-                        </a>
-                    @else
-                        <a href="{{ route('register') }}" class="inline-flex px-8 py-3.5 bg-[#f48c46] text-white rounded-[10px] text-[17px] font-bold hover:bg-[#e07b35] shadow-lg shadow-orange-500/30 transition transform hover:-translate-y-0.5">
-                            Adopt a pet
-                        </a>
-                    @endauth
+            <!-- Step 2 -->
+            <div class="flex flex-col items-center text-center relative">
+                <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#EAF8FA] to-[#D1F0F5] shadow-[0_8px_20px_rgba(10,165,192,0.15)] flex items-center justify-center mb-6 relative">
+                    <!-- Clipboard List (Lucide) -->
+                    <svg class="w-12 h-12 text-[#0AA5C0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>
+                    </svg>
                 </div>
-
-                <!-- Stats Section -->
-                <div class="flex items-center gap-8 lg:gap-12 pt-10 mt-8">
-                    <div class="flex flex-col items-center justify-center">
-                        <span class="text-[22px] font-black text-slate-800">Pets</span>
-                        <span class="text-[34px] font-black text-[#f48c46] mt-1 leading-none">2,300<span class="text-[#0489a9]">+</span></span>
-                    </div>
-                    <div class="w-[2px] h-14 bg-slate-200"></div>
-                    <div class="flex flex-col items-center justify-center">
-                        <span class="text-[22px] font-black text-slate-800">Adopted pets</span>
-                        <span class="text-[34px] font-black text-[#f48c46] mt-1 leading-none">3452<span class="text-[#0489a9]">+</span></span>
-                    </div>
-                    <div class="w-[2px] h-14 bg-slate-200"></div>
-                    <div class="flex flex-col items-center justify-center">
-                        <span class="text-[22px] font-black text-slate-800">Clients</span>
-                        <span class="text-[34px] font-black text-[#f48c46] mt-1 leading-none">1980<span class="text-[#0489a9]">+</span></span>
-                    </div>
-                </div>
+                <span class="font-black text-[#0AA5C0] text-3xl mb-2">02</span>
+                <span class="font-black text-dark text-lg mb-2">Gửi đơn nhận nuôi</span>
+                <p class="text-sm font-bold text-muted leading-tight px-2">Điền thông tin và gửi<br>đơn đăng ký</p>
             </div>
-
-            <!-- Right: Illustration Area -->
-            <div class="lg:col-span-7 relative w-full h-[500px] lg:h-[700px] flex items-end justify-center mt-12 lg:mt-0">
-                
-                <!-- Orange Background Blob -->
-                <div class="absolute w-[85%] h-[85%] bg-[#f48c46] blob-shape -z-10 right-4 top-10"></div>
-                
-                <!-- Teal Decorative Blobs -->
-                <div class="absolute top-10 left-12 w-8 h-12 bg-[#0489a9] rounded-full rotate-[-20deg] -z-10"></div>
-                <div class="absolute top-14 left-[20%] w-10 h-10 bg-[#0489a9] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] -z-10"></div>
-                <div class="absolute top-20 right-10 w-16 h-16 bg-[#0489a9] rounded-[30%_70%_70%_30%/30%_30%_70%_70%] -z-10"></div>
-
-                <!-- Pet Images Placeholder (Giả lập khoảng trống chứa đàn chó mèo) -->
-                <div class="relative z-10 w-[95%] h-[80%] mb-10 flex items-end justify-center">
-                    <div class="w-full h-full bg-white/30 backdrop-blur-sm border-4 border-dashed border-white rounded-[40px] flex flex-col items-center justify-center p-8 shadow-2xl">
-                        <div class="flex gap-4 text-7xl mb-6">
-                            <span>🐈</span>
-                            <span>🐶</span>
-                            <span>🐕</span>
-                            <span>🐩</span>
-                        </div>
-                        <span class="text-slate-800 font-bold text-2xl text-center">
-                            [ Khu Vực Chứa Hình Ảnh ]
-                        </span>
-                        <span class="text-slate-700 font-semibold text-[15px] mt-2 text-center max-w-sm">
-                            Hãy xóa thẻ &lt;div&gt; chứa viền đứt nét này và thay bằng thẻ &lt;img src="..."&gt; chứa ảnh bầy chó mèo đã xóa phông nền (PNG).
-                        </span>
-                    </div>
+            
+            <!-- Step 3 -->
+            <div class="flex flex-col items-center text-center relative">
+                <!-- Decorative Top Ring (From Image Design) -->
+                <div class="absolute -top-[7px] left-1/2 -translate-x-1/2 w-[124px] h-[124px] rounded-full border border-[#F58A3C]/30 z-0"></div>
+                <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#FFF5ED] to-[#FFE6D1] shadow-[0_8px_20px_rgba(245,138,60,0.15)] flex items-center justify-center mb-6 relative z-10">
+                    <!-- Users/Interview (Lucide) -->
+                    <svg class="w-12 h-12 text-[#F58A3C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
                 </div>
-
+                <span class="font-black text-[#F58A3C] text-3xl mb-2">03</span>
+                <span class="font-black text-dark text-lg mb-2">Phỏng vấn</span>
+                <p class="text-sm font-bold text-muted leading-tight px-2">Chúng tôi sẽ liên hệ<br>và phỏng vấn</p>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="flex flex-col items-center text-center relative">
+                <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#EAF8FA] to-[#D1F0F5] shadow-[0_8px_20px_rgba(10,165,192,0.15)] flex items-center justify-center mb-6 relative">
+                    <!-- Clipboard Check (Lucide) -->
+                    <svg class="w-12 h-12 text-[#0AA5C0]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                        <path d="m9 14 2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="font-black text-[#0AA5C0] text-3xl mb-2">04</span>
+                <span class="font-black text-dark text-lg mb-2">Ký hợp đồng</span>
+                <p class="text-sm font-bold text-muted leading-tight px-2">Hoàn tất thủ tục và<br>ký hợp đồng nhận nuôi</p>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="flex flex-col items-center text-center relative">
+                <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#FFF5ED] to-[#FFE6D1] shadow-[0_8px_20px_rgba(245,138,60,0.15)] flex items-center justify-center mb-6 relative">
+                    <!-- Home with Heart (Lucide Custom) -->
+                    <svg class="w-12 h-12 text-[#F58A3C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <path d="M12 17.5l-2.5-2.5a1.5 1.5 0 0 1 2.12-2.12L12 13.5l.38-.38a1.5 1.5 0 0 1 2.12 2.12L12 17.5z"/>
+                    </svg>
+                </div>
+                <span class="font-black text-[#F58A3C] text-3xl mb-2">05</span>
+                <span class="font-black text-dark text-lg mb-2">Đón thú cưng</span>
+                <p class="text-sm font-bold text-muted leading-tight px-2">Đưa bé về nhà và bắt đầu<br>hành trình mới</p>
             </div>
         </div>
-    </main>
+    </div>
+</section>
 
-</body>
-</html>
+<!-- Volunteer Activities -->
+<section class="py-12 lg:py-16 px-6 lg:px-16 max-w-[1400px] mx-auto mt-6 lg:mt-10 bg-cute-pattern">
+    <div class="flex justify-center md:justify-between items-center mb-8 text-center md:text-left">
+        <h2 class="text-3xl font-black text-dark flex items-center gap-2">
+            Những hoạt động tình nguyện <span class="text-secondary text-2xl">💮</span>
+        </h2>
+        <a href="#" class="text-sm font-bold text-secondary hidden md:flex items-center gap-1 hover:underline">
+            Xem tất cả hoạt động <span>&rarr;</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Left Text -->
+        <div class="col-span-1 md:col-span-3 flex flex-col items-center text-center md:items-start md:text-left justify-center">
+            <h3 class="text-xl font-black text-dark mb-4 leading-snug">Mỗi hành động nhỏ đều tạo nên sự thay đổi lớn</h3>
+            <p class="text-sm font-bold text-muted mb-8">Chúng tôi tổ chức nhiều hoạt động cứu hộ, chăm sóc và bảo vệ động vật.</p>
+            <a href="#" class="bg-secondary text-white rounded-full font-bold px-6 py-3 text-sm w-max hover:bg-teal-600 transition-colors">Tham gia cùng chúng tôi</a>
+        </div>
+        
+        <!-- Right Masonry Grid -->
+        <div class="col-span-1 md:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Large vertical -->
+            <div class="relative rounded-2xl overflow-hidden md:col-span-1 md:row-span-2 group h-[300px] md:h-full">
+                <img src="https://images.unsplash.com/photo-1601758177266-bc599de87707?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Volunteer">
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
+                    <span class="text-xs font-bold text-dark">Cứu hộ động vật bị bỏ rơi</span>
+                </div>
+            </div>
+            <!-- Small 1 -->
+            <div class="relative rounded-2xl overflow-hidden group h-[180px]">
+                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Care">
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
+                    <span class="text-xs font-bold text-dark">Chăm sóc & phục hồi sức khỏe</span>
+                </div>
+            </div>
+            <!-- Small 2 -->
+            <div class="relative rounded-2xl overflow-hidden group h-[180px]">
+                <img src="https://images.unsplash.com/photo-1522276498395-f4f68f7f8454?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Event">
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
+                    <span class="text-xs font-bold text-dark">Tổ chức ngày hội nhận nuôi</span>
+                </div>
+            </div>
+            <!-- Small 3 -->
+            <div class="relative rounded-2xl overflow-hidden group h-[180px]">
+                <img src="https://images.unsplash.com/photo-1511125357778-43ec75f56b3e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Transport">
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
+                    <span class="text-xs font-bold text-dark">Vận chuyển đến mái ấm mới</span>
+                </div>
+            </div>
+            <!-- Small 4 -->
+            <div class="relative rounded-2xl overflow-hidden group h-[180px]">
+                <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Community">
+                <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
+                    <span class="text-xs font-bold text-dark">Lan tỏa yêu thương</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Full Width KPIs Line -->
+<section class="py-8 lg:py-12 px-6 lg:px-16 mt-6 lg:mt-10 border-y border-gray-100 bg-white shadow-sm relative z-20">
+    <div class="max-w-[1200px] mx-auto flex flex-wrap justify-between gap-6 md:gap-0 items-center divide-x-0 md:divide-x divide-gray-100">
+        <div class="flex items-center gap-3 px-4 flex-1 justify-center">
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-2xl">👥</div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black text-secondary">150+</span>
+                <span class="text-[11px] font-bold text-dark uppercase tracking-tight">Tình nguyện viên</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 px-4 flex-1 justify-center">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl">❤️</div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black text-primary">500+</span>
+                <span class="text-[11px] font-bold text-dark uppercase tracking-tight">Ca cứu hộ thành công</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 px-4 flex-1 justify-center">
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-2xl">🐾</div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black text-secondary">2,300+</span>
+                <span class="text-[11px] font-bold text-dark uppercase tracking-tight">Thú cưng được chăm sóc</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 px-4 flex-1 justify-center">
+            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl">🏠</div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black text-primary">1,800+</span>
+                <span class="text-[11px] font-bold text-dark uppercase tracking-tight">Thú cưng tìm được nhà mới</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 px-4 flex-1 justify-center">
+            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-2xl">🤝</div>
+            <div class="flex flex-col">
+                <span class="text-2xl font-black text-secondary">25+</span>
+                <span class="text-[11px] font-bold text-dark uppercase tracking-tight">Đối tác & tổ chức</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Story -->
+<section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1200px] mx-auto mt-6 lg:mt-10 bg-cute-pattern">
+    <h2 class="text-3xl font-black text-dark mb-10 flex justify-center lg:justify-start items-center gap-2 text-center lg:text-left">
+        <span class="text-primary text-2xl">❤️</span> Câu chuyện thay đổi cuộc đời <span class="text-secondary text-2xl">💮</span>
+    </h2>
+    
+    <div class="flex flex-col lg:flex-row items-center gap-16 relative">
+        <!-- Abstract decorations -->
+        <svg class="absolute top-0 right-[30%] w-16 h-16 text-primary z-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <svg class="absolute bottom-0 right-[10%] w-12 h-12 text-secondary opacity-50 z-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+
+        <!-- Image Slider container -->
+        <div class="w-full lg:w-[55%] relative z-10 flex items-center">
+            <button class="arrow-button absolute -left-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+            
+            <div class="relative w-full h-[350px] rounded-[40px] overflow-hidden flex border-4 border-white shadow-xl">
+                <!-- Before -->
+                <div class="w-1/2 relative grayscale relative border-r-2 border-white">
+                    <img src="https://images.unsplash.com/photo-1533479133446-953e5eaf8802?q=80&w=500&auto=format&fit=crop" class="w-full h-full object-cover" alt="Before">
+                    <div class="absolute bottom-6 left-6 text-white font-black text-xl tracking-widest">TRƯỚC</div>
+                </div>
+                <!-- After -->
+                <div class="w-1/2 relative border-l-2 border-white">
+                    <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=500&auto=format&fit=crop" class="w-full h-full object-cover" alt="After">
+                    <div class="absolute bottom-6 left-6 text-white font-black text-xl tracking-widest">SAU</div>
+                </div>
+            </div>
+            
+            <button class="arrow-button absolute -right-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+        </div>
+        
+        <!-- Text Content -->
+        <div class="w-full lg:w-[45%] flex flex-col items-center text-center lg:items-start lg:text-left z-10">
+            <h3 class="text-3xl font-black text-dark mb-4 leading-tight">Từ bị bỏ rơi đến<br>hạnh phúc viên mãn</h3>
+            <p class="text-sm font-bold text-muted mb-8 leading-relaxed">
+                Bim được cứu khi đang bị thương nặng và sợ hãi. Sau 3 tháng chăm sóc, Bim đã tìm được gia đình yêu thương và một cuộc sống hạnh phúc.
+            </p>
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-lg">💙</div>
+                <span class="font-bold text-dark text-sm">Gia đình anh Nam</span>
+            </div>
+            
+            <!-- Happy family photo collage overlapping slightly -->
+            <div class="mt-8 rounded-[40px] overflow-hidden w-[80%] h-40 border-4 border-white shadow-md relative right-[-20%]">
+                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Happy Family">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Donation Section (Full Width Beige Background) -->
+<section class="donation-section py-12 lg:py-20 px-6 lg:px-16 w-full mt-10 lg:mt-20 relative overflow-hidden">
+    <!-- Top & bottom wave borders could be achieved via pseudo elements or SVG masks. Keeping it solid for simplicity, matching the image. -->
+    <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+        <!-- Left -->
+        <div class="flex flex-col items-center text-center lg:items-start lg:text-left justify-center">
+            <h2 class="text-4xl font-black text-dark mb-4 leading-tight">Ủng hộ để chúng tôi<br>cứu thêm nhiều sinh mạng</h2>
+            <p class="text-sm font-bold text-muted mb-8 leading-relaxed border-l-4 border-primary pl-4">
+                Sự đóng góp của bạn giúp chúng tôi có thêm nguồn lực<br>để cứu hộ, chăm sóc và tìm mái ấm cho các bé.
+            </p>
+            <a href="{{ route('frontend.donations.index') }}" class="btn-primary w-max">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                Ủng hộ ngay
+            </a>
+        </div>
+        
+        <!-- Right -->
+        <div class="bg-white/80 backdrop-blur-sm p-8 rounded-[30px] border border-white shadow-soft relative">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                <button class="py-3 bg-white border border-gray-200 text-dark font-black rounded-xl text-sm shadow-sm">50.000đ</button>
+                <button class="py-3 bg-primary border border-primary text-white font-black rounded-xl text-sm shadow-md shadow-orange-500/30">100.000đ</button>
+                <button class="py-3 bg-white border border-gray-200 text-dark font-black rounded-xl text-sm shadow-sm">200.000đ</button>
+                <button class="py-3 bg-white border border-gray-200 text-dark font-black rounded-xl text-sm shadow-sm">500.000đ</button>
+                <button class="py-3 bg-white border border-gray-200 text-dark font-black rounded-xl text-sm shadow-sm md:col-span-4 lg:col-span-1">Khác</button>
+            </div>
+            
+            <div class="mb-2 flex justify-between items-end">
+                <span class="text-sm font-bold text-dark">Mục tiêu tháng này</span>
+                <span class="text-2xl font-black text-dark">75%</span>
+            </div>
+            <div class="w-full bg-white rounded-full h-4 mb-3 border border-gray-100 p-0.5">
+                <div class="bg-primary h-full rounded-full" style="width: 75%"></div>
+            </div>
+            <p class="text-xs font-bold text-dark flex items-center gap-1">
+                Đã quyên góp: <span class="font-black">37.500.000đ / 50.000.000đ</span>
+            </p>
+            
+            <!-- Floating pets on the right side of the donation box -->
+            <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=400&auto=format&fit=crop" class="absolute -right-10 -bottom-10 w-48 h-auto object-cover rounded-[30px] border-4 border-white shadow-lg rotate-3" alt="Pets overlay">
+        </div>
+    </div>
+</section>
+
+<!-- News Section -->
+<section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto bg-cute-pattern">
+    <div class="flex justify-center md:justify-between items-end mb-10 text-center md:text-left">
+        <h2 class="text-3xl font-black text-dark">Tin tức mới nhất</h2>
+        <a href="#" class="text-sm font-bold text-secondary hidden md:flex items-center gap-1 hover:underline">
+            Xem tất cả <span>&rarr;</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- News 1 -->
+        <a href="#" class="pet-card group p-4 flex flex-col">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
+                <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Chăm sóc thú cưng</div>
+            </div>
+            <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">5 lưu ý khi đưa chó mèo mới về nhà</h3>
+            <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
+                <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 12/06/2026</span>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+        </a>
+        <!-- News 2 -->
+        <a href="#" class="pet-card group p-4 flex flex-col">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1522276498395-f4f68f7f8454?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
+                <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Tin tức</div>
+            </div>
+            <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Ngày hội nhận nuôi thú cưng tháng 6/2026</h3>
+            <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
+                <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 09/06/2026</span>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+        </a>
+        <!-- News 3 -->
+        <a href="#" class="pet-card group p-4 flex flex-col">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
+                <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Câu chuyện</div>
+            </div>
+            <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Hành trình giải cứu bé mèo kẹt trong cống</h3>
+            <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
+                <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 02/06/2026</span>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+        </a>
+        <!-- News 4 -->
+        <a href="#" class="pet-card group p-4 flex flex-col">
+            <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
+                <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Hoạt động</div>
+            </div>
+            <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Chúng tôi đã tổ chức buổi tiêm phòng miễn phí</h3>
+            <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
+                <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 28/05/2026</span>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+        </a>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1200px] mx-auto">
+    <h2 class="text-3xl font-black text-dark mb-12 flex justify-center md:justify-start items-center gap-2 text-center md:text-left">
+        <span class="text-secondary text-2xl">💮</span> Câu hỏi thường gặp
+    </h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Accordion List -->
+        <div class="lg:col-span-2 flex flex-col gap-3">
+            <!-- FAQ 1 -->
+            <div x-data="{ open: false }" class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                <button @click="open = !open" class="flex justify-between items-center w-full px-6 py-5 text-left font-black text-dark hover:text-primary transition-colors text-sm">
+                    Tôi có cần trả phí khi nhận nuôi không?
+                    <svg class="w-5 h-5 transition-transform" :class="open ? 'rotate-180 text-primary' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open" class="px-6 pb-5 text-muted text-sm font-bold leading-relaxed border-t border-gray-50 pt-4" style="display: none;">
+                    Có, một khoản phí nhỏ được yêu cầu để hỗ trợ chi phí y tế ban đầu như tiêm phòng, tẩy giun và triệt sản.
+                </div>
+            </div>
+            <!-- FAQ 2 -->
+            <div x-data="{ open: false }" class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                <button @click="open = !open" class="flex justify-between items-center w-full px-6 py-5 text-left font-black text-dark hover:text-primary transition-colors text-sm">
+                    Ai có thể nhận nuôi thú cưng?
+                    <svg class="w-5 h-5 transition-transform" :class="open ? 'rotate-180 text-primary' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open" class="px-6 pb-5 text-muted text-sm font-bold leading-relaxed border-t border-gray-50 pt-4" style="display: none;">
+                    Bất kỳ ai trên 18 tuổi, có nguồn thu nhập ổn định và có khả năng cũng như môi trường sống phù hợp.
+                </div>
+            </div>
+            <!-- FAQ 3 -->
+            <div x-data="{ open: false }" class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                <button @click="open = !open" class="flex justify-between items-center w-full px-6 py-5 text-left font-black text-dark hover:text-primary transition-colors text-sm">
+                    Thời gian xét duyệt đơn nhận nuôi là bao lâu?
+                    <svg class="w-5 h-5 transition-transform" :class="open ? 'rotate-180 text-primary' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open" class="px-6 pb-5 text-muted text-sm font-bold leading-relaxed border-t border-gray-50 pt-4" style="display: none;">
+                    Thường mất từ 3 đến 5 ngày làm việc để chúng tôi xem xét đơn và sắp xếp phỏng vấn.
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Box -->
+        <div class="lg:col-span-1">
+            <div class="bg-secondary rounded-[24px] p-8 h-full text-white flex flex-col justify-center items-center text-center shadow-lg relative overflow-hidden">
+                <svg class="absolute -bottom-10 -right-10 w-40 h-40 opacity-10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                <h3 class="text-lg font-black mb-2">Không tìm thấy câu trả lời?</h3>
+                <p class="text-xs font-bold text-white/80 mb-6 leading-relaxed">Liên hệ với chúng tôi để được hỗ trợ trực tiếp nhé!</p>
+                <a href="#" class="bg-white text-secondary font-black text-sm px-6 py-3 rounded-full hover:bg-gray-50 transition-colors shadow-sm">Liên hệ ngay</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@endsection
+

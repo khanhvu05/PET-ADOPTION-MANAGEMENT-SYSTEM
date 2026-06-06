@@ -1,133 +1,94 @@
 <x-admin-layout>
+    @section('title', 'Tổng Quan')
+
     <!-- Main Content Area -->
     <div class="space-y-6">
         
         <!-- Metrics Grid (4 columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <!-- Metric Card 1 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Total Revenue</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">$124,500</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[40%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[30%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[70%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[85%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[95%] bg-orange-brand rounded-sm"></div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tổng Thú Cưng</p>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalPets) }}</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
                     </div>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        12.5% vs last month
-                    </div>
+                <div class="flex items-center text-xs font-semibold relative z-10">
+                    <span class="{{ $petsPercent > 0 ? 'text-emerald-600' : 'text-slate-500' }} flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
+                        {{ $availablePets }} sẵn sàng
+                    </span>
+                    <span class="text-slate-400 ml-2 font-medium truncate">/ tổng số</span>
                 </div>
             </div>
 
             <!-- Metric Card 2 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Active Customers</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">1,432</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[50%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[40%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[60%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[75%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[90%] bg-orange-brand rounded-sm"></div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Đơn Nhận Nuôi</p>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalAdoptions) }}</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     </div>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        4.2% vs last month
-                    </div>
+                <div class="flex items-center text-xs font-semibold relative z-10">
+                    <span class="{{ $pendingAdoptions > 0 ? 'text-amber-600' : 'text-slate-500' }} flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
+                        {{ $pendingAdoptions }} chờ duyệt
+                    </span>
+                    <span class="text-slate-400 ml-2 font-medium truncate">/ tổng số</span>
                 </div>
             </div>
 
             <!-- Metric Card 3 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">New Signups</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">384</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[60%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[50%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[40%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[30%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[20%] bg-orange-brand rounded-sm"></div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tổng Quyên Góp</p>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalDonations, 0, ',', '.') }}đ</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-red-500">
-                        <svg class="w-3 h-3 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        -2.4% vs last month
-                    </div>
+                <div class="flex items-center text-xs font-semibold relative z-10">
+                    <span class="text-emerald-600 flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
+                        + {{ number_format($thisMonthDonations, 0, ',', '.') }}đ
+                    </span>
+                    <span class="text-slate-400 ml-2 font-medium truncate">tháng này</span>
                 </div>
             </div>
 
             <!-- Metric Card 4 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between shadow-sm">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Conversion Rate</span>
-                <div class="flex items-end justify-between mb-4">
-                    <span class="text-2xl font-semibold text-slate-900">3.8%</span>
-                    
-                    <!-- Sparkline -->
-                    <div class="flex items-end gap-0.5 h-10">
-                        <div class="w-[6px] h-[30%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[45%] bg-orange-brand/40 rounded-sm"></div>
-                        <div class="w-[6px] h-[65%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[70%] bg-orange-brand rounded-sm"></div>
-                        <div class="w-[6px] h-[85%] bg-orange-brand rounded-sm"></div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Người Dùng</p>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalUsers) }}</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-1 text-xs font-medium text-green-500">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                        1.1% vs last month
-                    </div>
+                <div class="flex items-center text-xs font-semibold relative z-10">
+                    <span class="text-emerald-600 flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
+                        + {{ number_format($recentUsers) }} 
+                    </span>
+                    <span class="text-slate-400 ml-2 font-medium truncate">tháng này</span>
                 </div>
             </div>
         </div>
 
         <!-- Charts Section (12 columns) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
             <!-- Main Chart: Sales Trend -->
             <div class="lg:col-span-8 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-base font-semibold text-slate-900">Sales Trend</h3>
-                    <div x-data="{ open: false, selected: 'Last 6 Months', options: ['Last 6 Months', 'This Year'] }" class="relative w-[130px]">
-                        <button @click="open = !open" @click.away="open = false" 
-                                class="w-full flex items-center justify-between text-xs font-semibold text-slate-700 bg-slate-50/50 border border-slate-200/80 rounded-[10px] px-3 py-1.5 hover:bg-slate-100 transition-all focus:outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20 cursor-pointer shadow-sm">
-                            <span x-text="selected"></span>
-                            <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        
-                        <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="transform opacity-0 scale-95"
-                             x-transition:enter-end="transform opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="transform opacity-100 scale-100"
-                             x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-20 py-1"
-                             style="display: none;">
-                            <template x-for="option in options" :key="option">
-                                <button @click="selected = option; open = false" 
-                                        class="w-full text-left px-3 py-2 text-xs font-medium transition-colors"
-                                        :class="selected === option ? 'bg-orange-brand/10 text-orange-brand' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'">
-                                    <span x-text="option"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
+                    <h3 class="text-base font-semibold text-slate-900">Thống Kê Nhận Nuôi (6 Tháng)</h3>
                 </div>
                 
                 <!-- Chart Area -->
@@ -139,7 +100,7 @@
             <!-- Secondary Chart: Revenue Breakdown -->
             <div class="lg:col-span-4 bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-base font-semibold text-slate-900">Revenue Breakdown</h3>
+                    <h3 class="text-base font-semibold text-slate-900">Phân Bố Giống Loài</h3>
                 </div>
                 
                 <div class="flex-1 flex flex-col justify-center mb-6">
@@ -149,10 +110,10 @@
                     </div>
                 </div>
 
-                <!-- AI Insight Bar -->
+                <!-- Insight Bar -->
                 <div class="mt-auto bg-slate-50 border border-slate-200 rounded-lg p-3 flex items-center gap-3">
-                    <svg class="w-4 h-4 text-orange-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-                    <span class="text-[11px] text-slate-600 font-medium leading-tight">Subscriptions are trending 15% higher this week. Consider promoting yearly plans.</span>
+                    <svg class="w-4 h-4 text-orange-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-[11px] text-slate-600 font-medium leading-tight">Biểu đồ thể hiện tỷ lệ số lượng thú cưng theo giống loài hiện có trong hệ thống.</span>
                 </div>
             </div>
         </div>
@@ -161,115 +122,84 @@
         <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
             <!-- Table Header -->
             <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h3 class="text-base font-semibold text-slate-900">Recent Transactions</h3>
+                <h3 class="text-base font-semibold text-slate-900">Đơn Nhận Nuôi Gần Đây</h3>
                 <div class="flex items-center gap-3">
-                    <div class="relative">
-                        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        <input type="text" placeholder="Search orders..." class="w-full sm:w-64 pl-9 pr-4 py-2 bg-slate-50/50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-orange-brand focus:ring-4 focus:ring-orange-brand/10 focus:bg-white transition-all shadow-sm">
-                    </div>
-                    <button class="bg-orange-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-500 hover:shadow-md hover:-translate-y-0.5 transition-all shadow-sm shrink-0">
-                        Add Transaction
-                    </button>
+                    <a href="{{ route('admin.adoptions.index') }}" class="bg-orange-brand text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-orange-500 hover:shadow-md hover:-translate-y-0.5 transition-all shadow-sm shrink-0">
+                        Xem Tất Cả
+                    </a>
                 </div>
             </div>
 
             <!-- Table -->
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr class="bg-slate-50/50">
-                            <th class="py-3 px-5 border-b border-slate-100 w-12">
-                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-orange-brand shadow-sm focus:ring-orange-brand focus:ring-2 focus:ring-offset-1 transition-all cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-orange-brand/50">
-                            </th>
-                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">ID</th>
-                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</th>
-                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Product</th>
-                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
-                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Total</th>
+                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Mã Đơn</th>
+                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Người Đăng Ký</th>
+                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Thú Cưng</th>
+                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Trạng Thái</th>
+                            <th class="py-3 px-5 border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-500">Ngày Đăng Ký</th>
                             <th class="py-3 px-5 border-b border-slate-100 w-12"></th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
-                        <!-- Row 1 -->
+                        @forelse($recentApplications as $app)
                         <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
+                            <td class="py-3 px-5 font-mono text-slate-500 text-xs">#{{ substr($app->Ma_don, 0, 8) }}</td>
+                            <td class="py-3 px-5 font-medium text-slate-900">{{ $app->nguoiDung->Ho_ten ?? 'N/A' }}</td>
+                            <td class="py-3 px-5 text-slate-500">{{ $app->thuCung->Ten ?? 'N/A' }}</td>
                             <td class="py-3 px-5">
-                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-orange-brand shadow-sm focus:ring-orange-brand focus:ring-2 focus:ring-offset-1 transition-all cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-orange-brand/50">
-                            </td>
-                            <td class="py-3 px-5 font-mono text-slate-500 text-xs">#TRX-8492</td>
-                            <td class="py-3 px-5 font-medium text-slate-900">Acme Corp</td>
-                            <td class="py-3 px-5 text-slate-500">Enterprise License</td>
-                            <td class="py-3 px-5">
-                                <!-- Success Badge Pill -->
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-green-500/10 text-green-600 border border-green-500/20">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                    Success
-                                </span>
-                            </td>
-                            <td class="py-3 px-5 font-medium text-slate-900">$2,400.00</td>
-                            <td class="py-3 px-5">
-                                <button class="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
+                                @php
+                                    $statusColors = [
+                                        'pending' => 'bg-amber-500/10 text-amber-600 border-amber-500/20 dot-amber-500',
+                                        'approved' => 'bg-green-500/10 text-green-600 border-green-500/20 dot-green-500',
+                                        'rejected' => 'bg-red-500/10 text-red-600 border-red-500/20 dot-red-500',
+                                        'cancelled' => 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500',
+                                        'cho_phong_van' => 'bg-blue-500/10 text-blue-600 border-blue-500/20 dot-blue-500',
+                                        'hoan_thanh' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dot-emerald-500',
+                                    ];
+                                    $colorClass = $statusColors[$app->Trang_thai] ?? 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500';
+                                    $parts = explode(' dot-', $colorClass);
+                                    $badgeColor = $parts[0];
+                                    $dotColor = 'bg-' . ($parts[1] ?? 'slate-500');
 
-                        <!-- Row 2 -->
-                        <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
-                            <td class="py-3 px-5">
-                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-orange-brand shadow-sm focus:ring-orange-brand focus:ring-2 focus:ring-offset-1 transition-all cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-orange-brand/50">
-                            </td>
-                            <td class="py-3 px-5 font-mono text-slate-500 text-xs">#TRX-8491</td>
-                            <td class="py-3 px-5 font-medium text-slate-900">Globex Inc</td>
-                            <td class="py-3 px-5 text-slate-500">Pro Plan (Yearly)</td>
-                            <td class="py-3 px-5">
-                                <!-- Pending Badge Pill -->
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-500/10 text-amber-600 border border-amber-500/20">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending
+                                    $statusLabels = [
+                                        'pending' => 'Chờ duyệt',
+                                        'approved' => 'Đã duyệt',
+                                        'rejected' => 'Từ chối',
+                                        'cancelled' => 'Đã hủy',
+                                        'cho_phong_van' => 'Chờ phỏng vấn',
+                                        'hoan_thanh' => 'Hoàn thành'
+                                    ];
+                                    $label = $statusLabels[$app->Trang_thai] ?? $app->Trang_thai;
+                                @endphp
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border {{ $badgeColor }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }}"></span>
+                                    {{ $label }}
                                 </span>
                             </td>
-                            <td class="py-3 px-5 font-medium text-slate-900">$990.00</td>
+                            <td class="py-3 px-5 font-medium text-slate-900">{{ $app->Ngay_tao->format('d/m/Y') }}</td>
                             <td class="py-3 px-5">
-                                <button class="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                                </button>
+                                <a href="{{ route('admin.adoptions.show', $app->Ma_don) }}" class="text-slate-400 hover:text-slate-600 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                </a>
                             </td>
                         </tr>
-
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors group">
-                            <td class="py-3 px-5">
-                                <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-orange-brand shadow-sm focus:ring-orange-brand focus:ring-2 focus:ring-offset-1 transition-all cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-orange-brand/50">
-                            </td>
-                            <td class="py-3 px-5 font-mono text-slate-500 text-xs">#TRX-8490</td>
-                            <td class="py-3 px-5 font-medium text-slate-900">Soylent Corp</td>
-                            <td class="py-3 px-5 text-slate-500">Starter Plan (Monthly)</td>
-                            <td class="py-3 px-5">
-                                <!-- Refunded Badge Pill -->
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-red-500/10 text-red-600 border border-red-500/20">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                    Refunded
-                                </span>
-                            </td>
-                            <td class="py-3 px-5 font-medium text-slate-900">-$49.00</td>
-                            <td class="py-3 px-5">
-                                <button class="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                                </button>
-                            </td>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-500">Không có đơn nhận nuôi nào gần đây.</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
             
-            <!-- Table Footer / Pagination mock -->
-            <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>Showing 1 to 3 of 12 entries</span>
-                <div class="flex gap-1.5">
-                    <button class="px-3 py-1.5 border border-slate-200 rounded-md hover:bg-slate-50 hover:border-slate-300 text-slate-600 font-medium transition-colors shadow-sm">Prev</button>
-                    <button class="px-3 py-1.5 border border-slate-200 rounded-md hover:bg-slate-50 hover:border-slate-300 text-slate-600 font-medium transition-colors shadow-sm">Next</button>
-                </div>
+            @if($recentApplications->count() >= 5)
+            <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-center text-xs text-slate-500">
+                <a href="{{ route('admin.adoptions.index') }}" class="px-3 py-1.5 text-orange-brand font-medium hover:underline transition-colors">Xem toàn bộ danh sách</a>
             </div>
+            @endif
         </div>
 
     </div>
@@ -282,6 +212,11 @@
                 return;
             }
 
+            // Data passed from controller
+            let chartLabels = {!! json_encode($chartLabels) !!};
+            let adoptionsData = {!! json_encode($adoptionsTrendData) !!};
+            let petBreakdownData = {!! json_encode($petBreakdownData) !!};
+
             // Chart Defaults for Premium Look
             Chart.defaults.font.family = "'General Sans', 'Nunito', ui-sans-serif, system-ui, sans-serif";
             Chart.defaults.color = '#64748b'; // slate-500
@@ -292,12 +227,12 @@
             new Chart(salesCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: chartLabels,
                     datasets: [
                         {
                             type: 'line',
-                            label: 'Trend',
-                            data: [14000, 22000, 16000, 28000, 32000, 19000],
+                            label: 'Xu hướng',
+                            data: adoptionsData,
                             borderColor: '#3f899a', // sidebar-blue
                             borderWidth: 2,
                             borderDash: [5, 5],
@@ -312,8 +247,8 @@
                         },
                         {
                             type: 'bar',
-                            label: 'Sales',
-                            data: [14000, 22000, 16000, 28000, 32000, 19000],
+                            label: 'Đơn nhận nuôi',
+                            data: adoptionsData,
                             backgroundColor: 'rgba(232, 130, 42, 0.6)', // Richer orange as requested
                             hoverBackgroundColor: '#e8822a', // Solid brand orange on hover
                             borderRadius: 6,
@@ -343,7 +278,7 @@
                             },
                             callbacks: {
                                 label: function(context) {
-                                    return 'Sales: $' + context.parsed.y.toLocaleString();
+                                    return 'Số đơn: ' + context.parsed.y;
                                 }
                             }
                         }
@@ -357,9 +292,7 @@
                                 borderDash: [5, 5]
                             },
                             ticks: {
-                                callback: function(value) {
-                                    return '$' + (value / 1000) + 'k';
-                                },
+                                precision: 0,
                                 padding: 10
                             },
                             border: { display: false }
@@ -369,7 +302,7 @@
                             ticks: {
                                 font: { size: 10, weight: 'bold' },
                                 color: function(context) {
-                                    return context.index === 4 ? '#e8822a' : '#64748b';
+                                    return context.index === 5 ? '#e8822a' : '#64748b'; // Highlight current month
                                 }
                             },
                             border: { display: false }
@@ -383,9 +316,9 @@
             new Chart(revenueCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Subscriptions', 'One-time Sales', 'Services'],
+                    labels: ['Chó', 'Mèo', 'Khác'],
                     datasets: [{
-                        data: [65, 25, 10],
+                        data: petBreakdownData,
                         backgroundColor: [
                             '#e8822a', 
                             'rgba(232, 130, 42, 0.7)',
@@ -414,7 +347,7 @@
                             bodyFont: { size: 13, weight: 'bold' },
                             callbacks: {
                                 label: function(context) {
-                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                    return ' ' + context.label + ': ' + context.parsed + ' thú cưng';
                                 }
                             }
                         }
