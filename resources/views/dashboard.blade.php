@@ -331,8 +331,8 @@
                     datasets: [{
                         label: 'Số tiền quyên góp',
                         data: campaignData,
-                        backgroundColor: '#e8822a', // orange-brand
-                        hoverBackgroundColor: '#d97706',
+                        backgroundColor: '#fdba74', // lighter orange
+                        hoverBackgroundColor: '#fb923c',
                         borderRadius: 6,
                         barPercentage: 0.5,
                     }]
