@@ -12,21 +12,41 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
-        return view('admin.settings.index', compact('settings'));
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->except(['_token', '_method']);
-
-        foreach ($data as $key => $value) {
-            \App\Models\Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => is_array($value) ? json_encode($value) : $value]
-            );
+        $users = request()->user()->isAdmin() ? \App\Models\User::all() : collect();
+        
+        $chatboxService = app(\App\Services\ChatboxService::class);
+        $chatboxSettings = $chatboxService->getSettings();
+        
+        // Tính lượng token đã sử dụng của mỗi user trong 7 ngày gần đây
+        $sevenDaysAgo = time() - (7 * 24 * 60 * 60);
+        $userUsageMap = [];
+        foreach ($chatboxSettings['userTokenUsage'] ?? [] as $usage) {
+            if (($usage['timestamp'] ?? 0) >= $sevenDaysAgo) {
+                $uid = $usage['userId'];
+                $userUsageMap[$uid] = ($userUsageMap[$uid] ?? 0) + ($usage['tokens'] ?? 0);
+            }
         }
 
-        return redirect()->back()->with('success', 'Cài đặt đã được lưu thành công.');
+        $roleLimits = $chatboxSettings['weeklyRoleLimits'] ?? [
+            'admin' => 200000,
+            'staff' => 100000,
+            'user' => 50000
+        ];
+        foreach ($users as $user) {
+            $used = $userUsageMap[$user->Ma_nguoi_dung] ?? 0;
+            $user->chatbox_used_tokens = $used;
+            
+            $role = 'user';
+            if ($user->hasRole('admin')) {
+                $role = 'admin';
+            } elseif ($user->hasRole('staff')) {
+                $role = 'staff';
+            }
+            
+            $limit = $roleLimits[$role] ?? ($chatboxSettings['weeklyTokenLimit'] ?? 50000);
+            $user->chatbox_remaining_tokens = max(0, $limit - $used);
+        }
+
+        return view('admin.settings.index', compact('users', 'chatboxSettings'));
     }
 }

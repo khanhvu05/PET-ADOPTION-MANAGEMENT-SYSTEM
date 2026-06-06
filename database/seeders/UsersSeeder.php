@@ -96,22 +96,21 @@ class UsersSeeder extends Seeder
 
         $userRoleMap = [];
 
-        foreach ($users as $user) {
-            $role = $user['role'];
-            unset($user['role']);
+        foreach ($users as $userData) {
+            $role = $userData['role'];
+            unset($userData['role']);
 
-            DB::table('users')->insert($user);
+            DB::table('users')->insert($userData);
 
-            // Gán vai trò
-            DB::table('user_roles')->insert([
-                'Ma_nguoi_dung' => $user['Ma_nguoi_dung'],
-                'Ma_vai_tro'    => ($role === 'admin') ? $adminRoleId : $userRoleId,
-                'Nguoi_cap'     => null,
-                'Thoi_diem_cap' => now(),
-                'Ngay_het_han'  => null,
-            ]);
+            // Gán vai trò qua Spatie
+            $userModel = \App\Models\User::find($userData['Ma_nguoi_dung']);
+            if ($role === 'admin') {
+                $userModel->assignRole('admin');
+            } else {
+                $userModel->assignRole('customer');
+            }
 
-            $userRoleMap[$role][] = $user['Ma_nguoi_dung'];
+            $userRoleMap[$role][] = $userData['Ma_nguoi_dung'];
         }
 
         // Cache admin ID và user IDs để seeders khác dùng

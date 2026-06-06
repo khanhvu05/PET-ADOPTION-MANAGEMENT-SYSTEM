@@ -92,6 +92,16 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Cài đặt
     Route::resource('admin/settings', \App\Http\Controllers\Admin\SettingController::class, ['as' => 'admin']);
+
+    // Cấu hình Chatbox AI (Admin)
+    Route::post('admin/chatbox/settings/limit', [\App\Http\Controllers\ChatboxController::class, 'updateLimit'])->name('admin.chatbox.limit.update');
+    Route::post('admin/chatbox/settings/keys', [\App\Http\Controllers\ChatboxController::class, 'addKey'])->name('admin.chatbox.keys.add');
+    Route::delete('admin/chatbox/settings/keys', [\App\Http\Controllers\ChatboxController::class, 'deleteKey'])->name('admin.chatbox.keys.delete');
 });
+
+// API Chatbox Message (Authenticated Users)
+Route::post('/chatbox/message', [\App\Http\Controllers\ChatboxController::class, 'sendMessage'])
+    ->middleware('auth')
+    ->name('chatbox.message');
 
 require __DIR__.'/auth.php';
