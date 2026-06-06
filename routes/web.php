@@ -28,7 +28,7 @@ Route::get('/ung-ho/thuc-hien', [FrontendDonationController::class, 'process'])-
 Route::get('/ung-ho/thuc-hien/{campaignId}', [FrontendDonationController::class, 'process'])->name('frontend.donations.process.campaign');
 
 // Gửi đơn nhận nuôi + lịch sử (cần đăng nhập)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Gửi đơn nhận nuôi
     Route::get('/nhan-nuoi/{id}/dang-ky', [AdoptionApplicationController::class, 'create'])
         ->name('frontend.adoptions.create');

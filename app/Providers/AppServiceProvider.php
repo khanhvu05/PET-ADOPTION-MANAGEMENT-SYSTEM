@@ -39,5 +39,10 @@ class AppServiceProvider extends ServiceProvider
                 $apiKey
             ));
         });
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\PasswordReset::class,
+            \App\Listeners\SendPasswordResetNotification::class
+        );
     }
 }

@@ -17,7 +17,10 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-bg-dark text-white min-h-screen relative flex flex-col items-center justify-center p-2">
+<body class="font-sans antialiased text-white min-h-screen relative flex flex-col items-center justify-center p-2 bg-cover bg-center bg-no-repeat" style="background-image: url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1920&auto=format&fit=crop');">
+    
+    <!-- Dark Overlay for better readability -->
+    <div class="absolute inset-0 bg-[#121212]/80 backdrop-blur-[2px] z-0"></div>
 
     <!-- Back Button (Top Left) -->
     <a href="/" class="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 bg-black/40 hover:bg-black/60 rounded-sm text-white text-sm font-bold transition-all duration-200 backdrop-blur-md">
