@@ -98,7 +98,7 @@ class AdoptionController extends Controller
             'pending'      => ['approved', 'rejected'], // Bỏ qua pre_approved, cho phép duyệt thẳng
             'pre_approved' => ['approved', 'rejected'],
             'approved'     => ['completed', 'cancelled'], // Đã duyệt có thể hoàn tất hoặc bị hủy (bởi user/hệ thống)
-            'cho_phong_van'=> ['completed', 'cancelled'], // Chờ phỏng vấn có thể hoàn tất hoặc hủy
+            'cho_phong_van'=> ['completed', 'cancelled', 'rejected'], // Chờ phỏng vấn có thể hoàn tất, hủy, hoặc rớt phỏng vấn (từ chối)
             'completed'    => [], // Hoàn tất rồi thì đóng
             'rejected'     => [], // Đã từ chối không cho đổi
             'cancelled'    => [], // Đã hủy không cho đổi
@@ -132,8 +132,8 @@ class AdoptionController extends Controller
             return $this->completeApplication($application, $ghiChu);
         }
 
-        // Nếu hủy hoặc từ chối một đơn đã approved, đưa pet quay lại trạng thái sẵn sàng
-        if (in_array($newStatus, ['cancelled', 'rejected']) && $application->Trang_thai === 'approved') {
+        // Nếu hủy hoặc từ chối một đơn đã approved hoặc cho_phong_van, đưa pet quay lại trạng thái sẵn sàng
+        if (in_array($newStatus, ['cancelled', 'rejected']) && in_array($application->Trang_thai, ['approved', 'cho_phong_van'])) {
             $petToRevert = \App\Models\Pet::find($application->Ma_thu_cung);
             if ($petToRevert && $petToRevert->Trang_thai === 'cho_phong_van') {
                 $petToRevert->update(['Trang_thai' => 'san_sang']);
@@ -157,8 +157,9 @@ class AdoptionController extends Controller
             $application->load(['nguoiDung', 'thuCung']);
             $ghiChuEmail = $ghiChu; // Capture for closure
             $newStatusEmail = $newStatus;
+            $currentStatusEmail = $currentStatus;
             
-            app()->terminating(function () use ($application, $ghiChuEmail, $newStatusEmail) {
+            app()->terminating(function () use ($application, $ghiChuEmail, $newStatusEmail, $currentStatusEmail) {
                 try {
                     if ($application->nguoiDung && $application->nguoiDung->email) {
                         $mailService = app(MailService::class);
@@ -169,7 +170,11 @@ class AdoptionController extends Controller
                         $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
                         
                         if ($newStatusEmail === 'rejected') {
-                            $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
+                            if ($currentStatusEmail === 'cho_phong_van') {
+                                $body .= "<p>Rất tiếc, sau buổi phỏng vấn, chúng tôi nhận thấy điều kiện hiện tại của bạn chưa thực sự phù hợp để nhận nuôi bé vào lúc này. Vì vậy, chúng tôi đành phải thông báo rằng buổi phỏng vấn chưa thành công với lý do chi tiết như sau:</p>";
+                            } else {
+                                $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
+                            }
                         } else {
                             $body .= "<p>Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên với lý do:</p>";
                         }

@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class MailService
 {
     /**
-     * Gửi email sử dụng PHPMailer
+     * Gửi email sử dụng hệ thống Mail mặc định của Laravel
      * 
      * @param string $to Địa chỉ email người nhận
      * @param string $subject Tiêu đề email
@@ -19,61 +19,18 @@ class MailService
      */
     public function send($to, $subject, $body, $altBody = '')
     {
-        $mail = new PHPMailer(true);
-
         try {
-            // Cấu hình Server SMTP
-            $mail->isSMTP();
-            $mail->Host       = config('mail.mailers.smtp.host', env('MAIL_HOST', 'smtp.gmail.com'));
-            $mail->SMTPAuth   = true;
-            $mail->Username   = config('mail.mailers.smtp.username', env('MAIL_USERNAME'));
-            $mail->Password   = config('mail.mailers.smtp.password', env('MAIL_PASSWORD'));
-            
-            $encryption = config('mail.mailers.smtp.encryption', env('MAIL_ENCRYPTION', 'tls'));
-            if ($encryption === 'tls') {
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            } elseif ($encryption === 'ssl') {
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            } else {
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // default fallback
-            }
-            
-            $mail->Port       = config('mail.mailers.smtp.port', env('MAIL_PORT', 587));
-            
-            // Fix SSL issues on some local environments
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
-
-            // Người gửi và Người nhận
-            $fromAddress = config('mail.from.address', env('MAIL_FROM_ADDRESS', 'no-reply@petjam.com'));
-            $fromName = config('mail.from.name', env('MAIL_FROM_NAME', 'PetJam'));
-            
-            $mail->setFrom($fromAddress, $fromName);
-            $mail->addAddress($to);
-
-            // Nội dung - bọc trong template đẹp
-            $htmlBody = view('emails.template', [
+            Mail::send('emails.template', [
                 'subject' => $subject,
                 'content' => $body
-            ])->render();
-
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body    = $htmlBody;
-            $mail->AltBody = $altBody ?: strip_tags($body);
+            ], function ($message) use ($to, $subject) {
+                $message->to($to)
+                        ->subject($subject);
+            });
             
-            // Hỗ trợ tiếng Việt
-            $mail->CharSet = 'UTF-8';
-
-            $mail->send();
             return true;
-        } catch (Exception $e) {
-            Log::error("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        } catch (Throwable $e) {
+            Log::error("Message could not be sent. Mailer Error: {$e->getMessage()}");
             return false;
         }
     }
