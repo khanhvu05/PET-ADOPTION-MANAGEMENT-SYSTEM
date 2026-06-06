@@ -24,18 +24,19 @@ class DashboardController extends Controller
 
         $kpiStats = [];
 
-        $calcMetric = function($query, $isSum = false, $sumCol = '') use ($currentMonth, $currentYear, $lastMonth, $lastMonthYear) {
+        $calcMetric = function($query, $isSum = false, $sumCol = '') {
+            $endOfLastMonth = Carbon::now()->subMonth()->endOfMonth();
+            
             if ($isSum) {
-                $total = (clone $query)->sum($sumCol);
-                $curr = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->sum($sumCol);
-                $last = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->sum($sumCol);
+                $totalCurrent = (clone $query)->sum($sumCol);
+                $totalLastMonth = (clone $query)->where('Ngay_tao', '<=', $endOfLastMonth)->sum($sumCol);
             } else {
-                $total = (clone $query)->count();
-                $curr = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->count();
-                $last = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->count();
+                $totalCurrent = (clone $query)->count();
+                $totalLastMonth = (clone $query)->where('Ngay_tao', '<=', $endOfLastMonth)->count();
             }
-            $pct = $last > 0 ? round((($curr - $last) / $last) * 100, 1) : ($curr > 0 ? 100 : 0);
-            return [$total, $pct];
+            
+            $pct = $totalLastMonth > 0 ? round((($totalCurrent - $totalLastMonth) / $totalLastMonth) * 100, 1) : ($totalCurrent > 0 ? 100 : 0);
+            return [$totalCurrent, $pct];
         };
 
         list($petsTotal, $petsPct) = $calcMetric(Pet::query());

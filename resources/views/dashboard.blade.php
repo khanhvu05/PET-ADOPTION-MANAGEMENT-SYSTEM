@@ -8,13 +8,13 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             @foreach($kpiStats as $stat)
             <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div class="flex justify-between items-end mb-3">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">{{ $stat['label'] }}</p>
-                        <h3 class="text-[28px] leading-none font-bold text-slate-800">{{ $stat['count'] }}</h3>
+                <div class="flex justify-between items-end mb-3 gap-2">
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 truncate">{{ $stat['label'] }}</p>
+                        <h3 class="text-2xl lg:text-[26px] leading-none font-bold text-slate-800 truncate" title="{{ $stat['count'] }}">{{ $stat['count'] }}</h3>
                     </div>
                     <!-- Sparkline Bars matching image -->
-                    <div class="flex gap-1 items-end h-6 pb-0.5">
+                    <div class="flex gap-1 items-end h-6 pb-0.5 shrink-0">
                         <div class="w-1.5 h-3 bg-orange-brand/30 rounded-t-sm"></div>
                         <div class="w-1.5 h-4 bg-orange-brand/50 rounded-t-sm"></div>
                         <div class="w-1.5 h-5 bg-orange-brand/70 rounded-t-sm"></div>
