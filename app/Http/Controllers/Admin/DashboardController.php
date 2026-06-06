@@ -28,12 +28,12 @@ class DashboardController extends Controller
         $totalDonations = Donation::where('Trang_thai', 'success')->sum('So_tien');
         // Calculate recent donations (e.g. this month vs last month for trend)
         $thisMonthDonations = Donation::where('Trang_thai', 'success')
-            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereMonth('Ngay_tao', Carbon::now()->month)
             ->sum('So_tien');
         $donationsPercent = $totalDonations > 0 ? round(($thisMonthDonations / $totalDonations) * 100, 1) : 0;
 
         $totalUsers = User::count();
-        $recentUsers = User::whereMonth('created_at', Carbon::now()->month)->count();
+        $recentUsers = User::whereMonth('Ngay_tao', Carbon::now()->month)->count();
         $usersPercent = $totalUsers > 0 ? round(($recentUsers / $totalUsers) * 100, 1) : 0;
 
         // 2. Dữ liệu Biểu đồ (Charts)
@@ -44,8 +44,8 @@ class DashboardController extends Controller
             $month = Carbon::now()->subMonths($i);
             $chartLabels[] = $month->format('M Y');
             
-            $adoptionsTrendData[] = AdoptionApplication::whereYear('created_at', $month->year)
-                                        ->whereMonth('created_at', $month->month)
+            $adoptionsTrendData[] = AdoptionApplication::whereYear('Ngay_tao', $month->year)
+                                        ->whereMonth('Ngay_tao', $month->month)
                                         ->count();
         }
 
@@ -57,7 +57,7 @@ class DashboardController extends Controller
 
         // 3. Dữ liệu Danh sách (Recent Applications)
         $recentApplications = AdoptionApplication::with(['thuCung', 'nguoiDung'])
-                                ->orderBy('created_at', 'desc')
+                                ->orderBy('Ngay_tao', 'desc')
                                 ->take(5)
                                 ->get();
 
