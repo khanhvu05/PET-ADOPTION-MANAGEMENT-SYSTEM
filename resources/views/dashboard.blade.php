@@ -26,10 +26,7 @@
                 <hr class="border-slate-100 my-3">
                 
                 <div class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                    <span class="text-slate-400 font-bold tracking-widest text-[10px] uppercase">
-                        {{ $stat['percent'] >= 0 ? '+' : '' }}{{ $stat['percent'] }}%
-                    </span> 
-                    so với tháng trước
+                    <span class="text-emerald-500 font-bold tracking-widest text-[10px] uppercase">+{{ $stat['new'] }}</span> trong tháng này
                 </div>
             </div>
             @endforeach
