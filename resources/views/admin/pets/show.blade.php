@@ -22,14 +22,18 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Quay lại
                 </a>
-                <a href="#" class="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-orange-600 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                <a href="{{ route('admin.pets.edit', $pet->Ma_thu_cung) }}" class="bg-orange-500 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-orange-600 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     Chỉnh sửa
                 </a>
-                <button class="bg-white border border-red-200 text-red-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-red-50 hover:shadow-sm transition-all shadow-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    Xóa
-                </button>
+                <form action="{{ route('admin.pets.destroy', $pet->Ma_thu_cung) }}" method="POST" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thú cưng này? Hành động này không thể hoàn tác!');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-white border border-red-200 text-red-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-red-50 hover:shadow-sm transition-all shadow-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Xóa
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -40,13 +44,22 @@
                 <!-- Image Gallery -->
                 <div class="w-full md:w-64 shrink-0 flex flex-col gap-3">
                     <div class="w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-100">
-                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" class="w-full h-full object-cover" alt="Lucky">
+                        <img src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-cover" alt="{{ $pet->Ten }}">
                     </div>
+                    @if(is_array($pet->Thu_vien_anh) && count($pet->Thu_vien_anh) > 0)
                     <div class="flex gap-2">
-                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba" class="w-12 h-12 rounded-lg object-cover bg-slate-100" alt="Thumb">
-                        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" class="w-12 h-12 rounded-lg object-cover bg-slate-100" alt="Thumb">
-                        <div class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">+2</div>
+                        @foreach(array_slice($pet->Thu_vien_anh, 0, 3) as $index => $url)
+                            @if($index == 2 && count($pet->Thu_vien_anh) > 3)
+                                <div class="relative w-12 h-12 rounded-lg overflow-hidden">
+                                    <img src="{{ $url }}" class="w-full h-full object-cover bg-slate-100" alt="Thumb">
+                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-xs font-bold text-white cursor-pointer" @click="activeTab = 'images'">+{{ count($pet->Thu_vien_anh) - 2 }}</div>
+                                </div>
+                            @else
+                                <img src="{{ $url }}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" alt="Thumb">
+                            @endif
+                        @endforeach
                     </div>
+                    @endif
                 </div>
 
                 <!-- Pet Info -->
@@ -55,8 +68,18 @@
                         <div>
                             <div class="flex items-center gap-3 mb-1">
                                 <h1 class="text-3xl font-bold text-slate-900">{{ $pet->Ten }}</h1>
-                                <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border border-green-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Có sẵn
+                                @php
+                                    $statusColors = [
+                                        'san_sang' => 'green',
+                                        'chua_san_sang' => 'orange',
+                                        'dang_cuu_ho' => 'red',
+                                        'da_nhan_nuoi' => 'blue',
+                                        'da_mat' => 'slate'
+                                    ];
+                                    $color = $statusColors[$pet->Trang_thai] ?? 'slate';
+                                @endphp
+                                <span class="bg-{{ $color }}-100 text-{{ $color }}-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border border-{{ $color }}-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-{{ $color }}-500"></span> {{ $pet->trang_thai_label }}
                                 </span>
                             </div>
                             <p class="text-sm font-medium text-slate-500">#{{ $pet->Ma_hien_thi }}</p>
@@ -112,7 +135,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Cân nặng</p>
-                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Can_nang }} kg</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Can_nang ? number_format($pet->Can_nang, 1) . ' kg' : 'Chưa cập nhật' }}</p>
                             </div>
                         </div>
                         <!-- Màu lông -->
@@ -122,7 +145,7 @@
                             </div>
                             <div>
                                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Màu lông</p>
-                                <p class="text-sm font-semibold text-slate-800">Vàng kem</p>
+                                <p class="text-sm font-semibold text-slate-800">{{ $pet->Mau_long ?: 'Chưa cập nhật' }}</p>
                             </div>
                         </div>
                         <!-- Vị trí -->
@@ -150,9 +173,8 @@
                     <!-- Description -->
                     <div class="mt-5 bg-slate-50 rounded-xl p-4 border border-slate-100">
                         <h4 class="text-xs font-bold text-slate-800 mb-2">Mô tả</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            Lucky là một chú chó Golden Retriever rất thân thiện và thông minh. Bé hòa đồng với mọi người và đặc biệt rất thích chơi đùa.<br><br>
-                            Lucky đã được huấn luyện cơ bản và có thói quen vệ sinh tốt.
+                        <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                            {{ $pet->Mo_ta ?: 'Chưa có mô tả.' }}
                         </p>
                     </div>
                 </div>
@@ -167,35 +189,25 @@
                     <ul class="space-y-4">
                         <li class="flex justify-between items-center py-1">
                             <span class="text-sm text-slate-500 font-medium">Trạng thái</span>
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border border-green-200">
-                                <span class="w-1 h-1 rounded-full bg-green-500"></span> Có sẵn
-                            </span>
-                        </li>
-                        <li class="flex justify-between items-center py-1 border-t border-slate-100 pt-3">
-                            <span class="text-sm text-slate-500 font-medium">Tình trạng sức khỏe</span>
-                            <span class="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Tốt
+                            <span class="bg-{{ $color }}-100 text-{{ $color }}-700 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border border-{{ $color }}-200">
+                                <span class="w-1 h-1 rounded-full bg-{{ $color }}-500"></span> {{ $pet->trang_thai_label }}
                             </span>
                         </li>
                         <li class="flex justify-between items-center py-1 border-t border-slate-100 pt-3">
                             <span class="text-sm text-slate-500 font-medium">Tiêm phòng</span>
                             <span class="text-sm font-semibold text-slate-800 flex items-center gap-1">
-                                Đã tiêm đầy đủ <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                {{ $pet->Da_tiem_phong ? 'Đã tiêm' : 'Chưa tiêm' }} <svg class="w-3.5 h-3.5 text-{{ $pet->Da_tiem_phong ? 'green' : 'slate' }}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                             </span>
                         </li>
                         <li class="flex justify-between items-center py-1 border-t border-slate-100 pt-3">
                             <span class="text-sm text-slate-500 font-medium">Đã triệt sản</span>
                             <span class="text-sm font-semibold text-slate-800 flex items-center gap-1">
-                                Đã triệt sản <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                {{ $pet->Da_triet_san ? 'Đã triệt sản' : 'Chưa triệt sản' }} <svg class="w-3.5 h-3.5 text-{{ $pet->Da_triet_san ? 'green' : 'slate' }}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                             </span>
                         </li>
                         <li class="flex justify-between items-center py-1 border-t border-slate-100 pt-3">
-                            <span class="text-sm text-slate-500 font-medium">Lượt xem</span>
-                            <span class="text-sm font-semibold text-slate-800">1,234</span>
-                        </li>
-                        <li class="flex justify-between items-center py-1 border-t border-slate-100 pt-3">
                             <span class="text-sm text-slate-500 font-medium">Ngày cập nhật gần nhất</span>
-                            <span class="text-sm font-semibold text-slate-800">16/06/2024 14:20</span>
+                            <span class="text-sm font-semibold text-slate-800">{{ $pet->Ngay_cap_nhat->format('d/m/Y H:i') }}</span>
                         </li>
                     </ul>
                 </div>
@@ -242,42 +254,38 @@
                 <div class="mb-6">
                     <h4 class="text-sm font-bold text-slate-800 mb-3">Tính cách</h4>
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-teal-50 text-teal-700 border border-teal-200 rounded-full text-xs font-bold shadow-sm">Thân thiện</span>
-                        <span class="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-full text-xs font-bold shadow-sm">Hiền lành</span>
-                        <span class="px-3 py-1 bg-orange-50 text-orange-700 border border-orange-200 rounded-full text-xs font-bold shadow-sm">Năng động</span>
-                        <span class="px-3 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded-full text-xs font-bold shadow-sm">Thông minh</span>
+                        @if($pet->Tinh_cach)
+                            @foreach(explode(',', $pet->Tinh_cach) as $trait)
+                                <span class="px-3 py-1 bg-teal-50 text-teal-700 border border-teal-200 rounded-full text-xs font-bold shadow-sm">{{ trim($trait) }}</span>
+                            @endforeach
+                        @else
+                            <span class="text-sm text-slate-500">Chưa cập nhật</span>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Thói quen -->
                 <div class="mb-6">
                     <h4 class="text-sm font-bold text-slate-800 mb-3">Thói quen</h4>
-                    <ul class="space-y-2">
-                        <li class="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                            <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Đi vệ sinh đúng chỗ
-                        </li>
-                        <li class="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                            <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Không phá đồ
-                        </li>
-                        <li class="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                            <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Thân thiện với trẻ em
-                        </li>
-                        <li class="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                            <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Thân thiện với thú cưng khác
-                        </li>
-                    </ul>
+                    @if($pet->Thoi_quen)
+                        <p class="text-sm text-slate-600 leading-relaxed font-medium whitespace-pre-line">
+                            {{ $pet->Thoi_quen }}
+                        </p>
+                    @else
+                        <span class="text-sm text-slate-500">Chưa cập nhật</span>
+                    @endif
                 </div>
 
                 <!-- Yêu thích -->
                 <div>
                     <h4 class="text-sm font-bold text-slate-800 mb-3">Yêu thích</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed font-medium">
-                        Chơi bóng, Đi dạo, Vuốt ve
-                    </p>
+                    @if($pet->Yeu_thich)
+                        <p class="text-sm text-slate-600 leading-relaxed font-medium whitespace-pre-line">
+                            {{ $pet->Yeu_thich }}
+                        </p>
+                    @else
+                        <span class="text-sm text-slate-500">Chưa cập nhật</span>
+                    @endif
                 </div>
             </div>
 
@@ -286,137 +294,50 @@
                 <h4 class="text-sm font-bold text-slate-800 mb-4">Thông tin bổ sung</h4>
                 <ul class="space-y-4">
                     <li>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nguồn</p>
-                        <p class="text-sm font-medium text-slate-800">Trung tâm cứu hộ</p>
-                    </li>
-                    <li>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày nhập</p>
-                        <p class="text-sm font-medium text-slate-800">10/06/2024</p>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày tiếp nhận</p>
+                        <p class="text-sm font-medium text-slate-800">{{ $pet->Ngay_tiep_nhan ? $pet->Ngay_tiep_nhan->format('d/m/Y') : 'Chưa rõ' }}</p>
                     </li>
                     <li>
                         <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người phụ trách</p>
-                        <p class="text-sm font-medium text-slate-800">Admin</p>
+                        <p class="text-sm font-medium text-slate-800">{{ $pet->nguoiPhuTrach ? $pet->nguoiPhuTrach->Ho_ten : 'Không có' }}</p>
                     </li>
                     <li>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
-                        <p class="text-sm font-medium text-slate-800">Không có ghi chú</p>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Chế độ ăn đặc biệt</p>
+                        <p class="text-sm font-medium text-slate-800">{{ $pet->Che_do_an_dac_biet ?: 'Không có' }}</p>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- Bottom Timeline and Stats Block -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Timeline -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <h4 class="text-sm font-bold text-slate-800 mb-6">Lịch sử hoạt động</h4>
-                <div class="relative border-l-2 border-slate-100 ml-3 space-y-6">
-                    <div class="relative pl-6">
-                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-teal-100 border-2 border-teal-500 rounded-full"></div>
-                        <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
-                            <span class="text-xs font-bold text-slate-500 w-28 shrink-0">16/06/2024 14:20</span>
-                            <span class="text-sm font-bold text-slate-800">Cập nhật thông tin</span>
-                        </div>
-                        <p class="text-sm text-slate-500 sm:pl-[120px]">Admin đã cập nhật thông tin thú cưng</p>
-                    </div>
-                    <div class="relative pl-6">
-                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-slate-100 border-2 border-slate-300 rounded-full"></div>
-                        <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1">
-                            <span class="text-xs font-bold text-slate-500 w-28 shrink-0">15/06/2024 10:30</span>
-                            <span class="text-sm font-bold text-slate-800">Thêm thú cưng</span>
-                        </div>
-                        <p class="text-sm text-slate-500 sm:pl-[120px]">Admin đã thêm thú cưng vào hệ thống</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
-                <h4 class="text-sm font-bold text-slate-800 mb-6">Thống kê nhanh</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Stat 1 -->
-                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-lg font-bold text-slate-900">1,234</p>
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Lượt xem</p>
-                        </div>
-                    </div>
-                    <!-- Stat 2 -->
-                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-lg font-bold text-slate-900">56</p>
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Lượt yêu thích</p>
-                        </div>
-                    </div>
-                    <!-- Stat 3 -->
-                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-lg font-bold text-slate-900">12</p>
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Lượt chia sẻ</p>
-                        </div>
-                    </div>
-                    <!-- Stat 4 -->
-                    <div class="p-4 rounded-xl border border-slate-100 bg-slate-50 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-lg font-bold text-slate-900">3</p>
-                            <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Đơn nhận nuôi</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                </div>
+        <!-- Bottom Timeline and Stats Block removed as data is not tracked in DB -->
             </div>
 
             <!-- 2. Tab: Hình ảnh -->
             <div x-show="activeTab === 'images'" x-cloak>
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                    <h3 class="text-sm font-bold text-slate-800 mb-6">Hình ảnh</h3>
+                    <h3 class="text-sm font-bold text-slate-800 mb-6">Ảnh đại diện & Thư viện ảnh</h3>
                     
-                    <div class="space-y-4">
-                        <!-- Row 1: 3 large images -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" class="w-full h-full object-cover" alt="Image 1">
-                            </div>
-                            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a" class="w-full h-full object-cover" alt="Image 2">
-                            </div>
-                            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1537151608804-ea2d15a369ce" class="w-full h-full object-cover" alt="Image 3">
-                            </div>
+                    <div class="space-y-6">
+                        <div class="aspect-[3/4] sm:aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden bg-slate-100 max-w-3xl mx-auto">
+                            <img src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-contain bg-slate-900/5" alt="{{ $pet->Ten }}">
                         </div>
 
-                        <!-- Row 2: thumbnails + add button -->
-                        <div class="flex flex-wrap gap-4">
-                            <div class="w-24 h-24 rounded-xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba" class="w-full h-full object-cover" alt="Thumb 1">
-                            </div>
-                            <div class="w-24 h-24 rounded-xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" class="w-full h-full object-cover" alt="Thumb 2">
-                            </div>
-                            <div class="w-24 h-24 rounded-xl overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1517423440428-a5a00ad493e8" class="w-full h-full object-cover" alt="Thumb 3">
-                            </div>
-                            <button class="w-24 h-24 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-500 hover:text-orange-brand hover:border-orange-brand hover:bg-orange-50 transition-colors">
-                                <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                <span class="text-xs font-medium">Thêm ảnh</span>
-                            </button>
+                        @if(is_array($pet->Thu_vien_anh) && count($pet->Thu_vien_anh) > 0)
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            @foreach($pet->Thu_vien_anh as $url)
+                                <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm">
+                                    <img src="{{ $url }}" class="w-full h-full object-cover" alt="Gallery Image">
+                                </div>
+                            @endforeach
                         </div>
+                        <p class="text-sm font-medium text-slate-500 mt-6">Tổng cộng {{ count($pet->Thu_vien_anh) + 1 }} ảnh (Bao gồm ảnh đại diện)</p>
+                        @else
+                        <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl mt-4">
+                            <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <p class="text-sm font-bold text-slate-500">Bé này hiện chưa có ảnh phụ nào.</p>
+                        </div>
+                        @endif
                     </div>
-                    
-                    <p class="text-sm font-medium text-slate-500 mt-8">Tổng cộng 7 ảnh</p>
                 </div>
             </div>
 
@@ -487,39 +408,7 @@
                                 </thead>
                                 <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
                                     <tr>
-                                        <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">15/06/2024</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Tiêm phòng</td>
-                                        <td class="px-4 py-4">Tiêm vaccine 5 bệnh (Care)</td>
-                                        <td class="px-4 py-4 text-slate-600 whitespace-nowrap">PetCare Clinic</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Định kỳ</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">10/06/2024</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Khám sức khỏe</td>
-                                        <td class="px-4 py-4">Khám tổng quát</td>
-                                        <td class="px-4 py-4 text-slate-600 whitespace-nowrap">PetCare Clinic</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Sức khỏe tốt</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">10/06/2024</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Tẩy giun</td>
-                                        <td class="px-4 py-4">Tẩy giun định kỳ</td>
-                                        <td class="px-4 py-4 text-slate-600 whitespace-nowrap">PetCare Clinic</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">05/06/2024</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Điều trị</td>
-                                        <td class="px-4 py-4">Điều trị viêm tai nhẹ</td>
-                                        <td class="px-4 py-4 text-slate-600 whitespace-nowrap">PetCare Clinic</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Đã khỏi</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">01/06/2024</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Tiêm phòng</td>
-                                        <td class="px-4 py-4">Tiêm vaccine dại</td>
-                                        <td class="px-4 py-4 text-slate-600 whitespace-nowrap">PetCare Clinic</td>
-                                        <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">-</td>
+                                        <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-medium">Chưa có dữ liệu lịch sử sức khỏe.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -529,52 +418,8 @@
                     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                         <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch nhắc nhở</h3>
                         
-                        <div class="space-y-4">
-                            <!-- Reminder 1 -->
-                            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800">Tiêm phòng định kỳ</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span class="text-sm font-bold text-slate-500 hidden sm:block">15/06/2025</span>
-                                    <span class="bg-green-50 text-green-600 border border-green-100 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Còn 364 ngày</span>
-                                </div>
-                            </div>
-                            <!-- Reminder 2 -->
-                            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800">Tẩy giun định kỳ</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span class="text-sm font-bold text-slate-500 hidden sm:block">10/09/2024</span>
-                                    <span class="bg-green-50 text-green-600 border border-green-100 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Còn 91 ngày</span>
-                                </div>
-                            </div>
-                            <!-- Reminder 3 -->
-                            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800">Khám sức khỏe định kỳ</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span class="text-sm font-bold text-slate-500 hidden sm:block">10/12/2024</span>
-                                    <span class="bg-green-50 text-green-600 border border-green-100 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Còn 182 ngày</span>
-                                </div>
-                            </div>
+                        <div class="space-y-4 text-center py-4 text-slate-500 font-medium">
+                            Chưa có lịch nhắc nhở nào.
                         </div>
                     </div>
                 </div>
@@ -585,16 +430,27 @@
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <h3 class="text-sm font-bold text-slate-800">Lịch sử đơn nhận nuôi</h3>
-                        <a href="{{ route('admin.adoptions.create', ['from' => 'pet', 'pet_id' => 1]) }}" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center justify-center gap-2">
+                        <a href="{{ route('admin.adoptions.create', ['from' => 'pet', 'pet_id' => $pet->Ma_thu_cung]) }}" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                             Thêm đơn mới
                         </a>
                     </div>
                     
+                    @if($pet->donNhanNuoi->count() > 0)
                     <div class="relative border-l-2 border-slate-100 ml-4 space-y-6">
-                        <!-- Application 1 -->
+                        @foreach($pet->donNhanNuoi as $application)
                         <div class="relative pl-8">
-                            <div class="absolute -left-[17px] top-4 w-8 h-8 bg-teal-50 border-2 border-white rounded-full flex items-center justify-center text-teal-600 shadow-[0_0_0_2px_theme(colors.slate.100)]">
+                            @php
+                                $statusIcons = [
+                                    'pending' => 'bg-orange-50 text-orange-600',
+                                    'pre_approved' => 'bg-blue-50 text-blue-600',
+                                    'approved' => 'bg-green-50 text-green-600',
+                                    'rejected' => 'bg-rose-50 text-rose-600',
+                                    'cancelled' => 'bg-slate-50 text-slate-600',
+                                ];
+                                $iconClass = $statusIcons[$application->Trang_thai] ?? 'bg-slate-50 text-slate-600';
+                            @endphp
+                            <div class="absolute -left-[17px] top-4 w-8 h-8 {{ $iconClass }} border-2 border-white rounded-full flex items-center justify-center shadow-[0_0_0_2px_theme(colors.slate.100)]">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             </div>
                             <div class="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
@@ -602,105 +458,46 @@
                                     <!-- Left side -->
                                     <div>
                                         <div class="flex items-center gap-2 mb-2">
-                                            <span class="bg-slate-100 text-slate-600 text-[11px] font-bold px-2 py-0.5 rounded-md">#ADP-0002</span>
+                                            <span class="bg-slate-100 text-slate-600 text-[11px] font-bold px-2 py-0.5 rounded-md">#{{ $application->Ma_don }}</span>
                                         </div>
-                                        <h4 class="text-base font-bold text-slate-800 mb-3">Trần Quang Huy</h4>
+                                        <h4 class="text-base font-bold text-slate-800 mb-3">{{ $application->Nguoi_Dung ? $application->Nguoi_Dung->Ho_ten : 'Khách vãng lai' }}</h4>
                                         <div class="space-y-2">
                                             <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                                0932 345 678
+                                                {{ $application->Nguoi_Dung ? $application->Nguoi_Dung->So_dien_thoai : ($application->So_dien_thoai ?: 'Không rõ') }}
                                             </p>
                                             <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                                quanghuy@gmail.com
+                                                {{ $application->Nguoi_Dung ? $application->Nguoi_Dung->Email : 'Không rõ' }}
                                             </p>
                                         </div>
                                     </div>
                                     <!-- Right side -->
                                     <div class="flex flex-col justify-between items-start md:items-end">
                                         <div class="space-y-2.5 mb-4 md:mb-0 w-full md:w-auto">
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">14/06/2024 15:45</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Trạng thái:</span> <span class="bg-green-50 text-green-600 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-green-100">Đã phê duyệt</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày xử lý:</span> <span class="text-slate-800 font-medium">15/06/2024 09:20</span></p>
+                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">{{ $application->created_at->format('d/m/Y H:i') }}</span></p>
+                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Trạng thái:</span> 
+                                                <span class="{{ str_replace('text', 'border', $iconClass) }} text-[11px] font-bold px-2.5 py-0.5 rounded-full border">
+                                                    {{ $application->trang_thai_label }}
+                                                </span>
+                                            </p>
+                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày xử lý:</span> <span class="text-slate-800 font-medium">{{ $application->Ngay_cap_nhat_trang_thai ? $application->Ngay_cap_nhat_trang_thai->format('d/m/Y H:i') : '-' }}</span></p>
                                         </div>
-                                        <button class="px-4 py-1.5 border border-teal-200 text-teal-600 font-bold text-sm rounded-lg hover:bg-teal-50 transition-colors w-full md:w-auto text-center">Xem chi tiết</button>
+                                        <a href="{{ route('admin.adoptions.show', $application->Ma_don) }}" class="px-4 py-1.5 border border-teal-200 text-teal-600 font-bold text-sm rounded-lg hover:bg-teal-50 transition-colors w-full md:w-auto text-center">Xem chi tiết</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Application 2 -->
-                        <div class="relative pl-8">
-                            <div class="absolute -left-[17px] top-4 w-8 h-8 bg-blue-50 border-2 border-white rounded-full flex items-center justify-center text-blue-600 shadow-[0_0_0_2px_theme(colors.slate.100)]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            </div>
-                            <div class="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
-                                <div class="flex flex-col md:flex-row justify-between gap-4">
-                                    <div>
-                                        <div class="flex items-center gap-2 mb-2">
-                                            <span class="bg-slate-100 text-slate-600 text-[11px] font-bold px-2 py-0.5 rounded-md">#ADP-0001</span>
-                                        </div>
-                                        <h4 class="text-base font-bold text-slate-800 mb-3">Nguyễn Minh Anh</h4>
-                                        <div class="space-y-2">
-                                            <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
-                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                                0901 234 567
-                                            </p>
-                                            <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
-                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                                minhanh@gmail.com
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col justify-between items-start md:items-end">
-                                        <div class="space-y-2.5 mb-4 md:mb-0 w-full md:w-auto">
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">15/06/2024 10:30</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Trạng thái:</span> <span class="bg-orange-50 text-orange-600 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-orange-100">Đang xử lý</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày xử lý:</span> <span class="text-slate-800 font-medium">-</span></p>
-                                        </div>
-                                        <button class="px-4 py-1.5 border border-teal-200 text-teal-600 font-bold text-sm rounded-lg hover:bg-teal-50 transition-colors w-full md:w-auto text-center">Xem chi tiết</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Application 3 -->
-                        <div class="relative pl-8">
-                            <div class="absolute -left-[17px] top-4 w-8 h-8 bg-rose-50 border-2 border-white rounded-full flex items-center justify-center text-rose-600 shadow-[0_0_0_2px_theme(colors.slate.100)]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </div>
-                            <div class="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
-                                <div class="flex flex-col md:flex-row justify-between gap-4">
-                                    <div>
-                                        <div class="flex items-center gap-2 mb-2">
-                                            <span class="bg-slate-100 text-slate-600 text-[11px] font-bold px-2 py-0.5 rounded-md">#ADP-0003</span>
-                                        </div>
-                                        <h4 class="text-base font-bold text-slate-800 mb-3">Phạm Thảo Vy</h4>
-                                        <div class="space-y-2">
-                                            <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
-                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                                0987 654 321
-                                            </p>
-                                            <p class="text-sm text-slate-600 flex items-center gap-2 font-medium">
-                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                                thaovy@gmail.com
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col justify-between items-start md:items-end">
-                                        <div class="space-y-2.5 mb-4 md:mb-0 w-full md:w-auto">
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">14/06/2024 09:15</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Trạng thái:</span> <span class="bg-rose-50 text-rose-600 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-rose-100">Đã từ chối</span></p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày xử lý:</span> <span class="text-slate-800 font-medium">14/06/2024 11:00</span></p>
-                                        </div>
-                                        <button class="px-4 py-1.5 border border-teal-200 text-teal-600 font-bold text-sm rounded-lg hover:bg-teal-50 transition-colors w-full md:w-auto text-center">Xem chi tiết</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     
-                    <p class="text-sm font-medium text-slate-500 mt-8">Hiển thị 1 đến 3 của 3 kết quả</p>
+                    <p class="text-sm font-medium text-slate-500 mt-8">Tổng cộng {{ $pet->donNhanNuoi->count() }} đơn nhận nuôi</p>
+                    @else
+                    <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl">
+                        <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <p class="text-sm font-bold text-slate-500">Bé chưa có đơn nhận nuôi nào.</p>
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -718,73 +515,9 @@
                     </div>
 
                     <div class="space-y-4">
-                        <!-- Note 1 -->
-                        <div class="p-5 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow relative group">
-                            <div class="flex items-start gap-4 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden shrink-0">
-                                    <img src="https://ui-avatars.com/api/?name=Admin&background=475569&color=fff" alt="Admin" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-slate-800">Admin</h4>
-                                    <p class="text-[11px] font-medium text-slate-500">16/06/2024 14:20</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-600 pl-[56px] leading-relaxed">Cập nhật thông tin sức khỏe: Tiêm vaccine 5 bệnh và tẩy giun.</p>
-                            
-                            <div class="absolute right-4 top-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="text-slate-400 hover:text-blue-600 transition-colors p-1.5 rounded-lg hover:bg-blue-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                </button>
-                                <button class="text-slate-400 hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-red-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Note 2 -->
-                        <div class="p-5 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow relative group">
-                            <div class="flex items-start gap-4 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden shrink-0">
-                                    <img src="https://ui-avatars.com/api/?name=Admin&background=475569&color=fff" alt="Admin" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-slate-800">Admin</h4>
-                                    <p class="text-[11px] font-medium text-slate-500">16/06/2024 10:30</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-600 pl-[56px] leading-relaxed">Thêm mới thú cưng vào hệ thống.</p>
-                            
-                            <div class="absolute right-4 top-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="text-slate-400 hover:text-blue-600 transition-colors p-1.5 rounded-lg hover:bg-blue-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                </button>
-                                <button class="text-slate-400 hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-red-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Note 3 -->
-                        <div class="p-5 rounded-xl border border-slate-100 bg-white shadow-sm hover:shadow-md transition-shadow relative group">
-                            <div class="flex items-start gap-4 mb-3">
-                                <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden shrink-0">
-                                    <img src="https://ui-avatars.com/api/?name=Admin&background=475569&color=fff" alt="Admin" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-bold text-slate-800">Admin</h4>
-                                    <p class="text-[11px] font-medium text-slate-500">10/06/2024 16:00</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-600 pl-[56px] leading-relaxed">Lucky rất thích chơi bóng và đi dạo.</p>
-                            
-                            <div class="absolute right-4 top-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="text-slate-400 hover:text-blue-600 transition-colors p-1.5 rounded-lg hover:bg-blue-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                </button>
-                                <button class="text-slate-400 hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-red-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                            </div>
+                        <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl">
+                            <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <p class="text-sm font-bold text-slate-500">Chưa có ghi chú nào.</p>
                         </div>
                     </div>
                 </div>
@@ -802,72 +535,9 @@
                             </button>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã ca cứu hộ</p>
-                                <p class="text-sm font-bold text-slate-800">#RES-0105</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
-                                <p class="text-sm font-bold text-slate-800">10/06/2024</p>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
-                                <p class="text-sm font-medium text-slate-800">Khu vực công viên Thống Nhất, phát hiện bị bỏ rơi trong hộp giấy.</p>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tình trạng ban đầu</p>
-                                <p class="text-sm font-medium text-slate-800">Suy dinh dưỡng nặng, viêm da, có ve rận. Rụt rè và sợ hãi con người.</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người/Tổ chức cứu hộ</p>
-                                <p class="text-sm font-medium text-slate-800">Tình nguyện viên: Nguyễn Văn A</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Trạng thái xử lý</p>
-                                <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-md border border-green-200">Đã phục hồi</span>
-                            </div>
+                        <div class="py-8 text-center">
+                            <p class="text-sm font-medium text-slate-500">Thú cưng này không có ca cứu hộ liên kết.</p>
                         </div>
-                    </div>
-
-                    <!-- Bảng Chi phí cứu hộ -->
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-slate-800">Chi phí y tế & Cứu hộ</h3>
-                            <button class="text-sm font-bold text-teal-600 hover:text-teal-700">+ Thêm chi phí</button>
-                        </div>
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
-                                <tr>
-                                    <th class="px-4 py-3 rounded-l-lg">Hạng mục</th>
-                                    <th class="px-4 py-3">Ngày</th>
-                                    <th class="px-4 py-3 text-right rounded-r-lg">Số tiền (VNĐ)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
-                                <tr>
-                                    <td class="px-4 py-3">Khám tổng quát ban đầu</td>
-                                    <td class="px-4 py-3 text-slate-500">10/06/2024</td>
-                                    <td class="px-4 py-3 font-bold text-right">300,000</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-4 py-3">Thuốc trị ve rận & viêm da</td>
-                                    <td class="px-4 py-3 text-slate-500">10/06/2024</td>
-                                    <td class="px-4 py-3 font-bold text-right">450,000</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-4 py-3">Thức ăn bồi bổ phục hồi</td>
-                                    <td class="px-4 py-3 text-slate-500">11/06/2024</td>
-                                    <td class="px-4 py-3 font-bold text-right">200,000</td>
-                                </tr>
-                            </tbody>
-                            <tfoot class="border-t-2 border-slate-100">
-                                <tr>
-                                    <td colspan="2" class="px-4 py-4 text-right font-bold text-slate-800">Tổng chi phí:</td>
-                                    <td class="px-4 py-4 font-bold text-orange-600 text-right text-base">950,000 đ</td>
-                                </tr>
-                            </tfoot>
-                        </table>
                     </div>
                 </div>
 

@@ -22,6 +22,7 @@ class Pet extends Model
         'Than_thien_nguoi', 'Than_thien_cho', 'Than_thien_meo',
         'Che_do_an_dac_biet', 'Ngay_tiep_nhan', 'Phi_nhan_nuoi',
         'Noi_bat', 'Mo_ta', 'Nguoi_phu_trach', 'Anh_dai_dien',
+        'Mau_long', 'Tinh_cach', 'Thoi_quen', 'Yeu_thich', 'Thu_vien_anh',
     ];
 
     protected $casts = [
@@ -36,6 +37,7 @@ class Pet extends Model
         'Ngay_tiep_nhan'   => 'date',
         'Ngay_tao'         => 'datetime',
         'Ngay_cap_nhat'    => 'datetime',
+        'Thu_vien_anh'     => 'array',
     ];
 
     // Tự sinh UUID khi tạo mới

@@ -36,6 +36,11 @@ class StorePetRequest extends FormRequest
             'Mo_ta'            => 'nullable|string|max:3000',
             'Nguoi_phu_trach'  => 'nullable|exists:users,Ma_nguoi_dung',
             'anh_upload'       => ($petId ? 'nullable' : 'nullable') . '|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'Mau_long'         => 'nullable|string|max:100',
+            'Tinh_cach'        => 'nullable|string|max:255',
+            'Thoi_quen'        => 'nullable|string|max:1000',
+            'Yeu_thich'        => 'nullable|string|max:1000',
+            'thu_vien_anh_upload.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ];
     }
 
@@ -53,6 +58,9 @@ class StorePetRequest extends FormRequest
             'anh_upload.image'       => 'File phải là hình ảnh.',
             'anh_upload.mimes'       => 'Chỉ chấp nhận định dạng JPG, PNG, WEBP.',
             'anh_upload.max'         => 'Kích thước ảnh không được vượt quá 5MB.',
+            'thu_vien_anh_upload.*.image' => 'File phải là hình ảnh.',
+            'thu_vien_anh_upload.*.mimes' => 'Chỉ chấp nhận định dạng JPG, PNG, WEBP.',
+            'thu_vien_anh_upload.*.max'   => 'Kích thước ảnh phụ không được vượt quá 5MB.',
             'Can_nang.numeric'       => 'Cân nặng phải là số.',
             'Phi_nhan_nuoi.numeric'  => 'Phí nhận nuôi phải là số.',
             'Trang_thai.required'    => 'Vui lòng chọn trạng thái.',

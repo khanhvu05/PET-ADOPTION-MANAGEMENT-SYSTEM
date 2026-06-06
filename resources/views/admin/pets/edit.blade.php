@@ -63,10 +63,15 @@
                             <option value="khac" {{ old('Loai', $pet->Loai) === 'khac' ? 'selected' : '' }}>Khác</option>
                         </select>
                     </div>
-                    <!-- Giống loài -->
+                    <!-- Màu lông -->
                     <div class="col-span-1">
-                        <label class="block text-xs font-bold text-slate-700 mb-2">Giống loài / Màu lông</label>
-                        <input type="text" name="Giong" value="{{ old('Giong', $pet->Giong) }}" placeholder="Nhập giống loài / màu lông" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm">
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Màu lông</label>
+                        <input type="text" name="Mau_long" value="{{ old('Mau_long', $pet->Mau_long) }}" placeholder="VD: Vàng kem, Đen trắng..." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm @error('Mau_long') border-red-400 @enderror">
+                    </div>
+                    <!-- Tính cách -->
+                    <div class="col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Tính cách</label>
+                        <input type="text" name="Tinh_cach" value="{{ old('Tinh_cach', $pet->Tinh_cach) }}" placeholder="Ví dụ: Thân thiện, Năng động, Hiền lành (Cách nhau bởi dấu phẩy)" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm @error('Tinh_cach') border-red-400 @enderror">
                     </div>
                     
                     <!-- Giới tính -->
@@ -113,24 +118,53 @@
                     <h3 class="text-sm font-bold text-slate-800">Hình ảnh</h3>
                     <p class="text-[11px] text-slate-500 mt-1">Tải lên hình ảnh mới để thay thế ảnh hiện tại.</p>
                 </div>
-                <div class="p-6">
-                    <div class="flex flex-wrap gap-4">
-                        <!-- Preview ảnh hiện tại (nếu có) -->
-                        <div id="image-preview" class="w-40 h-40 rounded-2xl overflow-hidden relative group shadow-sm border border-slate-200">
-                            <img id="preview-img" src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-cover" alt="Preview">
-                        </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-700 mb-3">Ảnh đại diện <span class="text-red-500">*</span></h4>
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Preview ảnh hiện tại (nếu có) -->
+                            <div id="image-preview" class="w-40 h-40 rounded-2xl overflow-hidden relative group shadow-sm border border-slate-200">
+                                <img id="preview-img" src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-cover" alt="Preview">
+                            </div>
 
-                        <!-- Upload Zone (Cloudinary) -->
-                        <label for="anh_upload" class="w-40 h-40 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center cursor-pointer group">
-                            <svg class="w-8 h-8 text-slate-400 group-hover:text-teal-600 transition-colors mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <span class="text-xs font-medium text-slate-500 text-center">Đổi ảnh khác<br><span class="font-normal">Kéo thả hoặc</span></span>
-                            <span class="mt-2 text-[11px] font-bold text-teal-700 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">Chọn ảnh</span>
-                            <input type="file" id="anh_upload" name="anh_upload" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(this)">
-                        </label>
-                        
-                        @error('anh_upload')
-                            <p class="text-red-500 text-xs mt-1 w-full">{{ $message }}</p>
-                        @enderror
+                            <!-- Upload Zone (Cloudinary) -->
+                            <label for="anh_upload" class="w-40 h-40 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center cursor-pointer group">
+                                <svg class="w-8 h-8 text-slate-400 group-hover:text-teal-600 transition-colors mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <span class="text-xs font-medium text-slate-500 text-center">Đổi ảnh khác<br><span class="font-normal">Kéo thả hoặc</span></span>
+                                <span class="mt-2 text-[11px] font-bold text-teal-700 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">Chọn ảnh</span>
+                                <input type="file" id="anh_upload" name="anh_upload" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(this)">
+                            </label>
+                            
+                            @error('anh_upload')
+                                <p class="text-red-500 text-xs mt-1 w-full">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-700 mb-3">Thư viện ảnh phụ</h4>
+                        <div class="flex flex-col gap-4">
+                            <label for="thu_vien_anh_upload" class="w-full h-20 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col items-center justify-center cursor-pointer group">
+                                <span class="text-xs font-medium text-slate-500 text-center flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-slate-400 group-hover:text-teal-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+                                    Cập nhật thư viện ảnh phụ (Sẽ xóa ảnh cũ)
+                                </span>
+                                <input type="file" id="thu_vien_anh_upload" name="thu_vien_anh_upload[]" accept="image/jpeg,image/png,image/webp" multiple class="hidden" onchange="previewMultipleImages(this)">
+                            </label>
+                            
+                            <div id="multiple-images-preview" class="flex flex-wrap gap-3 {{ empty($pet->Thu_vien_anh) ? 'empty:hidden' : '' }}">
+                                @if(is_array($pet->Thu_vien_anh))
+                                    @foreach($pet->Thu_vien_anh as $url)
+                                        <div class="w-20 h-20 rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group opacity-75">
+                                            <img src="{{ $url }}" class="w-full h-full object-cover">
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            @error('thu_vien_anh_upload.*')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
             </div>
@@ -277,6 +311,18 @@
                         <label class="block text-xs font-bold text-slate-700 mb-2">Chế độ ăn đặc biệt</label>
                         <textarea rows="2" name="Che_do_an_dac_biet" placeholder="Ví dụ: ăn mềm do vấn đề răng, dị ứng với gà..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm resize-none">{{ old('Che_do_an_dac_biet', $pet->Che_do_an_dac_biet) }}</textarea>
                     </div>
+
+                    <!-- Thói quen -->
+                    <div class="col-span-1 md:col-span-1">
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Thói quen</label>
+                        <textarea rows="2" name="Thoi_quen" placeholder="VD: Đi vệ sinh đúng chỗ, ngủ nhiều..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm resize-none">{{ old('Thoi_quen', $pet->Thoi_quen) }}</textarea>
+                    </div>
+                    
+                    <!-- Yêu thích -->
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Yêu thích / Sở thích</label>
+                        <textarea rows="2" name="Yeu_thich" placeholder="VD: Thích chơi bóng, thích đi dạo..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-700 placeholder-slate-400 transition-colors shadow-sm resize-none">{{ old('Yeu_thich', $pet->Yeu_thich) }}</textarea>
+                    </div>
                 </div>
             </div>
         </form>
@@ -290,6 +336,26 @@
                 document.getElementById('preview-img').src = e.target.result;
             };
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewMultipleImages(input) {
+        const container = document.getElementById('multiple-images-preview');
+        container.innerHTML = '';
+        
+        if (input.files) {
+            Array.from(input.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'w-20 h-20 rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                    `;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
         }
     }
 

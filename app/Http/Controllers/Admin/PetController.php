@@ -123,7 +123,20 @@ class PetController extends Controller
             $data['Anh_dai_dien'] = $uploaded['url'];
         }
 
+        // Upload thư viện ảnh phụ
+        if ($request->hasFile('thu_vien_anh_upload')) {
+            $gallery = [];
+            foreach ($request->file('thu_vien_anh_upload') as $file) {
+                $uploaded = $this->cloudinary->uploadImage($file, 'petjam/pets/gallery');
+                if ($uploaded) {
+                    $gallery[] = $uploaded['url'];
+                }
+            }
+            $data['Thu_vien_anh'] = empty($gallery) ? null : $gallery;
+        }
+
         unset($data['anh_upload']);
+        unset($data['thu_vien_anh_upload']);
 
         // Tạo mã hiển thị tự động nếu không có
         if (empty($data['Ma_hien_thi'])) {
@@ -198,7 +211,30 @@ class PetController extends Controller
             $data['Anh_dai_dien'] = $uploaded['url'];
         }
 
+        // Upload thư viện ảnh phụ
+        if ($request->hasFile('thu_vien_anh_upload')) {
+            // Xóa các ảnh phụ cũ
+            if (is_array($pet->Thu_vien_anh)) {
+                foreach ($pet->Thu_vien_anh as $url) {
+                    $publicId = $this->cloudinary->extractPublicId($url);
+                    if ($publicId) {
+                        $this->cloudinary->deleteImage($publicId);
+                    }
+                }
+            }
+
+            $gallery = [];
+            foreach ($request->file('thu_vien_anh_upload') as $file) {
+                $uploaded = $this->cloudinary->uploadImage($file, 'petjam/pets/gallery');
+                if ($uploaded) {
+                    $gallery[] = $uploaded['url'];
+                }
+            }
+            $data['Thu_vien_anh'] = empty($gallery) ? null : $gallery;
+        }
+
         unset($data['anh_upload']);
+        unset($data['thu_vien_anh_upload']);
 
         $pet->update($data);
 
@@ -237,6 +273,14 @@ class PetController extends Controller
             $publicId = $this->cloudinary->extractPublicId($pet->Anh_dai_dien);
             if ($publicId) {
                 $this->cloudinary->deleteImage($publicId);
+            }
+        }
+        if (is_array($pet->Thu_vien_anh)) {
+            foreach ($pet->Thu_vien_anh as $url) {
+                $publicId = $this->cloudinary->extractPublicId($url);
+                if ($publicId) {
+                    $this->cloudinary->deleteImage($publicId);
+                }
             }
         }
 
