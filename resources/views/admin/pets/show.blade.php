@@ -405,22 +405,58 @@
                                         <th class="px-4 py-3">Bác sĩ / Phòng khám</th>
                                         <th class="px-4 py-3 rounded-r-lg">Ghi chú</th>
                                     </tr>
-                                </thead>
                                 <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-medium">Chưa có dữ liệu lịch sử sức khỏe.</td>
-                                    </tr>
+                                    @if($pet->lichSuTiemChung->count() > 0)
+                                        @foreach($pet->lichSuTiemChung as $health)
+                                        <tr>
+                                            <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">{{ $health->Ngay_tiem ? $health->Ngay_tiem->format('d/m/Y') : '-' }}</td>
+                                            <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Tiêm phòng/Khám</td>
+                                            <td class="px-4 py-4">{{ $health->Ten_vac_xin }}</td>
+                                            <td class="px-4 py-4 text-slate-600 whitespace-nowrap">{{ $health->Ten_noi_tiem ?? '-' }}</td>
+                                            <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">{{ $health->Chi_phi ? number_format($health->Chi_phi) . ' đ' : '-' }}</td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-medium">Chưa có dữ liệu lịch sử sức khỏe.</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
                     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                        <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch nhắc nhở</h3>
+                        <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch nhắc nhở tiêm phòng</h3>
                         
+                        @php
+                            $reminders = $pet->lichSuTiemChung->filter(fn($item) => $item->Ngay_tiem_nhac_tiep && $item->Ngay_tiem_nhac_tiep->isFuture())->sortBy('Ngay_tiem_nhac_tiep');
+                        @endphp
+
+                        @if($reminders->count() > 0)
+                        <div class="space-y-4">
+                            @foreach($reminders as $reminder)
+                            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">Nhắc lại: {{ $reminder->Ten_vac_xin }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-6">
+                                    <span class="text-sm font-bold text-slate-500 hidden sm:block">{{ $reminder->Ngay_tiem_nhac_tiep->format('d/m/Y') }}</span>
+                                    <span class="bg-green-50 text-green-600 border border-green-100 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Còn {{ $reminder->so_ngay_con_lai }} ngày</span>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @else
                         <div class="space-y-4 text-center py-4 text-slate-500 font-medium">
                             Chưa có lịch nhắc nhở nào.
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -524,43 +560,74 @@
             </div>
         </div>
             <!-- 5. Tab: Ca cứu hộ -->
-            <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Left: Thông tin ca cứu hộ -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-base font-bold text-slate-800">Thông tin ca cứu hộ</h3>
-                            <button class="px-4 py-2 bg-orange-500 text-white font-bold text-[13px] rounded-xl hover:bg-orange-600 transition-colors shadow-sm flex items-center gap-2">
-                                Cập nhật
-                            </button>
+            <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                @if($pet->caCuuHo->count() > 0)
+                @php $rescue = $pet->caCuuHo->first(); @endphp
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Thông tin ca cứu hộ -->
+                    <div class="space-y-6">
+                        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-base font-bold text-slate-800">Thông tin ca cứu hộ</h3>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã ca cứu hộ</p>
+                                    <p class="text-sm font-bold text-slate-800">#{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
+                                    <p class="text-sm font-bold text-slate-800">{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('d/m/Y') : '-' }}</p>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
+                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Dia_diem_cuu_ho ?? '-' }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại cứu hộ</p>
+                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->loai_cuu_ho_label }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người báo cáo</p>
+                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Nguoi_bao_cao ?? '-' }}</p>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
+                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Ghi_chu ?? '-' }}</p>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="py-8 text-center">
-                            <p class="text-sm font-medium text-slate-500">Thú cưng này không có ca cứu hộ liên kết.</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Right: Hình ảnh cứu hộ ban đầu -->
-                <div>
-                    <h3 class="text-base font-bold text-slate-800 mb-4 px-2">Hình ảnh ban đầu</h3>
-                    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-4">
-                        <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 relative group">
-                            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1" class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" alt="Lúc mới cứu">
-                            <div class="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-1 rounded">10/06/2024</div>
+                        <!-- Bảng Chi phí cứu hộ -->
+                        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-base font-bold text-slate-800">Chi phí y tế & Cứu hộ</h3>
+                            </div>
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
+                                    <tr>
+                                        <th class="px-4 py-3 rounded-l-lg">Hạng mục</th>
+                                        <th class="px-4 py-3 text-right rounded-r-lg">Số tiền (VNĐ)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-4 py-3">Tổng chi phí cứu hộ</td>
+                                        <td class="px-4 py-3 font-bold text-right">{{ $rescue->Chi_phi_cuu_ho ? number_format($rescue->Chi_phi_cuu_ho) : '0' }} đ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="grid grid-cols-2 gap-2">
-                             <div class="aspect-square rounded-lg overflow-hidden bg-slate-100">
-                                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e" class="w-full h-full object-cover grayscale opacity-80" alt="Vet">
-                             </div>
-                             <button class="aspect-square rounded-lg border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-colors">
-                                 <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                                 <span class="text-[10px] font-bold">Thêm ảnh</span>
-                             </button>
-                        </div>
-                        <p class="text-[11px] text-slate-500 italic text-center mt-2">* Hình ảnh lúc mới đưa về trạm.</p>
                     </div>
                 </div>
+                @else
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <div class="py-8 text-center">
+                        <p class="text-sm font-medium text-slate-500">Thú cưng này không có ca cứu hộ liên kết.</p>
+                    </div>
+                </div>
+                @endif
             </div>
 
         </div>
