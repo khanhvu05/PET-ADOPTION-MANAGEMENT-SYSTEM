@@ -10,6 +10,7 @@ use App\Models\Pet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\MailService;
 
 class AdoptionApplicationController extends Controller
 {
@@ -87,7 +88,7 @@ class AdoptionApplicationController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($validated, $petId, $answers) {
+            $application = DB::transaction(function () use ($validated, $petId, $answers) {
                 // Kiểm tra pet còn san_sang không (race condition)
                 $pet = Pet::where('Ma_thu_cung', $petId)
                     ->lockForUpdate()
@@ -133,7 +134,29 @@ class AdoptionApplicationController extends Controller
                         ]);
                     }
                 }
+                
+                return $application;
             });
+            
+            // Gửi email xác nhận đã nhận đơn
+            try {
+                $user = Auth::user();
+                if ($user && $user->email) {
+                    // Ensure we have the application with relations for the view
+                    $app = AdoptionApplication::with(['thuCung'])->find($application->Ma_don);
+                    
+                    $mailService = app(MailService::class);
+                    $subject = "Xác nhận đã nhận đơn đăng ký nhận nuôi thú cưng";
+                    $body = view('emails.partials.application_received', [
+                        'user' => $user,
+                        'application' => $app
+                    ])->render();
+                    
+                    $mailService->send($user->email, $subject, $body);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Lỗi gửi email xác nhận đã nhận đơn: ' . $e->getMessage());
+            }
 
             return redirect()
                 ->route('frontend.user.adoptions.index')

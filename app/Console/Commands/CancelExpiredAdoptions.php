@@ -34,11 +34,11 @@ class CancelExpiredAdoptions extends Command
             if ($app->nguoiDung && $app->nguoiDung->email) {
                 $petName = $app->thuCung->Ten ?? 'thú cưng';
                 $subject = "Thông báo hủy đơn nhận nuôi bé {$petName}";
-                $body = "<h2>Xin chào {$app->nguoiDung->Ho_ten},</h2>";
-                $body .= "<p>Hệ thống ghi nhận bạn đã không xác nhận lịch phỏng vấn trong vòng 24 giờ sau khi đơn nhận nuôi bé <strong>{$petName}</strong> được phê duyệt.</p>";
-                $body .= "<p>Do đó, đơn đăng ký của bạn đã bị <strong>hủy tự động</strong> để nhường cơ hội cho các bạn khác.</p>";
-                $body .= "<p>Nếu vẫn còn nguyện vọng nhận nuôi, bạn vui lòng theo dõi lại danh sách các bé trên website và gửi lại đơn nhé.</p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                $body = view('emails.partials.adoption_failed', [
+                    'user' => $app->nguoiDung,
+                    'application' => $app,
+                    'ghiChu' => 'Hệ thống tự động hủy đơn do quá hạn 24h không xác nhận lịch phỏng vấn.'
+                ])->render();
 
                 $mailService->send($app->nguoiDung->email, $subject, $body);
             }

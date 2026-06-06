@@ -171,23 +171,26 @@ class AdoptionController extends Controller
                         
                         if ($newStatusEmail === 'rejected') {
                             if ($currentStatusEmail === 'cho_phong_van') {
-                                $body .= "<p>Rất tiếc, sau buổi phỏng vấn, chúng tôi nhận thấy điều kiện hiện tại của bạn chưa thực sự phù hợp để nhận nuôi bé vào lúc này. Vì vậy, chúng tôi đành phải thông báo rằng buổi phỏng vấn chưa thành công với lý do chi tiết như sau:</p>";
+                                $body = view('emails.partials.interview_failed', [
+                                    'user' => $application->nguoiDung,
+                                    'application' => $application,
+                                    'ghiChu' => $ghiChuEmail
+                                ])->render();
                             } else {
-                                $body .= "<p>Rất tiếc, sau khi xem xét, chúng tôi không thể phê duyệt đơn nhận nuôi của bạn với lý do:</p>";
+                                $body = view('emails.partials.adoption_failed', [
+                                    'user' => $application->nguoiDung,
+                                    'application' => $application,
+                                    'ghiChu' => $ghiChuEmail
+                                ])->render();
                             }
                         } else {
-                            $body .= "<p>Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên với lý do:</p>";
+                            $body = view('emails.partials.adoption_failed', [
+                                'user' => $application->nguoiDung,
+                                'application' => $application,
+                                'ghiChu' => $ghiChuEmail ?? 'Đơn nhận nuôi của bạn đã bị hủy bỏ bởi hệ thống/quản trị viên.'
+                            ])->render();
                         }
 
-                        if ($ghiChuEmail) {
-                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>{$ghiChuEmail}</blockquote>";
-                        } else {
-                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Không đạt yêu cầu hoặc vi phạm quy định nhận nuôi.</blockquote>";
-                        }
-                        
-                        $body .= "<p>Hy vọng bạn sẽ tìm được một người bạn đồng hành phù hợp khác trong tương lai.</p>";
-                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
-                        
                         $mailService->send($application->nguoiDung->email, $subject, $body);
                     }
                 } catch (\Exception $e) {
@@ -246,14 +249,16 @@ class AdoptionController extends Controller
                         $petName = $application->thuCung->Ten ?? 'thú cưng';
                         
                         $subject = "Chúc mừng! Đơn nhận nuôi bé {$petName} đã được phê duyệt";
-                        $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                        $body .= "<p>PetJam xin chúc mừng bạn! Đơn đăng ký nhận nuôi bé <strong>{$petName}</strong> của bạn đã chính thức được <strong>phê duyệt</strong>.</p>";
-                        if ($ghiChuEmail) {
-                            $body .= "<p><strong>Ghi chú từ quản trị viên:</strong> {$ghiChuEmail}</p>";
-                        }
-                        $body .= "<p>Để hoàn tất thủ tục, bạn vui lòng truy cập vào lịch sử nhận nuôi và chọn lịch phỏng vấn/đón bé với chúng tôi trong vòng 24 giờ tới. Nếu quá hạn, đơn của bạn sẽ bị hủy tự động.</p>";
-                        $body .= "<p><a href='" . route('frontend.user.adoptions.index') . "' style='display:inline-block;padding:10px 20px;background:#F58A3C;color:#fff;text-decoration:none;border-radius:5px;'>Chọn lịch phỏng vấn ngay</a></p>";
-                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                        $body = view('emails.partials.interview_scheduled', [
+                            'user' => $application->nguoiDung,
+                            'application' => $application,
+                            'slot' => (object)[
+                                'Ngay' => now()->addDays(3)->toDateString(), // Mock data since slot is chosen later by user
+                                'Gio_bat_dau' => '09:00:00',
+                                'Gio_ket_thuc' => '11:00:00',
+                            ],
+                            'ghiChu' => $ghiChuEmail
+                        ])->render();
                         
                         $mailService->send($application->nguoiDung->email, $subject, $body);
                     }
@@ -312,8 +317,9 @@ class AdoptionController extends Controller
             });
 
             $application->load(['nguoiDung', 'thuCung']);
+            $ghiChuEmail = $ghiChu;
             
-            app()->terminating(function () use ($application, $rejectedApps) {
+            app()->terminating(function () use ($application, $rejectedApps, $ghiChuEmail) {
                 $mailService = app(MailService::class);
                 
                 // Gửi email xác nhận hoàn tất
@@ -322,10 +328,11 @@ class AdoptionController extends Controller
                         $petName = $application->thuCung->Ten ?? 'thú cưng';
                         
                         $subject = "Chúc mừng! Bạn đã chính thức nhận nuôi bé {$petName}";
-                        $body = "<h2>Xin chào {$application->nguoiDung->Ho_ten},</h2>";
-                        $body .= "<p>PetJam xin chúc mừng bạn đã hoàn tất thủ tục và đón bé <strong>{$petName}</strong> về nhà mới thành công!</p>";
-                        $body .= "<p>Chúc bạn và bé có những khoảnh khắc tuyệt vời bên nhau. Nếu có bất kỳ thắc mắc hay cần hỗ trợ nào trong quá trình chăm sóc bé, đừng ngần ngại liên hệ với chúng tôi.</p>";
-                        $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                        $body = view('emails.partials.adoption_successful', [
+                            'user' => $application->nguoiDung,
+                            'application' => $application,
+                            'ghiChu' => $ghiChuEmail
+                        ])->render();
                         
                         $mailService->send($application->nguoiDung->email, $subject, $body);
                     }
@@ -339,12 +346,11 @@ class AdoptionController extends Controller
                         if ($app->nguoiDung && $app->nguoiDung->email) {
                             $petName = $app->thuCung->Ten ?? 'thú cưng';
                             $subject = "Thông báo kết quả đơn nhận nuôi bé {$petName}";
-                            $body = "<h2>Xin chào {$app->nguoiDung->Ho_ten},</h2>";
-                            $body .= "<p>Cảm ơn bạn đã quan tâm và đăng ký nhận nuôi bé <strong>{$petName}</strong> tại PetJam.</p>";
-                            $body .= "<p>Rất tiếc, đơn nhận nuôi của bạn đã bị từ chối tự động với lý do:</p>";
-                            $body .= "<blockquote style='background: #f9f9f9; border-left: 4px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px;'>Bé đã được nhận nuôi thành công bởi một người khác nhanh tay hơn.</blockquote>";
-                            $body .= "<p>Hy vọng bạn sẽ tiếp tục theo dõi và tìm được một người bạn đồng hành phù hợp khác trong tương lai tại PetJam.</p>";
-                            $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                            $body = view('emails.partials.adoption_failed', [
+                                'user' => $app->nguoiDung,
+                                'application' => $app,
+                                'ghiChu' => 'Bé đã được nhận nuôi thành công bởi một người khác. Rất mong bạn thông cảm.'
+                            ])->render();
                             
                             $mailService->send($app->nguoiDung->email, $subject, $body);
                         }

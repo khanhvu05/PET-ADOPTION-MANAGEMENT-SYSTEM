@@ -33,13 +33,10 @@ class RemindUnconfirmedAdoptions extends Command
             if ($app->nguoiDung && $app->nguoiDung->email) {
                 $petName = $app->thuCung->Ten ?? 'thú cưng';
                 $subject = "[Nhắc nhở] Bạn chưa chọn lịch phỏng vấn cho bé {$petName}";
-                $body = "<h2>Xin chào {$app->nguoiDung->Ho_ten},</h2>";
-                $body .= "<p>Đây là email nhắc nhở tự động từ hệ thống PetJam.</p>";
-                $body .= "<p>Đơn đăng ký nhận nuôi bé <strong>{$petName}</strong> của bạn đã được duyệt, nhưng bạn <strong>chưa chọn lịch phỏng vấn</strong>.</p>";
-                $body .= "<p style='color: red; font-weight: bold;'>Bạn chỉ còn chưa đầy 12 giờ để xác nhận lịch. Hạn chót là: " . $app->han_xac_nhan_phong_van->format('H:i d/m/Y') . ".</p>";
-                $body .= "<p>Vui lòng truy cập hệ thống và chọn lịch trống ngay để không bỏ lỡ cơ hội đón bé nhé!</p>";
-                $body .= "<p><a href='" . route('frontend.user.adoptions.index') . "' style='display:inline-block;padding:10px 20px;background:#0AA5C0;color:#fff;text-decoration:none;border-radius:5px;'>Chọn lịch ngay</a></p>";
-                $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+                $body = view('emails.partials.interview_choose_reminder', [
+                    'user' => $app->nguoiDung,
+                    'application' => $app
+                ])->render();
 
                 $mailService->send($app->nguoiDung->email, $subject, $body);
             }

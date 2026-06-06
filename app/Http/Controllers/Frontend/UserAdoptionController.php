@@ -84,13 +84,11 @@ class UserAdoptionController extends Controller
             $slot = $application->interviewSlot;
             
             $subject = 'Xác nhận lịch phỏng vấn nhận nuôi thú cưng';
-            $body = "<h2>Xin chào {$user->name},</h2>";
-            $body .= "<p>Lịch phỏng vấn nhận nuôi bé <strong>{$application->thuCung->Ten}</strong> của bạn đã được xác nhận thành công!</p>";
-            $body .= "<p><strong>Thời gian:</strong> {$slot->formatted_time} ngày " . date('d/m/Y', strtotime($slot->Ngay)) . "</p>";
-            $body .= "<p><strong>Địa điểm:</strong> Trạm cứu hộ PetJam</p>";
-            $body .= "<p>Vui lòng đến đúng giờ và mang theo các giấy tờ tùy thân (CCCD/CMND) để hoàn thiện hồ sơ.</p>";
-            $body .= "<p>Chúc bạn có một buổi phỏng vấn thuận lợi và sớm đón bé về nhà!</p>";
-            $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
+            $body = view('emails.partials.interview_scheduled', [
+                'user' => $user,
+                'application' => $application,
+                'slot' => $slot
+            ])->render();
 
             $mailService->send($user->email, $subject, $body);
 
