@@ -12,7 +12,21 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $users = request()->user()->isAdmin() ? \App\Models\User::all() : collect();
-        return view('admin.settings.index', compact('users'));
+        $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+        return view('admin.settings.index', compact('settings'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->except(['_token', '_method']);
+
+        foreach ($data as $key => $value) {
+            \App\Models\Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => is_array($value) ? json_encode($value) : $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Cài đặt đã được lưu thành công.');
     }
 }
