@@ -72,8 +72,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage posts',
         ]);
 
-        // User (Người dùng phổ thông - không cần quyền đặc biệt để thao tác basic)
-        $userRole = Role::firstOrCreate(['name' => 'user']);
+        // Customer (Người dùng phổ thông - không cần quyền đặc biệt để thao tác basic)
+        $customerRole = Role::firstOrCreate(['name' => 'customer']);
         
         // 3. Gán Role cho một số tài khoản mặc định (nếu có)
         // Lấy admin user hiện tại để gán quyền
