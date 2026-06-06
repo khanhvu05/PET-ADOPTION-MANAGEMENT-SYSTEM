@@ -11,3 +11,4 @@ use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('adoptions:remind-unconfirmed')->everyFifteenMinutes();
 Schedule::command('adoptions:cancel-expired')->everyFifteenMinutes();
+Schedule::command('campaigns:close-expired')->daily();

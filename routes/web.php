@@ -21,6 +21,9 @@ Route::get('/nhan-nuoi/{id}', [FrontendPetController::class, 'show'])->name('fro
 Route::get('/ung-ho', [FrontendDonationController::class, 'index'])->name('frontend.donations.index');
 Route::get('/ung-ho/thuc-hien', [FrontendDonationController::class, 'process'])->name('frontend.donations.process');
 Route::get('/ung-ho/thuc-hien/{campaignId}', [FrontendDonationController::class, 'process'])->name('frontend.donations.process.campaign');
+Route::post('/ung-ho/thuc-hien', [FrontendDonationController::class, 'store'])->name('frontend.donations.store');
+Route::get('/ung-ho/thanh-toan/ket-qua', [FrontendDonationController::class, 'vnpayReturn'])->name('frontend.donations.vnpay.return');
+Route::any('/ung-ho/vnpay-ipn', [FrontendDonationController::class, 'vnpayIpn'])->name('frontend.donations.vnpay.ipn');
 
 // Gửi đơn nhận nuôi + lịch sử (cần đăng nhập)
 Route::middleware('auth')->group(function () {
@@ -32,20 +35,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/tai-khoan/don-nhan-nuoi/{id}/huy', [AdoptionApplicationController::class, 'cancel'])
         ->name('frontend.adoptions.cancel');
 
-    // Ủng hộ (submit form + vnpay callback)
-    Route::post('/ung-ho/thuc-hien', [FrontendDonationController::class, 'store'])->name('frontend.donations.store');
-    Route::get('/ung-ho/thanh-toan/ket-qua', [FrontendDonationController::class, 'vnpayReturn'])->name('frontend.donations.vnpay.return');
+    // Ủng hộ (Đã di chuyển ra ngoài để cho phép khách vãng lai ủng hộ)
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Lịch sử nhận nuôi của user
+    // Lịch sử nhận nuôi & ủng hộ của user
     Route::get('/tai-khoan/lich-su-nhan-nuoi', [\App\Http\Controllers\Frontend\UserAdoptionController::class, 'index'])
         ->name('frontend.user.adoptions.index');
     Route::post('/tai-khoan/don-nhan-nuoi/{id}/xep-lich', [\App\Http\Controllers\Frontend\UserAdoptionController::class, 'scheduleInterview'])
         ->name('frontend.user.adoptions.schedule-interview');
+    Route::get('/tai-khoan/lich-su-ung-ho', [FrontendDonationController::class, 'history'])->name('frontend.user.donations.index');
 });
 
 // ── Khu vực Admin ───────────────────────────────────────────────────────────
@@ -80,6 +82,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('admin/donation_campaigns', \App\Http\Controllers\Admin\DonationCampaignController::class, ['as' => 'admin']);
 
     // Donations
+    // Route::get('admin/donations/statistics', [\App\Http\Controllers\Admin\DonationController::class, 'statistics'])->name('admin.donations.statistics');
     Route::resource('admin/donations', \App\Http\Controllers\Admin\DonationController::class, ['as' => 'admin'])->only(['index', 'show']);
         
     // Quản lý ca phỏng vấn (sử dụng interview_schedules)

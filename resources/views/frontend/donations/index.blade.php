@@ -24,27 +24,11 @@
                     Cùng chúng tôi mang đến bữa ăn, thức ăn, chăm sóc y tế và yêu thương cho những thú cưng kém may mắn.
                 </p>
                 
-                <div class="flex flex-wrap items-center gap-4 mb-12">
+                <div class="flex flex-wrap items-center gap-4 mb-10">
                     <a href="{{ route('frontend.donations.process') }}" class="bg-[#F58A3C] hover:bg-[#E07930] text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.3)] hover:-translate-y-1 transition-all duration-300">
                         <i data-lucide="heart-handshake" class="w-5 h-5"></i>
                         Ủng hộ ngay
                     </a>
-                    
-                    <button class="bg-white hover:bg-gray-50 text-[#1D2B53] border border-gray-200 px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 shadow-sm hover:-translate-y-1 transition-all duration-300">
-                        <i data-lucide="play-circle" class="w-5 h-5 text-[#F58A3C]"></i>
-                        Xem câu chuyện
-                    </button>
-                </div>
-
-                <div class="inline-flex items-center gap-4 bg-white border border-gray-100 shadow-sm p-4 rounded-xl hover:shadow-md transition-shadow cursor-pointer">
-                    <div class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p class="font-bold text-[#1D2B53] text-[14px]">Xem danh sách ủng hộ công khai</p>
-                        <p class="text-[12px] text-gray-400">Minh bạch, rõ ràng, cập nhật liên tục</p>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-5 h-5 text-gray-300 ml-2"></i>
                 </div>
             </div>
             
@@ -136,65 +120,6 @@
     </div>
 </div>
 
-<!-- PHƯƠNG THỨC ỦNG HỘ -->
-<div class="py-20 bg-[#FAFAFA]">
-    <div class="max-w-[1200px] mx-auto px-6">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-black text-[#1D2B53] mb-4">Các phương thức ủng hộ</h2>
-            <p class="text-gray-500 font-medium text-[15px]">Ngoài thanh toán online, bạn có thể lựa chọn các hình thức ủng hộ khác phù hợp.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Chuyển khoản -->
-            <div class="bg-blue-50/50 rounded-[20px] p-6 border border-blue-100/50 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-5">
-                    <i data-lucide="landmark" class="w-6 h-6"></i>
-                </div>
-                <h4 class="font-bold text-[#1D2B53] text-[16px] mb-2">Chuyển khoản ngân hàng</h4>
-                <p class="text-gray-500 text-[13px] mb-6">Chuyển khoản trực tiếp đến số tài khoản của chúng tôi.</p>
-                <a href="#" class="inline-flex items-center gap-1 text-blue-600 font-bold text-[13px] hover:text-blue-700">
-                    Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
-            </div>
-
-            <!-- QR Code -->
-            <div class="bg-teal-50/50 rounded-[20px] p-6 border border-teal-100/50 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center mb-5">
-                    <i data-lucide="qr-code" class="w-6 h-6"></i>
-                </div>
-                <h4 class="font-bold text-[#1D2B53] text-[16px] mb-2">Quét mã QR</h4>
-                <p class="text-gray-500 text-[13px] mb-6">Quét mã QR của ngân hàng để ủng hộ nhanh chóng.</p>
-                <a href="#" class="inline-flex items-center gap-1 text-teal-600 font-bold text-[13px] hover:text-teal-700">
-                    Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
-            </div>
-
-            <!-- Hiện vật -->
-            <div class="bg-orange-50/50 rounded-[20px] p-6 border border-orange-100/50 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-orange-100 text-[#F58A3C] rounded-xl flex items-center justify-center mb-5">
-                    <i data-lucide="package" class="w-6 h-6"></i>
-                </div>
-                <h4 class="font-bold text-[#1D2B53] text-[16px] mb-2">Ủng hộ hiện vật</h4>
-                <p class="text-gray-500 text-[13px] mb-6">Thức ăn, vật dụng, thuốc men cho các bé thú cưng.</p>
-                <a href="#" class="inline-flex items-center gap-1 text-[#F58A3C] font-bold text-[13px] hover:text-orange-600">
-                    Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
-            </div>
-
-            <!-- Tình nguyện viên -->
-            <div class="bg-pink-50/50 rounded-[20px] p-6 border border-pink-100/50 hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mb-5">
-                    <i data-lucide="users" class="w-6 h-6"></i>
-                </div>
-                <h4 class="font-bold text-[#1D2B53] text-[16px] mb-2">Trở thành tình nguyện viên</h4>
-                <p class="text-gray-500 text-[13px] mb-6">Dành thời gian, kỹ năng để giúp đỡ các bé.</p>
-                <a href="#" class="inline-flex items-center gap-1 text-pink-600 font-bold text-[13px] hover:text-pink-700">
-                    Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- CHIẾN DỊCH GÂY QUỸ -->
 <div class="py-20 bg-white">
@@ -204,205 +129,199 @@
                 <h2 class="text-3xl font-black text-[#1D2B53] mb-4">Chiến dịch đang gây quỹ</h2>
                 <p class="text-gray-500 font-medium text-[15px] max-w-2xl">Chung tay giúp đỡ các bé thú cưng đang gặp hoàn cảnh khó khăn cần được chăm sóc y tế khẩn cấp hoặc những dự án xây dựng mái ấm tốt hơn.</p>
             </div>
-            <a href="#" class="inline-flex items-center gap-2 text-[#F58A3C] font-bold hover:text-orange-600 transition-colors">
-                Xem tất cả chiến dịch <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Campaign Card 1 -->
-            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
-                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80" alt="Lucky" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-4 left-4 bg-teal-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Chi phí y tế</div>
-                </div>
-                
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-teal-600 transition-colors">
-                        <a href="#">Cứu trợ Lucky bị viêm phổi nặng</a>
-                    </h3>
-                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Lucky được phát hiện trong tình trạng nguy kịch, cần chi phí lớn để điều trị viêm phổi và phục hồi sức khỏe.</p>
+            @forelse($campaigns as $campaign)
+                @php
+                    $daysLeft = null;
+                    if ($campaign->Ngay_ket_thuc) {
+                        $daysLeft = round(now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($campaign->Ngay_ket_thuc)->startOfDay(), false));
+                    }
+                @endphp
+                <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
+                    <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
+                        <img src="{{ $campaign->Anh_dai_dien ?? 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80' }}" alt="{{ $campaign->Tieu_de }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-teal-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Gây quỹ</div>
+                    </div>
                     
-                    <div class="mt-auto">
-                        <div class="flex justify-between items-end mb-2">
-                            <div>
-                                <span class="text-[18px] font-black text-teal-600 leading-none">32.450.000đ</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 50.000.000đ</span>
-                            </div>
-                        </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-teal-600 transition-colors">
+                            <a href="{{ route('frontend.donations.process.campaign', $campaign->Ma_chien_dich) }}">{{ $campaign->Tieu_de }}</a>
+                        </h3>
+                        <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">{{ $campaign->Mo_ta ?? 'Chưa có mô tả...' }}</p>
                         
-                        <!-- Progress Bar -->
-                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
-                            <div class="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-full" style="width: 65%"></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">128 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
+                        <div class="mt-auto">
+                            <div class="flex justify-between items-end mb-2">
+                                <div>
+                                    <span class="text-[18px] font-black text-teal-600 leading-none">{{ number_format($campaign->So_tien_hien_tai, 0, ',', '.') }}đ</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[13px] font-bold text-gray-400 leading-none">/ {{ $campaign->So_tien_muc_tieu ? number_format($campaign->So_tien_muc_tieu, 0, ',', '.') . 'đ' : 'Không giới hạn' }}</span>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">15 <span class="font-normal text-gray-400">ngày còn lại</span></span>
+                            
+                            <!-- Progress Bar -->
+                            <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
+                                <div class="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-full" style="width: {{ $campaign->progress }}%"></div>
                             </div>
+                            
+                            <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="info" class="w-4 h-4 text-gray-400"></i>
+                                    <span class="text-[13px] font-bold text-gray-600">Đang hoạt động</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                                    <span class="text-[13px] font-bold text-gray-600">
+                                        @if($daysLeft !== null)
+                                            @if($daysLeft >= 0)
+                                                Còn {{ $daysLeft }} ngày
+                                            @else
+                                                Đã hết hạn
+                                            @endif
+                                        @else
+                                            Vô thời hạn
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('frontend.donations.process.campaign', $campaign->Ma_chien_dich) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
+                                Ủng hộ ngay
+                            </a>
                         </div>
-                        
-                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 1]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
-                            Ủng hộ ngay
-                        </a>
                     </div>
                 </div>
-            </div>
-
-            <!-- Campaign Card 2 -->
-            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
-                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Mèo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-4 left-4 bg-orange-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Thức ăn</div>
-                </div>
-                
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-orange-500 transition-colors">
-                        <a href="#">Quỹ thức ăn tháng 6 cho trạm cứu hộ</a>
-                    </h3>
-                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Hơn 150 bé chó mèo đang cần sự chung tay để đảm bảo những bữa ăn dinh dưỡng trong tháng tới.</p>
-                    
-                    <div class="mt-auto">
-                        <div class="flex justify-between items-end mb-2">
-                            <div>
-                                <span class="text-[18px] font-black text-orange-500 leading-none">12.500.000đ</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 20.000.000đ</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Progress Bar -->
-                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
-                            <div class="h-full bg-gradient-to-r from-orange-400 to-[#F58A3C] rounded-full" style="width: 62.5%"></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">85 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">5 <span class="font-normal text-gray-400">ngày còn lại</span></span>
-                            </div>
-                        </div>
-                        
-                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 2]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
-                            Ủng hộ ngay
-                        </a>
+            @empty
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-3xl p-10 text-center border border-gray-100 shadow-sm max-w-lg mx-auto flex flex-col items-center justify-center">
+                    <div class="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mb-4 text-teal-600">
+                        <i data-lucide="alert-circle" class="w-8 h-8"></i>
                     </div>
+                    <h3 class="text-lg font-bold text-dark mb-1">Hiện tại không có chiến dịch hoạt động</h3>
+                    <p class="text-gray-500 text-sm mb-6">Bạn vẫn có thể đóng góp vào quỹ chung của chúng tôi để giúp đỡ các bé thú cưng.</p>
+                    <a href="{{ route('frontend.donations.process') }}" class="btn-primary text-sm">Ủng hộ quỹ chung</a>
                 </div>
-            </div>
-
-            <!-- Campaign Card 3 -->
-            <div class="bg-white rounded-[20px] overflow-hidden border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col">
-                <div class="aspect-[16/10] relative overflow-hidden bg-gray-100">
-                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80" alt="Chó" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-4 left-4 bg-pink-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">Xây dựng</div>
-                </div>
-                
-                <div class="p-6 flex flex-col flex-1">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2 leading-tight group-hover:text-pink-500 transition-colors">
-                        <a href="#">Sửa chữa mái che mùa mưa bão</a>
-                    </h3>
-                    <p class="text-[14px] text-gray-500 mb-6 line-clamp-2">Mái che của trạm đã xuống cấp trầm trọng, cần sửa chữa gấp để các bé có nơi trú ẩn an toàn.</p>
-                    
-                    <div class="mt-auto">
-                        <div class="flex justify-between items-end mb-2">
-                            <div>
-                                <span class="text-[18px] font-black text-pink-500 leading-none">5.200.000đ</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[13px] font-bold text-gray-400 leading-none">/ 15.000.000đ</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Progress Bar -->
-                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden mb-4">
-                            <div class="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full" style="width: 34%"></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between py-4 border-t border-gray-50 mb-4">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="users" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">32 <span class="font-normal text-gray-400">lượt ủng hộ</span></span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
-                                <span class="text-[13px] font-bold text-gray-600">20 <span class="font-normal text-gray-400">ngày còn lại</span></span>
-                            </div>
-                        </div>
-                        
-                        <a href="{{ route('frontend.donations.process', ['campaign_id' => 3]) }}" class="block w-full text-center bg-[#F58A3C] hover:bg-[#E07930] text-white font-bold text-[15px] py-3.5 rounded-xl transition-colors shadow-[0_4px_10px_rgba(245,138,60,0.2)]">
-                            Ủng hộ ngay
-                        </a>
-                    </div>
-                </div>
-            </div>
-
+            @endforelse
         </div>
+    </div>
+</div>
+
+<!-- BẢNG VINH DANH -->
+<div class="py-20 bg-[#FFF5EF]/40 border-t border-orange-100/30">
+    <div class="max-w-[1200px] mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-black text-[#1D2B53] mb-4 flex items-center justify-center gap-3">
+                Bảng Vinh Danh Nhà Hảo Tâm
+                <i data-lucide="sparkles" class="w-8 h-8 text-amber-500 fill-current"></i>
+            </h2>
+            <p class="text-gray-500 font-medium text-[15px]">Chân thành cảm ơn những đóng góp và tấm lòng vàng từ cộng đồng dành cho các bé thú cưng.</p>
+            <div class="w-16 h-1 bg-[#F58A3C] mx-auto rounded-full mt-4"></div>
+        </div>
+
+        @if($recentDonations->isEmpty())
+            <div class="bg-white rounded-3xl p-10 text-center border border-gray-100 shadow-sm max-w-lg mx-auto flex flex-col items-center justify-center">
+                <div class="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4">
+                    <i data-lucide="heart" class="w-8 h-8 text-primary"></i>
+                </div>
+                <h3 class="text-lg font-bold text-dark mb-1">Hãy là người đầu tiên ủng hộ!</h3>
+                <p class="text-gray-500 text-sm mb-6 font-medium">Mọi sự đóng góp đều vô cùng ý nghĩa đối với các bé.</p>
+                <a href="{{ route('frontend.donations.process') }}" class="btn-primary text-sm">Ủng hộ ngay</a>
+            </div>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                @foreach($recentDonations as $donation)
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-start gap-4 transition-all duration-300 hover:shadow-md">
+                        <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center shrink-0 text-primary">
+                            <i data-lucide="heart" class="w-6 h-6 fill-current"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 class="font-bold text-[#1D2B53] truncate">
+                                        {{ $donation->An_danh ? 'Nhà hảo tâm ẩn danh' : $donation->Ten_nguoi_ung_ho }}
+                                    </h4>
+                                    <p class="text-xs text-gray-400 font-bold mt-0.5">
+                                        {{ $donation->Thoi_diem_thanh_toan ? $donation->Thoi_diem_thanh_toan->format('H:i d/m/Y') : $donation->Ngay_tao->format('H:i d/m/Y') }}
+                                    </p>
+                                </div>
+                                <span class="text-emerald-600 font-black text-[16px] shrink-0">+{{ number_format($donation->So_tien, 0, ',', '.') }}đ</span>
+                            </div>
+                            @if($donation->Loi_nhan)
+                                <div class="p-3 bg-gray-50 rounded-xl text-gray-600 text-[13px] font-medium leading-relaxed italic border border-gray-100/50">
+                                    "{{ $donation->Loi_nhan }}"
+                                </div>
+                            @endif
+                            @if($donation->chienDich)
+                                <p class="text-[11px] font-bold text-teal-600 mt-2 flex items-center gap-1">
+                                    <i data-lucide="tag" class="w-3 h-3"></i>
+                                    Chiến dịch: {{ $donation->chienDich->Tieu_de }}
+                                </p>
+                            @else
+                                <p class="text-[11px] font-bold text-gray-400 mt-2 flex items-center gap-1">
+                                    <i data-lucide="globe" class="w-3 h-3"></i>
+                                    Ủng hộ quỹ chung
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>
 
 <!-- STATS -->
 <div class="py-16 bg-white border-y border-gray-100">
     <div class="max-w-[1200px] mx-auto px-6">
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-10">
+        <div class="flex flex-col lg:flex-row items-start justify-between gap-10">
             <div class="lg:w-1/3">
                 <h3 class="text-2xl font-black text-[#1D2B53] mb-3">Cùng nhau tạo nên<br>điều kỳ diệu</h3>
                 <p class="text-gray-500 font-medium text-[14px]">Nhờ sự tin tưởng và ủng hộ của cộng đồng, chúng tôi đã và đang giúp đỡ nhiều thú cưng hơn mỗi ngày.</p>
             </div>
             
-            <div class="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <!-- Stat 1 -->
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-[#F58A3C]">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-orange-50 flex items-center justify-center text-[#F58A3C]">
                         <i data-lucide="home" class="w-6 h-6"></i>
                     </div>
-                    <div>
-                        <div class="text-2xl font-black text-[#F58A3C]">1.850+</div>
-                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Thú cưng được giúp đỡ</div>
+                    <div class="min-w-0">
+                        <div class="text-2xl font-black text-[#F58A3C] leading-tight">1.850+</div>
+                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide leading-tight mt-0.5">Thú cưng được giúp đỡ</div>
                     </div>
                 </div>
                 
                 <!-- Stat 2 -->
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-teal-500">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-teal-50 flex items-center justify-center text-teal-500">
                         <i data-lucide="stethoscope" class="w-6 h-6"></i>
                     </div>
-                    <div>
-                        <div class="text-2xl font-black text-teal-500">3.280+</div>
-                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Lượt khám & điều trị</div>
+                    <div class="min-w-0">
+                        <div class="text-2xl font-black text-teal-500 leading-tight">3.280+</div>
+                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide leading-tight mt-0.5">Lượt khám &amp; điều trị</div>
                     </div>
                 </div>
                 
-                <!-- Stat 3 -->
+                <!-- Stat 3: Tổng Quyên Góp -->
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-pink-500">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-pink-50 flex items-center justify-center text-pink-500">
                         <i data-lucide="heart-handshake" class="w-6 h-6"></i>
                     </div>
-                    <div>
-                        <div class="text-2xl font-black text-pink-500">5.600+</div>
-                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Nhà hảo tâm đồng hành</div>
+                    <div class="min-w-0">
+                        <div class="text-2xl font-black text-pink-500 leading-tight break-all">{{ number_format($totalAmount, 0, ',', '.') }}đ</div>
+                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide leading-tight mt-0.5">Tổng tiền đã ủng hộ</div>
                     </div>
                 </div>
                 
                 <!-- Stat 4 -->
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
                         <i data-lucide="utensils" class="w-6 h-6"></i>
                     </div>
-                    <div>
-                        <div class="text-2xl font-black text-blue-500">12.450+</div>
-                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide">Bữa ăn được trao</div>
+                    <div class="min-w-0">
+                        <div class="text-2xl font-black text-blue-500 leading-tight">12.450+</div>
+                        <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wide leading-tight mt-0.5">Bữa ăn được trao</div>
                     </div>
                 </div>
             </div>

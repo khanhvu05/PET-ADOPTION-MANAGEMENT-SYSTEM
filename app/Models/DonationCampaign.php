@@ -16,7 +16,7 @@ class DonationCampaign extends Model
     const UPDATED_AT = 'Ngay_cap_nhat';
 
     protected $fillable = [
-        'Ma_chien_dich', 'Tieu_de', 'Mo_ta', 'Anh_dai_dien', 
+        'Ma_chien_dich', 'Tieu_de', 'Mo_ta', 'Anh_dai_dien', 'Anh_nen',
         'So_tien_muc_tieu', 'So_tien_hien_tai', 'Ngay_bat_dau', 
         'Ngay_ket_thuc', 'Trang_thai'
     ];

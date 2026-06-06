@@ -19,10 +19,19 @@
             </div>
             
             <div class="flex items-center gap-3">
-                <button class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
-                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <button type="button" onclick="exportExcel()" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
                     Xuất Excel
                 </button>
+                <script>
+                    function exportExcel() {
+                        const form = document.getElementById('filter-form');
+                        const formData = form ? new FormData(form) : new FormData();
+                        formData.append('export', 'excel');
+                        const params = new URLSearchParams(formData);
+                        window.location.href = window.location.pathname + '?' + params.toString();
+                    }
+                </script>
                 
                 <a href="{{ route('admin.donation_campaigns.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-teal-600 text-white rounded-xl font-bold text-sm shadow-sm hover:bg-teal-700 transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
@@ -79,11 +88,11 @@
             
             <!-- Filters Section -->
             <div class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
-                <form method="GET" action="{{ route('admin.donation_campaigns.index') }}" class="flex items-end gap-4 min-w-[900px]">
+                <form id="filter-form" x-data="{ submit() { this.$el.submit(); } }" method="GET" action="{{ route('admin.donation_campaigns.index') }}" class="flex items-end gap-4 min-w-[900px]">
                     <!-- Search Input -->
                     <div class="w-[260px] shrink-0">
                         <div class="relative w-full">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm chiến dịch, mô tả..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-900 placeholder-slate-400 transition-all shadow-sm">
+                            <input @input.debounce.500ms="submit()" type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm chiến dịch, mô tả..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-900 placeholder-slate-400 transition-all shadow-sm">
                             <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
@@ -96,7 +105,7 @@
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <div class="relative">
-                                <select name="status" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
+                                <select @change="submit()" name="status" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
                                     <option value="">Tất cả trạng thái</option>
                                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Đang hoạt động</option>
                                     <option value="closed" {{ request('status') === 'closed' ? 'selected' : '' }}>Đã kết thúc</option>
@@ -107,26 +116,21 @@
                             </div>
                         </div>
 
-                        <!-- Dropdown Mục tiêu (Mockup) -->
-                        <div class="flex flex-col gap-1.5 flex-1">
-                            <label class="text-xs font-bold text-slate-700">Loại mục tiêu</label>
-                            <div class="relative">
-                                <select class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
-                                    <option value="">Tất cả mục tiêu</option>
-                                    <option value="has_goal">Có mục tiêu</option>
-                                    <option value="no_goal">Không giới hạn</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Date Filter (Mockup) -->
+                        <!-- Date Filter (Flatpickr) -->
                         <div class="flex flex-col gap-1.5 flex-[1.5]">
                             <label class="text-xs font-bold text-slate-700">Thời gian</label>
                             <div class="relative">
-                                <input type="text" placeholder="01/05/2025 - 28/05/2025" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm pr-10">
+                                <input type="text" name="date_range" id="campaign_date_range" value="{{ request('date_range') }}" placeholder="Thời gian (Từ - Đến)" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm pr-10" x-init="
+                                    flatpickr($el, {
+                                        mode: 'range',
+                                        dateFormat: 'd/m/Y',
+                                        onChange: function(selectedDates) {
+                                            if (selectedDates.length === 2 || selectedDates.length === 0) {
+                                                submit();
+                                            }
+                                        }
+                                    });
+                                ">
                                 <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 </div>
@@ -135,11 +139,9 @@
 
                         <!-- Filter Actions -->
                         <div class="flex items-center gap-2 shrink-0">
-                            <button type="submit" class="flex items-center justify-center h-11 px-4 bg-white border border-teal-600 rounded-xl text-teal-600 font-bold text-sm shadow-sm hover:bg-teal-50 transition-all">
-                                Lọc Dữ Liệu
-                            </button>
-                            <a href="{{ route('admin.donation_campaigns.index') }}" class="flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-xl text-slate-500 shadow-sm hover:bg-slate-50 transition-all" title="Đặt lại">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <a href="{{ route('admin.donation_campaigns.index') }}" class="flex items-center justify-center h-11 px-4 bg-white border border-slate-200 rounded-xl text-slate-500 font-bold text-sm shadow-sm hover:bg-slate-50 transition-all" title="Đặt lại">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                Làm mới
                             </a>
                         </div>
                     </div>

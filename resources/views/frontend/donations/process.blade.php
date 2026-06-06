@@ -51,6 +51,16 @@
 @endsection
 
 @section('content')
+{{-- Hidden FORM: sẽ được submit bởi Alpine.js khi user bấm nút VNPay --}}
+<form id="vnpay-donation-form" method="POST" action="{{ route('frontend.donations.store') }}" style="display:none;">
+    @csrf
+    <input type="hidden" name="So_tien" id="form-amount">
+    <input type="hidden" name="Ten_nguoi_ung_ho" id="form-name">
+    <input type="hidden" name="An_danh" id="form-an-danh">
+    <input type="hidden" name="Loi_nhan" id="form-loi-nhan">
+    <input type="hidden" name="Ma_chien_dich" id="form-campaign-id" value="{{ $campaign->Ma_chien_dich ?? '' }}">
+</form>
+
 <div class="bg-[#FAFAFA] min-h-screen pt-24 pb-20" x-data="donationApp()">
     <div class="max-w-[1100px] mx-auto px-4 md:px-6">
         
@@ -184,14 +194,34 @@
                         Thông tin người ủng hộ
                         <i data-lucide="heart" class="w-6 h-6 text-[#F58A3C]"></i>
                     </h2>
-                    <p class="text-gray-500 font-medium text-[14px] mb-8 leading-relaxed">
-                        Vui lòng cung cấp thông tin để chúng tôi gửi xác nhận<br class="hidden md:block">
-                        và cập nhật dự án cho bạn.
-                    </p>
+                    <p                    <div class="space-y-8">
 
-                    <div class="space-y-8">
-                        <div>
-                            <h3 class="font-bold text-[#1D2B53] mb-5 text-[15px]">1. Thông tin cá nhân</h3>
+                        <!-- Toggle Ẩn danh - Lên đầu tiên -->
+                        <div class="flex items-center justify-between p-5 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border-2 cursor-pointer transition-all duration-200"
+                             :class="isAnonymous ? 'border-[#F58A3C] shadow-sm' : 'border-orange-100 hover:border-orange-200'"
+                             @click="isAnonymous = !isAnonymous">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
+                                     :class="isAnonymous ? 'bg-[#F58A3C] text-white' : 'bg-orange-100 text-[#F58A3C]'">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-[#1D2B53] text-[15px]" :class="isAnonymous ? 'text-[#F58A3C]' : ''">Tôi muốn ủng hộ ẩn danh</p>
+                                    <p class="text-[12px] text-gray-500">Tên của bạn sẽ không hiển thị trên danh sách quyên góp công khai</p>
+                                </div>
+                            </div>
+                            <!-- Toggle Switch -->
+                            <button type="button"
+                                    class="relative inline-flex flex-shrink-0 cursor-pointer rounded-full focus:outline-none"
+                                    :style="isAnonymous ? 'width: 44px; height: 24px; background-color: #F58A3C; transition: background-color 0.2s;' : 'width: 44px; height: 24px; background-color: #e5e7eb; transition: background-color 0.2s;'">
+                                <span class="pointer-events-none inline-block rounded-full bg-white shadow"
+                                      :style="isAnonymous ? 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(23px); transition: transform 0.2s;' : 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(3px); transition: transform 0.2s;'"></span>
+                            </button>
+                        </div>
+
+                        <!-- Thông tin cá nhân - chỉ hiện khi không ẩn danh -->
+                        <div x-show="!isAnonymous" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2">
+                            <h3 class="font-bold text-[#1D2B53] mb-5 text-[15px]">Thông tin cá nhân</h3>
                             <div class="space-y-4">
                                 <div>
                                     <label class="form-label">Họ và tên <span class="text-red-500">*</span></label>
@@ -205,202 +235,24 @@
                                     <label class="form-label">Số điện thoại</label>
                                     <input type="tel" x-model="phone" placeholder="Nhập số điện thoại" class="form-input">
                                 </div>
-                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 mt-6 cursor-pointer hover:border-orange-200 transition-colors" @click="isAnonymous = !isAnonymous">
-                                    <div>
-                                        <p class="font-bold text-[#1D2B53] text-[14px] mb-0.5" :class="isAnonymous ? 'text-[#F58A3C]' : ''">Ủng hộ ẩn danh</p>
-                                        <p class="text-[12px] text-gray-500">Tên của bạn sẽ không hiển thị công khai trên danh sách quyên góp</p>
-                                    </div>
-                                    <!-- Toggle Switch -->
-                                    <button type="button" 
-                                            class="relative inline-flex flex-shrink-0 cursor-pointer rounded-full focus:outline-none"
-                                            :style="isAnonymous ? 'width: 44px; height: 24px; background-color: #F58A3C; transition: background-color 0.2s;' : 'width: 44px; height: 24px; background-color: #e5e7eb; transition: background-color 0.2s;'">
-                                        <span class="pointer-events-none inline-block rounded-full bg-white shadow"
-                                              :style="isAnonymous ? 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(23px); transition: transform 0.2s;' : 'width: 18px; height: 18px; margin-top: 3px; transform: translateX(3px); transition: transform 0.2s;'"></span>
-                                    </button>
-                                </div>
                             </div>
                         </div>
 
-                        <div>
-                            <h3 class="font-bold text-[#1D2B53] mb-5 text-[15px]">2. Địa chỉ <span class="text-gray-400 font-medium text-[13px]">(không bắt buộc)</span></h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="form-label">Tỉnh / Thành phố</label>
-                                    <select x-model="province" class="form-input appearance-none bg-white">
-                                        <option value="">Chọn tỉnh / thành phố</option>
-                                        <option value="Hà Nội">Hà Nội</option>
-                                        <option value="TP.Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                                        <option value="Đà Nẵng">Đà Nẵng</option>
-                                        <option value="Khác">Khác</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="form-label">Lời nhắn thêm cho dự án <span class="text-gray-400 font-medium text-[13px]">(không bắt buộc)</span></label>
-                                    <div class="relative">
-                                        <textarea x-model="extraMessage" rows="3" placeholder="Gửi lời động viên đến các bé..." class="form-input resize-none" maxlength="200"></textarea>
-                                        <div class="absolute bottom-3 right-3 text-[11px] text-gray-400 font-bold"><span x-text="extraMessage.length"></span>/200</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div class="mt-10 flex gap-4">
                         <button @click="prevStep()" class="bg-gray-100 hover:bg-gray-200 text-[#1D2B53] px-6 py-3.5 rounded-xl font-bold flex items-center justify-center transition-colors">
                             <i data-lucide="arrow-left" class="w-5 h-5"></i>
                         </button>
-                        <button @click="nextStep()" :disabled="!name || !email" class="flex-1 bg-[#F58A3C] hover:bg-[#E07930] text-white px-10 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.3)] hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed">
-                            Tiếp tục
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        <button @click="submitVNPay()" :disabled="!isAnonymous && !name" class="flex-1 bg-[#F58A3C] hover:bg-[#E07930] text-white px-10 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2.5 shadow-[0_4px_15px_rgba(245,138,60,0.3)] hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed">
+                            <svg class="w-5 h-5" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="white" fill-opacity="0.2"/><text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-size="11" font-weight="900" fill="white">VN</text></svg>
+                            Thanh toán qua VNPay
                         </button>
                     </div>
-                </div>
 
-                <!-- STEP 3: THANH TOÁN -->
-                <div x-show="step === 3" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100">
-                    <h2 class="text-2xl md:text-[28px] font-black text-[#1D2B53] flex items-center gap-3 mb-3">
-                        Thanh toán
-                    </h2>
-                    <p class="text-gray-500 font-medium text-[14px] mb-8 leading-relaxed">
-                        Vui lòng chọn phương thức thanh toán phù hợp<br class="hidden md:block">
-                        để hoàn tất khoản ủng hộ.
-                    </p>
-
-                    <div class="space-y-8">
-                        <div>
-                            <h3 class="font-bold text-[#1D2B53] mb-4 text-[15px]">1. Chọn phương thức thanh toán</h3>
-                            <div class="grid grid-cols-2 gap-4">
-                                <!-- QR Banking -->
-                                <div @click="paymentMethod = 'QR Banking'" class="border rounded-xl p-4 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center relative bg-white group"
-                                     :class="paymentMethod === 'QR Banking' ? 'border-teal-500 shadow-sm bg-teal-50/10' : 'border-gray-200 hover:border-gray-300'">
-                                    <div class="w-12 h-12 rounded-xl mb-2 flex items-center justify-center bg-teal-50 text-teal-600">
-                                        <i data-lucide="qr-code" class="w-6 h-6"></i>
-                                    </div>
-                                    <h4 class="font-bold text-[13px] text-[#1D2B53] mb-1">QR Banking</h4>
-                                    <p class="text-[11px] text-gray-400 font-medium">Quét mã QR</p>
-                                    <div x-show="paymentMethod === 'QR Banking'" class="absolute top-2 right-2 w-5 h-5 bg-teal-500 rounded-full flex items-center justify-center text-white"><i data-lucide="check" class="w-3 h-3"></i></div>
-                                </div>
-                                <!-- Momo -->
-                                <div @click="paymentMethod = 'MoMo'" class="border rounded-xl p-4 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center relative bg-white group"
-                                     :class="paymentMethod === 'MoMo' ? 'border-pink-500 shadow-sm bg-pink-50/10' : 'border-gray-200 hover:border-gray-300'">
-                                    <div class="w-12 h-12 rounded-xl mb-2 flex items-center justify-center bg-pink-50 text-pink-600 font-black text-xs">MoMo</div>
-                                    <h4 class="font-bold text-[13px] text-[#1D2B53] mb-1">Ví MoMo</h4>
-                                    <p class="text-[11px] text-gray-400 font-medium">Thanh toán qua ví</p>
-                                    <div x-show="paymentMethod === 'MoMo'" class="absolute top-2 right-2 w-5 h-5 bg-pink-500 rounded-full flex items-center justify-center text-white"><i data-lucide="check" class="w-3 h-3"></i></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- QR Box (Simulated for QR Banking) -->
-                        <div x-show="paymentMethod === 'QR Banking'" x-collapse>
-                            <h3 class="font-bold text-[#1D2B53] mb-4 text-[15px]">2. Quét mã QR để thanh toán</h3>
-                            <div class="border border-gray-200 rounded-2xl p-6 bg-gray-50/50 flex flex-col items-center">
-                                <div class="w-48 h-48 bg-white border-4 border-white shadow-md rounded-xl mb-6 p-2 relative flex items-center justify-center">
-                                    <div class="w-full h-full" style="background-image: radial-gradient(circle, #111 2px, transparent 2px), radial-gradient(circle, #111 2px, transparent 2px); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
-                                    <div class="absolute inset-0 m-auto w-10 h-10 bg-white rounded-lg flex items-center justify-center border shadow-sm text-xs font-bold text-blue-600">MB</div>
-                                </div>
-
-                                <div class="w-full max-w-sm space-y-3 text-sm">
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 border-dashed">
-                                        <span class="text-gray-500 font-medium">Ngân hàng</span>
-                                        <span class="font-bold text-[#1D2B53]">MB Bank</span>
-                                    </div>
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 border-dashed">
-                                        <span class="text-gray-500 font-medium">Số tài khoản</span>
-                                        <span class="font-bold text-[#1D2B53] text-[16px]">0000 1234 5678</span>
-                                    </div>
-                                    <div class="flex justify-between items-center py-2 border-b border-gray-200 border-dashed">
-                                        <span class="text-gray-500 font-medium">Chủ tài khoản</span>
-                                        <span class="font-bold text-[#1D2B53]">QUỸ TRAO YÊU THƯƠNG</span>
-                                    </div>
-                                    <div class="flex justify-between items-center py-2">
-                                        <span class="text-gray-500 font-medium">Nội dung chuyển khoản <span class="text-xs text-gray-400 block">(không bắt buộc)</span></span>
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-bold text-[#1D2B53]">ung ho cham soc thu cung</span>
-                                            <button class="text-gray-400 hover:text-teal-600"><i data-lucide="copy" class="w-4 h-4"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <label class="flex items-center gap-3 cursor-pointer group mt-6">
-                            <input type="checkbox" x-model="isPaid" class="form-checkbox">
-                            <span class="font-bold text-[#1D2B53] text-[14px]">Tôi xác nhận đã hoàn tất thanh toán</span>
-                        </label>
-                    </div>
-
-                    <div class="mt-8 flex gap-4">
-                        <button @click="prevStep()" class="bg-gray-100 hover:bg-gray-200 text-[#1D2B53] px-6 py-3.5 rounded-xl font-bold flex items-center justify-center transition-colors">
-                            <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                        </button>
-                        <button @click="nextStep()" :disabled="!isPaid" class="flex-1 bg-[#F58A3C] hover:bg-[#E07930] text-white px-10 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.3)] hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed">
-                            Tôi đã thanh toán
-                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- STEP 4: HOÀN TẤT -->
-                <div x-show="step === 4" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100 text-center">
-                    
-                    <div class="w-20 h-20 rounded-full bg-orange-100 text-[#F58A3C] flex items-center justify-center mx-auto mb-6 shadow-inner relative">
-                        <div class="absolute inset-0 bg-[#F58A3C] opacity-20 rounded-full animate-ping"></div>
-                        <div class="w-14 h-14 rounded-full bg-[#F58A3C] text-white flex items-center justify-center z-10 shadow-lg">
-                            <i data-lucide="check" class="w-8 h-8"></i>
-                        </div>
-                    </div>
-                    
-                    <h2 class="text-3xl font-black text-[#1D2B53] mb-3">
-                        Cảm ơn bạn rất nhiều! 🎉
-                    </h2>
-                    <p class="text-gray-500 font-medium text-[15px] mb-10">
-                        Khoản đóng góp <span class="font-bold text-[#F58A3C]" x-text="formatMoney(getCurrentAmount())"></span> đã được ghi nhận thành công.
-                    </p>
-
-                    <!-- Transaction Info -->
-                    <div class="text-left bg-gray-50/50 rounded-2xl p-6 md:p-8 border border-gray-100 max-w-lg mx-auto mb-10">
-                        <h3 class="font-bold text-[#1D2B53] mb-5 text-[15px]">Thông tin giao dịch</h3>
-                        <div class="space-y-4 text-sm">
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1 border-b border-gray-200 border-dashed pb-3">
-                                <span class="text-gray-500 font-medium">Mã giao dịch</span>
-                                <span class="font-bold text-[#1D2B53]">DONATE-2025-000145</span>
-                            </div>
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1 border-b border-gray-200 border-dashed pb-3">
-                                <span class="text-gray-500 font-medium">Thời gian</span>
-                                <span class="font-bold text-[#1D2B53]">28/05/2025 14:30:25</span>
-                            </div>
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1 border-b border-gray-200 border-dashed pb-3">
-                                <span class="text-gray-500 font-medium">Phương thức thanh toán</span>
-                                <span class="font-bold text-[#1D2B53]" x-text="paymentMethod"></span>
-                            </div>
-                            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1 pt-1">
-                                <span class="text-gray-500 font-medium">Trạng thái</span>
-                                <span class="inline-flex px-3 py-1 bg-teal-100 text-teal-700 font-bold text-xs rounded-full">Thành công</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4 max-w-sm mx-auto">
-                        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3 text-left">
-                            <input type="checkbox" checked class="form-checkbox mt-1 shrink-0">
-                            <div>
-                                <p class="font-bold text-[13px] text-[#1D2B53]">Gửi email cập nhật định kỳ về dự án bạn đã ủng hộ</p>
-                                <p class="text-[11px] text-gray-500 mt-1">Bạn có thể thay đổi tùy chọn này bất cứ lúc nào.</p>
-                            </div>
-                        </div>
-
-                        <a href="{{ route('frontend.donations.index') }}" class="w-full block bg-[#F58A3C] hover:bg-[#E07930] text-white px-8 py-3.5 rounded-xl font-bold text-center shadow-[0_4px_15px_rgba(245,138,60,0.3)] hover:-translate-y-1 transition-all duration-300">
-                            <div class="flex items-center justify-center gap-2">
-                                <i data-lucide="gift" class="w-5 h-5"></i>
-                                Xem dự án đã ủng hộ
-                            </div>
-                        </a>
-                        
-                        <button class="w-full bg-white border border-teal-500 text-teal-600 px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-teal-50 transition-colors">
-                            <i data-lucide="share-2" class="w-4 h-4"></i>
-                            Chia sẻ yêu thương
-                        </button>
+                    <div class="mt-4 flex items-center gap-2 justify-center text-[12px] text-gray-400">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                        <span>Bảo mật bởi <strong class="text-gray-600">VNPay</strong> &amp; mã hóa <strong class="text-gray-600">SSL 256-bit</strong></span>
                     </div>
                 </div>
 
@@ -411,7 +263,7 @@
                 <div class="bg-[#FFF9F5] rounded-2xl p-6 shadow-sm border border-orange-100 overflow-hidden relative">
                     
                     <!-- Content changes based on step -->
-                    <div x-show="step < 3" x-transition>
+                    <div x-show="step <= 2" x-transition>
                         <h3 class="text-[18px] font-black text-[#1D2B53] flex items-center gap-2 mb-6">
                             Thông tin ủng hộ
                             <i data-lucide="heart" class="w-5 h-5 text-[#F58A3C]"></i>
@@ -442,69 +294,6 @@
                                 <p class="text-[12px] font-bold text-[#1D2B53] mb-1">Thông tin của bạn được bảo mật tuyệt đối</p>
                                 <p class="text-[10px] text-gray-500 font-medium leading-relaxed">Chúng tôi cam kết bảo vệ thông tin cá nhân và sử dụng khoản đóng góp minh bạch, hiệu quả.</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <div x-show="step === 3" x-cloak x-transition>
-                        <h3 class="text-[18px] font-black text-[#1D2B53] flex items-center gap-2 mb-6">
-                            Tóm tắt đơn ủng hộ
-                            <i data-lucide="heart" class="w-5 h-5 text-[#F58A3C]"></i>
-                        </h3>
-                        
-                        <div class="space-y-4 text-[13px]">
-                            <div class="flex justify-between items-start border-b border-orange-200/50 pb-4">
-                                <span class="font-bold text-gray-500">Số tiền ủng hộ</span>
-                                <span class="font-black text-[#F58A3C] text-xl" x-text="formatMoney(getCurrentAmount())"></span>
-                            </div>
-                            <div class="flex justify-between items-start border-b border-orange-200/50 pb-4">
-                                <span class="font-bold text-gray-500">Mục đích</span>
-                                <span class="font-bold text-[#1D2B53] text-right max-w-[150px]" x-text="getPurposeTitle()"></span>
-                            </div>
-                            <div class="flex justify-between items-start border-b border-orange-200/50 pb-4">
-                                <span class="font-bold text-gray-500">Phương thức</span>
-                                <span class="font-bold text-[#1D2B53]" x-text="paymentMethod"></span>
-                            </div>
-                            <div class="flex justify-between items-start pb-2">
-                                <span class="font-bold text-gray-500">Email nhận biên nhận</span>
-                                <span class="font-bold text-[#1D2B53] text-right truncate max-w-[150px]" x-text="email || 'Chưa nhập'"></span>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 bg-orange-50 rounded-xl p-4 border border-orange-100 flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-orange-100 text-[#F58A3C] flex items-center justify-center shrink-0">
-                                <i data-lucide="lock" class="w-3 h-3"></i>
-                            </div>
-                            <div>
-                                <p class="text-[12px] font-bold text-[#1D2B53] mb-0.5">Giao dịch an toàn</p>
-                                <p class="text-[10px] text-gray-500 font-medium leading-relaxed">Mọi giao dịch đều được mã hóa và bảo mật SSL 256-bit.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div x-show="step === 4" x-cloak x-transition>
-                        <h3 class="text-[18px] font-black text-[#1D2B53] text-center mb-4">
-                            Bé Mít gửi lời cảm ơn đến bạn! ❤️
-                        </h3>
-                        <p class="text-[13px] font-bold text-[#F58A3C] text-center italic mb-6 px-4">
-                            "Nhờ bạn mà mình có cơ hội được chăm sóc tốt hơn mỗi ngày."
-                        </p>
-                        
-                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mt-4 relative z-10">
-                            <h4 class="font-bold text-[13px] text-[#1D2B53] mb-4">Khoản đóng góp của bạn sẽ giúp</h4>
-                            <ul class="space-y-3">
-                                <li class="flex items-start gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#F58A3C] flex items-center justify-center shrink-0"><i data-lucide="utensils" class="w-3.5 h-3.5"></i></div>
-                                    <span class="text-[12px] font-medium text-gray-600">10 bữa ăn dinh dưỡng cho thú cưng</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center shrink-0"><i data-lucide="briefcase-medical" class="w-3.5 h-3.5"></i></div>
-                                    <span class="text-[12px] font-medium text-gray-600">Hỗ trợ thuốc và chi phí điều trị</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center shrink-0"><i data-lucide="stethoscope" class="w-3.5 h-3.5"></i></div>
-                                    <span class="text-[12px] font-medium text-gray-600">Chi phí chăm sóc sức khỏe và tiêm phòng</span>
-                                </li>
-                            </ul>
                         </div>
                     </div>
 
@@ -543,14 +332,12 @@
             steps: [
                 { id: 1, title: 'Chọn số tiền' },
                 { id: 2, title: 'Thông tin ủng hộ' },
-                { id: 3, title: 'Thanh toán' },
-                { id: 4, title: 'Hoàn tất' }
             ],
             
             // Step 1 Data
-            hasCampaign: {{ request('campaign_id') ? 'true' : 'false' }},
-            campaignId: '{{ request('campaign_id') ?? '' }}',
-            campaignName: 'Cứu trợ Lucky bị viêm phổi nặng', // Tạm thời mockup tên chiến dịch khi có ID
+            hasCampaign: {{ $campaign ? 'true' : 'false' }},
+            campaignId: '{{ $campaign->Ma_chien_dich ?? '' }}',
+            campaignName: '{{ $campaign->Tieu_de ?? '' }}',
             
             suggestedAmounts: [50000, 100000, 200000, 500000, 1000000],
             amount: 100000,
@@ -565,12 +352,10 @@
             ],
             
             // Step 2 Data
-            name: '',
-            email: '',
-            phone: '',
+            name: '{{ Auth::user()?->Ho_ten ?? '' }}',
+            email: '{{ Auth::user()?->Email ?? Auth::user()?->email ?? '' }}',
+            phone: '{{ Auth::user()?->So_dien_thoai ?? '' }}',
             isAnonymous: false,
-            province: '',
-            extraMessage: '',
             
             // Step 3 Data
             paymentMethod: 'QR Banking',
@@ -602,11 +387,28 @@
                 return p ? p.title : '';
             },
             
+            submitVNPay() {
+                const amount = this.getCurrentAmount();
+                if (amount < 10000) {
+                    alert('Số tiền ủng hộ tối thiểu là 10.000đ.');
+                    return;
+                }
+                if (!this.isAnonymous && !this.name.trim()) {
+                    alert('Vui lòng nhập tên của bạn hoặc chọn ủng hộ ẩn danh.');
+                    return;
+                }
+                // Điền vào form ẩn rồi submit
+                document.getElementById('form-amount').value = amount;
+                document.getElementById('form-name').value = this.isAnonymous ? 'Nhà hảo tâm ẩn danh' : this.name;
+                document.getElementById('form-an-danh').value = this.isAnonymous ? '1' : '0';
+                document.getElementById('form-loi-nhan').value = this.message || '';
+                document.getElementById('vnpay-donation-form').submit();
+            },
+            
             nextStep() {
-                if (this.step < 4) {
+                if (this.step < 2) {
                     this.step++;
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                    // Re-init lucide icons for newly visible elements
                     setTimeout(() => {
                         if (window.lucide) {
                             lucide.createIcons();
