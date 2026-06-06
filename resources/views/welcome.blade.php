@@ -350,7 +350,7 @@
             </div>
             <!-- Small 1 -->
             <div class="relative rounded-2xl overflow-hidden group h-[180px]">
-                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Care">
+                <img src="https://images.unsplash.com/photo-1537151608804-ea2d11ac943e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Care">
                 <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
                     <span class="text-xs font-bold text-dark">Chăm sóc & phục hồi sức khỏe</span>
                 </div>
@@ -364,7 +364,7 @@
             </div>
             <!-- Small 3 -->
             <div class="relative rounded-2xl overflow-hidden group h-[180px]">
-                <img src="https://images.unsplash.com/photo-1511125357778-43ec75f56b3e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Transport">
+                <img src="https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Transport">
                 <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
                     <span class="text-xs font-bold text-dark">Vận chuyển đến mái ấm mới</span>
                 </div>
