@@ -84,15 +84,15 @@
         </div>
 
         <!-- Filter & Table Card (Pets Style) -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden">
+        <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full">
             
             <!-- Filters Section -->
-            <div class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
-                <form id="filter-form" x-data="{ submit() { this.$el.submit(); } }" method="GET" action="{{ route('admin.donation_campaigns.index') }}" class="flex items-end gap-4 min-w-[900px]">
+            <div class="p-6 pb-4 border-b border-slate-100">
+                <form id="filter-form" method="GET" action="{{ route('admin.donation_campaigns.index') }}" class="flex flex-wrap items-end gap-4">
                     <!-- Search Input -->
-                    <div class="w-[260px] shrink-0">
+                    <div class="w-full sm:w-[260px] shrink-0">
                         <div class="relative w-full">
-                            <input @input.debounce.500ms="submit()" type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm chiến dịch, mô tả..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-900 placeholder-slate-400 transition-all shadow-sm">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm chiến dịch, mô tả..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 text-slate-900 placeholder-slate-400 transition-all shadow-sm">
                             <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
@@ -100,19 +100,34 @@
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="flex items-end gap-3 flex-1">
+                    <div class="flex flex-wrap sm:flex-nowrap items-end gap-3 flex-1">
                         <!-- Dropdown Trạng thái -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="flex flex-col gap-1.5 flex-1 relative" x-data="{ 
+                            open: false, 
+                            value: '{{ request('status', '') }}', 
+                            options: {'': 'Tất cả trạng thái', 'active': 'Đang hoạt động', 'closed': 'Đã kết thúc'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
-                            <div class="relative">
-                                <select @change="submit()" name="status" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
-                                    <option value="">Tất cả trạng thái</option>
-                                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Đang hoạt động</option>
-                                    <option value="closed" {{ request('status') === 'closed' ? 'selected' : '' }}>Đã kết thúc</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="status" x-model="value" id="status-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span class="truncate" x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-[60px] w-full min-w-[180px] max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('filter-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-teal-50 text-teal-600 font-bold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
@@ -126,7 +141,7 @@
                                         dateFormat: 'd/m/Y',
                                         onChange: function(selectedDates) {
                                             if (selectedDates.length === 2 || selectedDates.length === 0) {
-                                                submit();
+                                                document.getElementById('filter-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
                                             }
                                         }
                                     });
@@ -149,7 +164,13 @@
             </div>
 
             <!-- Table Container (Pets Style) -->
-            <div class="p-4 overflow-x-auto custom-scrollbar">
+            <div id="campaigns-table-container" class="relative min-h-[400px]">
+                <!-- Loading Overlay -->
+                <div id="table-loading-overlay" class="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-10 hidden flex items-center justify-center">
+                    <div class="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left border-collapse min-w-[1000px] whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
@@ -321,10 +342,10 @@
             </div>
 
             <!-- Pagination Bar -->
-            <div class="px-6 py-4">
-                {{ $campaigns->links() }}
+            <div class="px-6 py-4 border-t border-slate-100">
+                {{ $campaigns->links('admin.pagination.custom') }}
             </div>
-        </div>
+            </div>
 
         <!-- Close Campaign Modal -->
         <x-modal name="close-campaign-modal" focusable maxWidth="sm">
@@ -364,4 +385,12 @@
         </x-modal>
     </div>
 
+    <!-- Init AJAX Table Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initAjaxTable === 'function') {
+                initAjaxTable('campaigns-table-container', 'filter-form');
+            }
+        });
+    </script>
 </x-admin-layout>

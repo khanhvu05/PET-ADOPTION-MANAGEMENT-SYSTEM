@@ -38,11 +38,11 @@
         <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden" id="table-card-container">
             
             <!-- Filters Section -->
-            <form method="GET" action="{{ route('admin.adoptions.index') }}" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar" id="filterForm">
+            <form method="GET" action="{{ route('admin.adoptions.index') }}" class="p-6 pb-4 border-b border-slate-100" id="filterForm">
                 <!-- Preserve pagination size -->
                 <input type="hidden" name="per_page" id="per_page_input" value="{{ request('per_page', 5) }}">
                 
-                <div class="flex items-end gap-4 min-w-[900px]">
+                <div class="flex flex-wrap items-end gap-4">
                     <!-- Search Input -->
                     <div class="w-[280px] shrink-0">
                         <div class="relative w-full">
@@ -54,38 +54,64 @@
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="flex items-end gap-3 flex-1">
+                    <div class="flex flex-wrap items-end gap-3 flex-1">
                         <!-- Dropdown 1 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('trang_thai', '') }}', 
+                            options: {'': 'Tất cả trạng thái', 'pending': 'Chờ duyệt', 'pre_approved': 'Duyệt sơ bộ', 'approved': 'Đã duyệt', 'rejected': 'Từ chối', 'cancelled': 'Đã hủy', 'completed': 'Đã nhận nuôi'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
-                            <div class="relative">
-                                <select name="trang_thai" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
-                                    <option value="">Tất cả trạng thái</option>
-                                    <option value="pending" {{ request('trang_thai') == 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
-                                    <option value="pre_approved" {{ request('trang_thai') == 'pre_approved' ? 'selected' : '' }}>Duyệt sơ bộ</option>
-                                    <option value="approved" {{ request('trang_thai') == 'approved' ? 'selected' : '' }}>Đã duyệt</option>
-                                    <option value="rejected" {{ request('trang_thai') == 'rejected' ? 'selected' : '' }}>Từ chối</option>
-                                    <option value="cancelled" {{ request('trang_thai') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
-                                    <option value="completed" {{ request('trang_thai') == 'completed' ? 'selected' : '' }}>Đã nhận nuôi</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('trang_thai-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-teal-50/50 text-teal-700 font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
                         <!-- Dropdown 2 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('loai_thu_cung', '') }}', 
+                            options: {'': 'Tất cả loài', 'cho': 'Chó', 'meo': 'Mèo'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Loài thú cưng</label>
-                            <div class="relative">
-                                <select name="loai_thu_cung" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
-                                    <option value="">Tất cả loài</option>
-                                    <option value="cho" {{ request('loai_thu_cung') == 'cho' ? 'selected' : '' }}>Chó</option>
-                                    <option value="meo" {{ request('loai_thu_cung') == 'meo' ? 'selected' : '' }}>Mèo</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="loai_thu_cung" x-model="value" id="loai_thu_cung-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('loai_thu_cung-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-teal-50/50 text-teal-700 font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
@@ -340,8 +366,12 @@
 
         filterForm.addEventListener('submit', handleFormSubmit);
 
-        filterForm.querySelectorAll('select, input[type="date"]').forEach(el => {
-            el.addEventListener('change', handleFormSubmit);
+        filterForm.addEventListener('change', function(e) {
+            if (e.target.tagName === 'SELECT' || e.target.type === 'date' || e.target.type === 'hidden') {
+                if (e.target.name !== 'per_page') {
+                    handleFormSubmit();
+                }
+            }
         });
 
         let searchTimeout;

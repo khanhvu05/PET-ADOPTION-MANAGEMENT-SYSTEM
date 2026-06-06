@@ -32,7 +32,10 @@ class DonationCampaignController extends Controller
         // Tìm kiếm theo tiêu đề (không dấu)
         if ($request->filled('search')) {
             $search = $request->search;
-            $campaignsQuery->whereRaw('Tieu_de COLLATE utf8mb4_unicode_ci LIKE ?', ["%{$search}%"]);
+            $campaignsQuery->where(function($q) use ($search) {
+                $q->whereRaw('Tieu_de COLLATE utf8mb4_unicode_ci LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('Mo_ta COLLATE utf8mb4_unicode_ci LIKE ?', ["%{$search}%"]);
+            });
         }
 
         // Lọc theo trạng thái
@@ -62,7 +65,8 @@ class DonationCampaignController extends Controller
             return $this->exportCsv($campaignsQuery);
         }
 
-        $campaigns = $campaignsQuery->paginate(10)->withQueryString();
+        $perPage = $request->input('per_page', 10);
+        $campaigns = $campaignsQuery->paginate($perPage)->withQueryString();
 
         return view('admin.donation_campaigns.index', compact(
             'campaigns', 

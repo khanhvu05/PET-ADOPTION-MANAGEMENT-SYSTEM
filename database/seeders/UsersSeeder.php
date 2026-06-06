@@ -25,6 +25,7 @@ class UsersSeeder extends Seeder
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'nhan_vien_tao',
                 'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'admin',
             ],
             [
@@ -38,6 +39,7 @@ class UsersSeeder extends Seeder
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'web',
                 'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'user',
             ],
             [
@@ -51,6 +53,7 @@ class UsersSeeder extends Seeder
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'web',
                 'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'user',
             ],
             [
@@ -64,6 +67,7 @@ class UsersSeeder extends Seeder
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'web',
                 'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'user',
             ],
             [
@@ -76,7 +80,8 @@ class UsersSeeder extends Seeder
                 'Loai_tai_khoan'   => 'ca_nhan',
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'web',
-                'Email_da_xac_thuc' => false,
+                'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'user',
             ],
             [
@@ -90,6 +95,7 @@ class UsersSeeder extends Seeder
                 'Trang_thai'       => 'hoat_dong',
                 'Nguon_dang_ky'    => 'web',
                 'Email_da_xac_thuc' => true,
+                'email_verified_at' => now(),
                 'role'             => 'user',
             ],
         ];

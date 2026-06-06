@@ -304,7 +304,16 @@
                                     Lý do bạn muốn nhận nuôi bé {{ $pet->Ten }}? <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <textarea rows="4" x-model="form.reason" placeholder="Chia sẻ lý do bạn muốn nhận nuôi bé..." class="w-full p-4 bg-slate-50 border @error('Ly_do_nhan_nuoi') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:bg-white focus:ring-1 focus:ring-[#F58A3C] transition text-[#1D2B53]"></textarea>
+                                    <textarea rows="4" x-model="form.reason" placeholder="Chia sẻ lý do bạn muốn nhận nuôi bé..." 
+                                              :class="{
+                                                'border-red-500 focus:border-red-500 focus:ring-red-500': form.reason.length > 0 && form.reason.length < 30, 
+                                                'border-gray-200 focus:border-[#F58A3C] focus:ring-[#F58A3C]': form.reason.length === 0 || form.reason.length >= 30
+                                              }"
+                                              class="w-full p-4 bg-slate-50 border @error('Ly_do_nhan_nuoi') border-red-500 @enderror rounded-xl text-sm font-medium focus:outline-none focus:bg-white focus:ring-1 transition text-[#1D2B53]"></textarea>
+                                    <div class="absolute bottom-3 right-4 text-[11px] font-bold" 
+                                         :class="form.reason.length > 0 && form.reason.length < 30 ? 'text-red-500' : 'text-gray-400'">
+                                        <span x-text="form.reason.length"></span> ký tự (tối thiểu 30)
+                                    </div>
                                 </div>
                                 @error('Ly_do_nhan_nuoi')
                                     <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>

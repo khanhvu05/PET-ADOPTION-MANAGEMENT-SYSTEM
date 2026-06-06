@@ -2,25 +2,10 @@
 @section('title', 'Trang chủ')
 
 @section('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        .swiper-btn-next::after, .swiper-btn-prev::after {
+        /* Custom Native Slider Hide Scrollbar */
+        #pets-slider::-webkit-scrollbar {
             display: none;
-        }
-        .featured-swiper {
-            padding-bottom: 3.5rem !important; /* For pagination */
-        }
-        .featured-swiper .swiper-pagination-bullet {
-            width: 10px;
-            height: 10px;
-            background-color: #E5E7EB;
-            opacity: 1;
-            transition: all 0.3s ease;
-        }
-        .featured-swiper .swiper-pagination-bullet-active {
-            background-color: #F58A3C;
-            width: 28px;
-            border-radius: 999px;
         }
     </style>
 @endsection
@@ -135,80 +120,75 @@
         </a>
     </div>
 
-    <!-- Cards container with Swiper -->
-    <div class="relative w-full">
+    <!-- Cards container with Native CSS Slider -->
+    <div class="relative w-full group">
         <!-- Navigation Buttons -->
-        <button class="swiper-btn-prev hidden xl:flex absolute top-[40%] -left-6 z-10 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.06)] border border-gray-100 hover:scale-105 hover:bg-[#FFF5EF] transition-all text-gray-400 hover:text-[#F58A3C] focus:outline-none">
+        <button onclick="document.getElementById('pets-slider').scrollBy({left: -320, behavior: 'smooth'})" class="hidden xl:flex absolute top-[40%] -left-6 z-10 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.06)] border border-gray-100 hover:scale-105 hover:bg-[#FFF5EF] transition-all text-gray-400 hover:text-[#F58A3C] focus:outline-none">
             <i data-lucide="chevron-left" class="w-6 h-6"></i>
         </button>
         
-        <div class="swiper featured-swiper w-full px-2">
-            <div class="swiper-wrapper">
-                @forelse($featuredPets as $pet)
-                <div class="swiper-slide h-auto pb-4">
-                    <!-- Pet Card -->
-                    <div class="bg-white rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgb(0,0,0,0.08)] transition-all duration-300 border border-gray-100 flex flex-col hover:-translate-y-1 h-full">
-                        <div class="relative h-48 sm:h-44 overflow-hidden">
-                            <img src="{{ $pet->AnhUrl }}" alt="{{ $pet->Ten }}" class="w-full h-full object-cover">
-                            <div class="absolute top-3 left-3 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-medium px-3 py-1 rounded-lg shadow-sm">
-                                {{ $pet->LoaiLabel }}
-                            </div>
-                            <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-500 border border-red-100 hover:bg-red-50 shadow-sm transition group">
-                                <i data-lucide="heart" class="w-4 h-4"></i>
-                            </button>
+        <div id="pets-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-2 pb-8 scroll-smooth" style="scrollbar-width: none; -ms-overflow-style: none;">
+            @forelse($featuredPets as $pet)
+            <div class="snap-start shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] h-auto">
+                <!-- Pet Card -->
+                <div class="bg-white rounded-[24px] overflow-hidden shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgb(0,0,0,0.08)] transition-all duration-300 border border-gray-100 flex flex-col hover:-translate-y-1 h-full">
+                    <div class="relative h-48 sm:h-44 overflow-hidden">
+                        <img src="{{ $pet->AnhUrl }}" alt="{{ $pet->Ten }}" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-medium px-3 py-1 rounded-lg shadow-sm">
+                            {{ $pet->LoaiLabel }}
                         </div>
+                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-500 border border-red-100 hover:bg-red-50 shadow-sm transition group">
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="p-5 flex-1 flex flex-col">
+                        <h4 class="font-bold text-[16px] text-[#1D2B53] mb-3">{{ $pet->Ten }}</h4>
                         
-                        <div class="p-5 flex-1 flex flex-col">
-                            <h4 class="font-bold text-[16px] text-[#1D2B53] mb-3">{{ $pet->Ten }}</h4>
-                            
-                            <div class="flex items-center justify-between text-[11px] font-medium text-gray-500 mb-4 gap-1">
-                                <div class="flex items-center gap-1.5 truncate"><i data-lucide="calendar" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->NhomTuoiLabel }}</span></div>
-                                <div class="flex items-center gap-1.5 truncate"><i data-lucide="paw-print" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->GioiTinhLabel }}</span></div>
-                                <div class="flex items-center gap-1.5 truncate"><i data-lucide="box" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> 
-                                    <span class="truncate">
-                                        {{ $pet->Can_nang < 5 ? 'Nhỏ' : ($pet->Can_nang > 15 ? 'Lớn' : 'Trung bình') }}
-                                    </span>
-                                </div>
+                        <div class="flex items-center justify-between text-[11px] font-medium text-gray-500 mb-4 gap-1">
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="calendar" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->NhomTuoiLabel }}</span></div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="paw-print" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> <span class="truncate">{{ $pet->GioiTinhLabel }}</span></div>
+                            <div class="flex items-center gap-1.5 truncate"><i data-lucide="box" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i> 
+                                <span class="truncate">
+                                    {{ $pet->Can_nang < 5 ? 'Nhỏ' : ($pet->Can_nang > 15 ? 'Lớn' : 'Trung bình') }}
+                                </span>
                             </div>
-
-                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
-                                <div class="flex items-center gap-1 text-[11px] text-gray-500 font-medium truncate max-w-[50%]">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0"></i>
-                                    <span class="truncate">{{ $pet->ViTriLabel }}</span>
-                                </div>
-                                @if($pet->Da_tiem_phong)
-                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                        Đã tiêm phòng
-                                    </div>
-                                @elseif($pet->Da_triet_san)
-                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                        Đã triệt sản
-                                    </div>
-                                @else
-                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                        Khỏe mạnh
-                                    </div>
-                                @endif
-                            </div>
-
-                            <a href="{{ route('frontend.adoptions.show', $pet->Ma_thu_cung) }}" class="w-full mt-4 bg-[#FFF5EF] hover:bg-orange-100 text-[#F58A3C] font-semibold py-2.5 rounded-lg transition text-[12px] text-center block">
-                                Xem chi tiết
-                            </a>
                         </div>
+
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
+                            <div class="flex items-center gap-1 text-[11px] text-gray-500 font-medium truncate max-w-[50%]">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0"></i>
+                                <span class="truncate">{{ $pet->ViTriLabel }}</span>
+                            </div>
+                            @if($pet->Da_tiem_phong)
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Đã tiêm phòng
+                                </div>
+                            @elseif($pet->Da_triet_san)
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Đã triệt sản
+                                </div>
+                            @else
+                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                    Khỏe mạnh
+                                </div>
+                            @endif
+                        </div>
+
+                        <a href="{{ route('frontend.adoptions.show', $pet->Ma_thu_cung) }}" class="w-full mt-4 bg-[#FFF5EF] hover:bg-orange-100 text-[#F58A3C] font-semibold py-2.5 rounded-lg transition text-[12px] text-center block">
+                            Xem chi tiết
+                        </a>
                     </div>
                 </div>
-                @empty
-                <div class="w-full text-center py-10">
-                    <p class="text-gray-500 font-medium text-sm">Hiện tại chưa có thú cưng nổi bật nào.</p>
-                </div>
-                @endforelse
             </div>
-            
-            <!-- Custom Pagination -->
-            <div class="swiper-pagination !-bottom-1"></div>
+            @empty
+            <div class="w-full text-center py-10">
+                <p class="text-gray-500 font-medium text-sm">Hiện tại chưa có thú cưng nổi bật nào.</p>
+            </div>
+            @endforelse
         </div>
         
-        <button class="swiper-btn-next hidden xl:flex absolute top-[40%] -right-6 z-10 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.06)] border border-gray-100 hover:scale-105 hover:bg-[#FFF5EF] transition-all text-gray-400 hover:text-[#F58A3C] focus:outline-none">
+        <button onclick="document.getElementById('pets-slider').scrollBy({left: 320, behavior: 'smooth'})" class="hidden xl:flex absolute top-[40%] -right-6 z-10 -translate-y-1/2 w-12 h-12 bg-white rounded-full items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.06)] border border-gray-100 hover:scale-105 hover:bg-[#FFF5EF] transition-all text-gray-400 hover:text-[#F58A3C] focus:outline-none">
             <i data-lucide="chevron-right" class="w-6 h-6"></i>
         </button>
     </div>
@@ -545,7 +525,7 @@
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">5 lưu ý khi đưa chó mèo mới về nhà</h3>
             <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
                 <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 12/06/2026</span>
-                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7-7"></path></svg>
             </div>
         </a>
         <!-- News 2 -->
@@ -557,7 +537,7 @@
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Ngày hội nhận nuôi thú cưng tháng 6/2026</h3>
             <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
                 <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 09/06/2026</span>
-                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7-7"></path></svg>
             </div>
         </a>
         <!-- News 3 -->
@@ -569,19 +549,19 @@
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Hành trình giải cứu bé mèo kẹt trong cống</h3>
             <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
                 <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 02/06/2026</span>
-                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7-7"></path></svg>
             </div>
         </a>
         <!-- News 4 -->
         <a href="#" class="pet-card group p-4 flex flex-col">
             <div class="relative h-40 mb-4 rounded-[16px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1596726880026-6df3abeb1661?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
+                <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="News">
                 <div class="absolute top-3 left-3 bg-white text-primary text-[10px] font-black rounded-full px-3 py-1 shadow-sm uppercase tracking-wider">Hoạt động</div>
             </div>
             <h3 class="text-base font-black text-dark mb-4 leading-tight group-hover:text-primary transition-colors">Chúng tôi đã tổ chức buổi tiêm phòng miễn phí</h3>
             <div class="mt-auto flex items-center justify-between text-xs font-bold text-muted border-t border-gray-50 pt-3">
                 <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 28/05/2026</span>
-                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7-7"></path></svg>
             </div>
         </a>
     </div>
@@ -646,29 +626,4 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (document.querySelector('.featured-swiper')) {
-                new Swiper('.featured-swiper', {
-                    slidesPerView: 1,
-                    spaceBetween: 24,
-                    navigation: {
-                        nextEl: '.swiper-btn-next',
-                        prevEl: '.swiper-btn-prev',
-                    },
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    breakpoints: {
-                        640: { slidesPerView: 2 },
-                        1024: { slidesPerView: 3 },
-                        1280: { slidesPerView: 4 }
-                    }
-                });
-            }
-        });
-    </script>
 @endsection
-

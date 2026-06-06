@@ -40,6 +40,17 @@ class AdoptionApplicationController extends Controller
                 ->with('warning', "Bạn đã gửi đơn nhận nuôi bé {$pet->Ten} rồi. Vui lòng chờ xét duyệt.");
         }
 
+        // Kiểm tra giới hạn số lượng đơn nhận nuôi của user (tối đa 3 đơn đang xử lý hoặc đã duyệt)
+        $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
+            ->whereIn('Trang_thai', ['pending', 'pre_approved', 'approved'])
+            ->count();
+            
+        if ($activeApplicationsCount >= 3) {
+            return redirect()
+                ->route('frontend.adoptions.show', $petId)
+                ->with('error', "Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý hoặc đã duyệt). Vui lòng hoàn tất các đơn hiện tại trước khi nhận nuôi thêm.");
+        }
+
         // Load câu hỏi từ DB
         $questions = AdoptionQuestion::where('Hoat_dong', true)
             ->orderBy('Thu_tu')
@@ -107,6 +118,16 @@ class AdoptionApplicationController extends Controller
 
                 if ($duplicate) {
                     throw new \Exception("Bạn đã có đơn đang chờ duyệt cho bé này rồi.");
+                }
+
+                // Kiểm tra giới hạn (tối đa 3 đơn)
+                $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
+                    ->whereIn('Trang_thai', ['pending', 'pre_approved', 'approved'])
+                    ->lockForUpdate()
+                    ->count();
+
+                if ($activeApplicationsCount >= 3) {
+                    throw new \Exception("Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý hoặc đã duyệt).");
                 }
 
                 // Tạo đơn

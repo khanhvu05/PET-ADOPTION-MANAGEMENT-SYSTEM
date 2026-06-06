@@ -83,8 +83,8 @@
                     this.$el.action = url.pathname;
                     this.$el.submit();
                 }
-            }" action="{{ route('admin.donations.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
-                <div class="flex gap-4 min-w-max items-end">
+            }" action="{{ route('admin.donations.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100">
+                <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
                     <div class="w-64">
                         <div class="relative">
@@ -116,13 +116,32 @@
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="w-40">
-                        <select @change="submit()" name="method" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] appearance-none shadow-sm text-slate-700">
-                            <option value="all">Tất cả phương thức</option>
-                            <option value="VNPAYQR" {{ request('method') == 'VNPAYQR' ? 'selected' : '' }}>Quét mã QR (VNPAYQR)</option>
-                            <option value="VNBANK" {{ request('method') == 'VNBANK' ? 'selected' : '' }}>Thẻ ATM / VNBANK</option>
-                            <option value="INTCARD" {{ request('method') == 'INTCARD' ? 'selected' : '' }}>Thẻ Quốc Tế</option>
-                        </select>
+                    <div class="w-40 relative" x-data="{ 
+                        open: false, 
+                        value: '{{ request('method', 'all') }}', 
+                        options: {'all': 'Tất cả phương thức', 'VNPAYQR': 'Quét mã QR (VNPAYQR)', 'VNBANK': 'Thẻ ATM / VNBANK', 'INTCARD': 'Thẻ Quốc Tế'} 
+                    }">
+                        <input type="hidden" name="method" x-model="value" id="method-filter-input">
+                        <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-[42px] px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-100">
+                            <span class="truncate" x-text="options[value]"></span>
+                            <svg class="w-4 h-4 ml-2 shrink-0 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute left-0 top-full mt-2 w-max min-w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                            <template x-for="(text, val) in options" :key="val">
+                                <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('method-filter-input').dispatchEvent(new Event('change', { bubbles: true })); submit(); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between gap-4" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                    <span class="whitespace-nowrap" x-text="text"></span>
+                                    <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                            </template>
+                        </div>
                     </div>
 
                     <!-- Action Buttons -->

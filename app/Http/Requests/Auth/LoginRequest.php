@@ -56,6 +56,17 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $user = \App\Models\User::where('Email', $this->email)->first();
+
+        // Kiểm tra tài khoản bị khóa
+        if ($user && $user->Trang_thai === 'bi_khoa') {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Tài khoản của bạn đã bị khóa bởi quản trị viên vì vi phạm chính sách hoặc lý do bảo mật.',
+            ]);
+        }
+
         if (! Auth::attempt(['Email' => $this->email, 'password' => $this->password], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

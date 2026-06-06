@@ -42,11 +42,23 @@
                             <div class="absolute top-4 left-4 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm">
                                 {{ $pet->LoaiLabel }}
                             </div>
-                            @if($pet->Da_tiem_phong)
-                            <div class="absolute top-4 right-4 bg-emerald-500 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm">
-                                Đã tiêm phòng
+                            <div class="absolute top-4 right-4 flex flex-col gap-2">
+                                @if($pet->Da_tiem_phong)
+                                <div class="bg-emerald-500 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm text-center">
+                                    Đã tiêm phòng
+                                </div>
+                                @endif
+                                @if($pet->Da_triet_san)
+                                <div class="bg-emerald-500 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm text-center">
+                                    Đã triệt sản
+                                </div>
+                                @endif
+                                @if(!$pet->Da_tiem_phong && !$pet->Da_triet_san)
+                                <div class="bg-emerald-500 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm text-center">
+                                    Khỏe mạnh
+                                </div>
+                                @endif
                             </div>
-                            @endif
                             <button class="absolute bottom-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-500 shadow-lg hover:scale-110 transition duration-300">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             </button>

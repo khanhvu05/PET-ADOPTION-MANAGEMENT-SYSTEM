@@ -176,19 +176,23 @@
                                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0"></i>
                                 <span class="truncate">{{ $pet->ViTriLabel }}</span>
                             </div>
-                            @if($pet->Da_tiem_phong)
-                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                    Đã tiêm phòng
-                                </div>
-                            @elseif($pet->Da_triet_san)
-                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                    Đã triệt sản
-                                </div>
-                            @else
-                                <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
-                                    Khỏe mạnh
-                                </div>
-                            @endif
+                            <div class="flex gap-1 overflow-hidden">
+                                @if($pet->Da_tiem_phong)
+                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                        Đã tiêm phòng
+                                    </div>
+                                @endif
+                                @if($pet->Da_triet_san)
+                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                        Đã triệt sản
+                                    </div>
+                                @endif
+                                @if(!$pet->Da_tiem_phong && !$pet->Da_triet_san)
+                                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50/80 px-2.5 py-1.5 rounded-lg whitespace-nowrap tracking-wide">
+                                        Khỏe mạnh
+                                    </div>
+                                @endif
+                            </div>
                         </div>
 
                         <a href="{{ route('frontend.adoptions.show', $pet->Ma_thu_cung) }}" class="w-full mt-4 bg-[#FFF5EF] hover:bg-orange-100 text-[#F58A3C] font-semibold py-2.5 rounded-lg transition text-[12px] text-center block">

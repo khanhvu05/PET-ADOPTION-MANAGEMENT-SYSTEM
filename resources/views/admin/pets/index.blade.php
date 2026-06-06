@@ -76,10 +76,10 @@
         <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden relative">
             
             <!-- Filters Section -->
-            <form id="filter-form" action="{{ route('admin.pets.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
-                <div class="flex items-end gap-4 min-w-[900px]">
+            <form id="filter-form" action="{{ route('admin.pets.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100">
+                <div class="flex flex-wrap items-end gap-4">
                     <!-- Search Input -->
-                    <div class="w-[260px] shrink-0">
+                    <div class="w-full md:w-[260px] shrink-0">
                         <div class="relative w-full">
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm thú cưng..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] text-slate-900 placeholder-slate-400 transition-all shadow-sm">
                             <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
@@ -89,69 +89,129 @@
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="flex items-end gap-3 flex-1">
+                    <div class="flex flex-wrap items-end gap-3 flex-1">
                         <!-- Dropdown 1 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('loai', 'all') }}', 
+                            options: {'all': 'Tất cả loại', 'cho': 'Chó', 'meo': 'Mèo', 'khac': 'Khác'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Loại thú cưng</label>
-                            <div class="relative">
-                                <select name="loai" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm appearance-none cursor-pointer">
-                                    <option value="all">Tất cả loại</option>
-                                    <option value="cho" {{ request('loai') == 'cho' ? 'selected' : '' }}>Chó</option>
-                                    <option value="meo" {{ request('loai') == 'meo' ? 'selected' : '' }}>Mèo</option>
-                                    <option value="khac" {{ request('loai') == 'khac' ? 'selected' : '' }}>Khác</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="loai" x-model="value" id="loai-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('loai-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
                         <!-- Dropdown 2 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('giong', 'all') }}', 
+                            options: {
+                                'all': 'Tất cả giống',
+                                @foreach($breeds as $breed)
+                                    '{{ $breed }}': '{{ $breed }}',
+                                @endforeach
+                            } 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Giống loài</label>
-                            <div class="relative">
-                                <select name="giong" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm appearance-none cursor-pointer">
-                                    <option value="all">Tất cả giống</option>
-                                    @foreach($breeds as $breed)
-                                        <option value="{{ $breed }}" {{ request('giong') == $breed ? 'selected' : '' }}>{{ $breed }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="giong" x-model="value" id="giong-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('giong-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
                         <!-- Dropdown 3 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('trang_thai', 'all') }}', 
+                            options: {'all': 'Tất cả', 'san_sang': 'Sẵn sàng', 'dang_cuu_ho': 'Đang cứu hộ', 'chua_san_sang': 'Chưa sẵn sàng', 'da_nhan_nuoi': 'Đã nhận nuôi', 'da_mat': 'Đã mất'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
-                            <div class="relative">
-                                <select name="trang_thai" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm appearance-none cursor-pointer">
-                                    <option value="all">Tất cả trạng thái</option>
-                                    <option value="san_sang" {{ request('trang_thai') == 'san_sang' ? 'selected' : '' }}>Sẵn sàng</option>
-                                    <option value="dang_cuu_ho" {{ request('trang_thai') == 'dang_cuu_ho' ? 'selected' : '' }}>Đang cứu hộ</option>
-                                    <option value="chua_san_sang" {{ request('trang_thai') == 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
-                                    <option value="da_nhan_nuoi" {{ request('trang_thai') == 'da_nhan_nuoi' ? 'selected' : '' }}>Đã nhận nuôi</option>
-                                    <option value="da_mat" {{ request('trang_thai') == 'da_mat' ? 'selected' : '' }}>Đã mất</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('trang_thai-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
                         <!-- Dropdown 4 -->
-                        <div class="flex flex-col gap-1.5 flex-1">
+                        <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
+                            open: false, 
+                            value: '{{ request('gioi_tinh', 'all') }}', 
+                            options: {'all': 'Tất cả giới tính', 'duc': 'Đực', 'cai': 'Cái'} 
+                        }">
                             <label class="text-xs font-bold text-slate-700">Giới tính</label>
-                            <div class="relative">
-                                <select name="gioi_tinh" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm appearance-none cursor-pointer">
-                                    <option value="all">Tất cả giới tính</option>
-                                    <option value="duc" {{ request('gioi_tinh') == 'duc' ? 'selected' : '' }}>Đực</option>
-                                    <option value="cai" {{ request('gioi_tinh') == 'cai' ? 'selected' : '' }}>Cái</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
+                            <input type="hidden" name="gioi_tinh" x-model="value" id="gioi_tinh-filter-input">
+                            <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
+                                <span x-text="options[value]"></span>
+                                <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                                <template x-for="(text, val) in options" :key="val">
+                                    <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('gioi_tinh-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                        <span x-text="text"></span>
+                                        <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
@@ -162,7 +222,6 @@
                             </a>
                         </div>
                     </div>
-                </div>
             </form>
 
             <div id="pet-table-container" class="relative">

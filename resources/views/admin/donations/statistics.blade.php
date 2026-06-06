@@ -19,13 +19,39 @@
                 <p class="text-sm text-slate-500 mt-1">Tổng quan toàn bộ hoạt động quyên góp của hệ thống</p>
             </div>
             <!-- Year Filter -->
-            <form method="GET" action="{{ route('admin.donations.statistics') }}" class="flex items-center gap-3">
+            <form method="GET" action="{{ route('admin.donations.statistics') }}" class="flex items-center gap-3" id="filterFormYear">
                 <label class="text-sm font-semibold text-slate-600">Năm:</label>
-                <select name="year" onchange="this.form.submit()" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 shadow-sm focus:ring-2 focus:ring-teal-400 focus:border-teal-400 outline-none">
-                    @foreach($availableYears as $y)
-                        <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>{{ $y }}</option>
-                    @endforeach
-                </select>
+                <div class="relative min-w-[120px]" x-data="{ 
+                    open: false, 
+                    value: '{{ $year }}', 
+                    options: {
+                        @foreach($availableYears as $y)
+                            '{{ $y }}': '{{ $y }}',
+                        @endforeach
+                    } 
+                }">
+                    <input type="hidden" name="year" x-model="value" id="year-filter-input">
+                    <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-10 px-4 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 shadow-sm focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] flex items-center justify-between transition-colors hover:bg-slate-50">
+                        <span x-text="options[value]"></span>
+                        <svg class="w-4 h-4 ml-2 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 top-full mt-2 w-full max-h-60 overflow-y-auto custom-scrollbar bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50">
+                        <template x-for="(text, val) in options" :key="val">
+                            <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('filterFormYear').submit(); }, 50);" class="w-full text-left px-4 py-2 text-sm transition-colors flex items-center justify-between" :class="{'bg-[#41859c]/10 text-[#41859c] font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                <span x-text="text"></span>
+                                <svg x-show="value === val" class="w-4 h-4 text-[#41859c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </template>
+                    </div>
+                </div>
             </form>
         </div>
 

@@ -101,6 +101,8 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('quan-tri/bai-dang', \App\Http\Controllers\Admin\PostController::class)->names('admin.posts')->parameters(['bai-dang' => 'post']);
 
     // Người dùng
+    Route::get('quan-tri/nguoi-dung/xuat-excel', [\App\Http\Controllers\Admin\UserController::class, 'export'])->name('admin.users.export');
+    Route::patch('quan-tri/nguoi-dung/{user}/trang-thai', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('admin.users.toggle_status');
     Route::resource('quan-tri/nguoi-dung', \App\Http\Controllers\Admin\UserController::class)->names('admin.users')->parameters(['nguoi-dung' => 'user']);
 
     // Cài đặt

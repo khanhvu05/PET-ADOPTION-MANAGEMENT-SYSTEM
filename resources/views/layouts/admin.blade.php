@@ -278,7 +278,7 @@
                 // Intercept pagination clicks
                 container.addEventListener('click', (e) => {
                     const link = e.target.closest('a');
-                    if (link && link.href && link.closest('nav[aria-label="Pagination"]')) {
+                    if (link && link.href && link.href.includes('page=')) {
                         e.preventDefault();
                         fetchAndReplace(link.href);
                     }
@@ -325,9 +325,9 @@
                         submitForm();
                     });
 
-                    // Auto submit on select change
+                    // Auto submit on select change or hidden input change
                     form.addEventListener('change', (e) => {
-                        if (e.target.tagName === 'SELECT') {
+                        if (e.target.tagName === 'SELECT' || e.target.type === 'hidden') {
                             submitForm();
                         }
                     });

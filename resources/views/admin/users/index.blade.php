@@ -16,14 +16,14 @@
                 <p class="text-sm text-slate-500">Quản lý tài khoản và phân quyền người dùng trong hệ thống.</p>
             </div>
             <div class="flex items-center gap-3">
-                <button class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                <a href="{{ route('admin.users.export', request()->all()) }}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Xuất Excel
-                </button>
-                <button class="bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                </a>
+                <a href="{{ route('admin.users.create') }}" class="bg-teal-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Thêm Người Dùng
-                </button>
+                </a>
             </div>
         </div>
 
@@ -64,62 +64,97 @@
         <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden">
             
             <!-- Filters Section -->
-            <div class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar">
-                <div class="flex gap-4 min-w-max items-end">
+            <form id="filter-form" method="GET" action="{{ route('admin.users.index') }}" class="p-6 pb-4 border-b border-slate-100">
+                <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
                     <div class="w-72">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
-                            <input type="text" placeholder="Tìm kiếm tên, email, SĐT..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm tên, email, SĐT..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm">
                         </div>
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="w-40">
+                    <div class="w-40 relative" x-data="{ 
+                        open: false, 
+                        value: '{{ request('role', 'all') }}', 
+                        options: {'all': 'Tất cả', 'admin': 'Admin', 'staff': 'Nhân viên', 'user': 'Người dùng'} 
+                    }">
                         <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Vai trò</label>
-                        <select class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-700">
-                            <option>Tất cả</option>
-                            <option>Admin</option>
-                            <option>Nhân viên</option>
-                            <option>Người dùng</option>
-                        </select>
+                        <input type="hidden" name="role" x-model="value" id="role-filter-input">
+                        <button type="button" @click="open = !open" @click.away="open = false" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 shadow-sm text-slate-700 flex items-center justify-between transition-colors hover:bg-white">
+                            <span x-text="options[value]"></span>
+                            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 overflow-hidden">
+                            <template x-for="(text, val) in options" :key="val">
+                                <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('role-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between" :class="{'bg-teal-50/50 text-teal-700 font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                    <span x-text="text"></span>
+                                    <svg x-show="value === val" class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                            </template>
+                        </div>
                     </div>
 
-                    <div class="w-40">
+                    <div class="w-40 relative" x-data="{ 
+                        open: false, 
+                        value: '{{ request('status', 'all') }}', 
+                        options: {'all': 'Tất cả', 'hoat_dong': 'Hoạt động', 'bi_khoa': 'Bị khóa'} 
+                    }">
                         <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Trạng thái</label>
-                        <select class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-700">
-                            <option>Tất cả</option>
-                            <option>Hoạt động</option>
-                            <option>Bị khóa</option>
-                        </select>
-                    </div>
-
-                    <div class="w-44">
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Ngày đăng ký</label>
-                        <div class="relative">
-                            <input type="text" placeholder="Chọn thời gian" class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-700">
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            </div>
+                        <input type="hidden" name="status" x-model="value" id="status-filter-input">
+                        <button type="button" @click="open = !open" @click.away="open = false" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 shadow-sm text-slate-700 flex items-center justify-between transition-colors hover:bg-white">
+                            <span x-text="options[value]"></span>
+                            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="transform opacity-0 scale-95"
+                             x-transition:enter-end="transform opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="transform opacity-100 scale-100"
+                             x-transition:leave-end="transform opacity-0 scale-95"
+                             class="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 z-50 overflow-hidden">
+                            <template x-for="(text, val) in options" :key="val">
+                                <button type="button" @click="value = val; open = false; setTimeout(() => { document.getElementById('status-filter-input').dispatchEvent(new Event('change', { bubbles: true })); }, 50);" class="w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between" :class="{'bg-teal-50/50 text-teal-700 font-semibold': value === val, 'text-slate-600 hover:bg-slate-50 hover:text-slate-900': value !== val}">
+                                    <span x-text="text"></span>
+                                    <svg x-show="value === val" class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                            </template>
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-3 ml-auto">
-
-                        <button class="px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 hover:shadow-sm transition-all flex items-center gap-2">
+                        <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 hover:shadow-sm transition-all flex items-center gap-2">
                             <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                             Làm mới
-                        </button>
+                        </a>
                     </div>
                 </div>
-            </div>
+            </form>
 
-            <!-- Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse whitespace-nowrap">
+            <!-- Table Container -->
+            <div id="users-table-container" class="relative">
+                <!-- Loading Overlay -->
+                <div id="table-loading-overlay" class="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-10 hidden flex items-center justify-center">
+                    <div class="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto min-h-[280px] pb-4">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr class="bg-[#f8fafc]">
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Người Dùng</th>
@@ -151,7 +186,7 @@
                                 </span>
                             </td>
                             <td class="py-4 px-6 text-slate-600">{{ $user->So_dien_thoai ?? '---' }}</td>
-                            <td class="py-4 px-6 text-slate-600">{{ $user->Ngay_tao->format('d/m/Y H:i') }}</td>
+                            <td class="py-4 px-6 text-slate-600">{{ $user->Ngay_tao ? $user->Ngay_tao->format('d/m/Y H:i') : '---' }}</td>
                             <td class="py-4 px-6">
                                 @if($user->Trang_thai === 'hoat_dong')
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
@@ -164,12 +199,53 @@
                                 </span>
                                 @endif
                             </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center gap-2">
-                                    <!-- Edit Role button -->
-                                    <button onclick="openRoleModal('{{ $user->Ma_nguoi_dung }}', '{{ $user->roles->first()->name ?? 'user' }}')" class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors tooltip-trigger" title="Phân quyền">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <td class="py-4 px-6 relative" x-data="{ open: false, dropUp: false }">
+                                <div class="flex items-center justify-center">
+                                    <button @click="open = !open; dropUp = ($event.clientY > window.innerHeight - 250)" @click.away="open = false" class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 flex items-center justify-center transition-colors focus:outline-none">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                                     </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-100"
+                                         x-transition:enter-start="transform opacity-0 scale-95"
+                                         x-transition:enter-end="transform opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75"
+                                         x-transition:leave-start="transform opacity-100 scale-100"
+                                         x-transition:leave-end="transform opacity-0 scale-95"
+                                         :class="dropUp ? 'bottom-[50%] mb-2' : 'top-[50%] mt-2'"
+                                         class="absolute right-[50px] w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50">
+                                        
+                                        <button onclick="openRoleModal('{{ $user->Ma_nguoi_dung }}', '{{ $user->roles->first()->name ?? 'user' }}')" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            Phân quyền
+                                        </button>
+
+                                        <form method="POST" action="{{ route('admin.users.toggle_status', $user->Ma_nguoi_dung) }}" onsubmit="confirmToggleStatus(event, this, '{{ $user->Trang_thai === 'hoat_dong' ? 'khóa' : 'mở khóa' }}')" class="block">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                                                @if($user->Trang_thai === 'hoat_dong')
+                                                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                                    Khóa tài khoản
+                                                @else
+                                                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                                                    Mở khóa
+                                                @endif
+                                            </button>
+                                        </form>
+
+                                        <div class="border-t border-slate-100 my-1"></div>
+
+                                        <form method="POST" action="{{ route('admin.users.destroy', $user->Ma_nguoi_dung) }}" onsubmit="confirmDeleteUser(event, this)" class="block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                Xóa tài khoản
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -179,10 +255,27 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <div class="p-5 border-t border-slate-100">
-                {{ $users->links() }}
-            </div>
+                <!-- Pagination -->
+                <div class="p-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-slate-500">
+                        Hiển thị {{ $users->firstItem() ?? 0 }} đến {{ $users->lastItem() ?? 0 }} của {{ $users->total() }} kết quả
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-slate-500">Hiển thị</span>
+                            <select name="per_page" form="filter-form" class="bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:ring-teal-500 focus:border-teal-500 px-2 py-1 outline-none">
+                                <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            </select>
+                        </div>
+                        <div>
+                            {{ $users->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Table Container -->
 
         </div>
     </div>
@@ -220,7 +313,7 @@
     <script>
         function openRoleModal(userId, currentRole) {
             document.getElementById('roleModal').classList.remove('hidden');
-            document.getElementById('roleForm').action = `/admin/users/${userId}/role`;
+            document.getElementById('roleForm').action = `/quan-tri/nguoi-dung/${userId}/vai-tro`;
             
             let select = document.getElementById('roleSelect');
             for(let i=0; i<select.options.length; i++) {
@@ -233,6 +326,70 @@
         function closeRoleModal() {
             document.getElementById('roleModal').classList.add('hidden');
         }
+
+        const swalConfig = {
+            customClass: {
+                popup: 'rounded-[16px] border border-slate-100 shadow-2xl bg-white font-sans',
+                title: 'text-[18px] font-bold text-slate-800 pt-4',
+                htmlContainer: 'text-[14px] text-slate-500 font-medium leading-relaxed mt-2',
+                confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
+                cancelButton: 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm ml-3',
+                actions: 'mt-6 mb-2',
+                icon: 'border-0 scale-110 mb-0'
+            },
+            buttonsStyling: false,
+            backdrop: 'rgba(15, 23, 42, 0.5)'
+        };
+
+        function confirmDeleteUser(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                ...swalConfig,
+                title: 'Xóa người dùng?',
+                text: "Bạn có chắc chắn muốn xóa người dùng này vĩnh viễn? Hành động này không thể hoàn tác!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Có, xóa ngay',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        function confirmToggleStatus(event, form, actionName) {
+            event.preventDefault();
+            let isLock = actionName === 'khóa';
+            
+            let customConfig = {...swalConfig};
+            if(isLock) {
+                customConfig.customClass = { ...swalConfig.customClass, confirmButton: 'bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
+            } else {
+                customConfig.customClass = { ...swalConfig.customClass, confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
+            }
+
+            Swal.fire({
+                ...customConfig,
+                title: (isLock ? 'Khóa' : 'Mở khóa') + ' tài khoản?',
+                text: `Bạn có chắc chắn muốn ${actionName} tài khoản này?`,
+                icon: isLock ? 'warning' : 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Có, ' + actionName,
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if(typeof window.initAjaxTable === 'function') {
+                window.initAjaxTable('users-table-container', 'filter-form');
+            }
+        });
     </script>
     @endpush
 

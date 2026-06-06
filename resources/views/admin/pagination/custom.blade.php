@@ -8,24 +8,28 @@
         <!-- Right side: Dropdown + Pagination -->
         <div class="flex items-center gap-4">
             <!-- Dropdown chọn số lượng / trang -->
-            <form method="GET" class="flex items-center gap-2">
-                @foreach(request()->except('per_page', 'page') as $key => $value)
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                @endforeach
-                
-                <label for="per_page" class="text-sm text-slate-500">Hiển thị</label>
-                <div class="relative">
-                    <select name="per_page" id="per_page" class="text-sm border-slate-200 rounded-lg py-1.5 pl-3 pr-8 focus:ring-[#41859c] focus:border-[#41859c] text-slate-700 bg-white shadow-sm appearance-none cursor-pointer">
-                        <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
-                        <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                        <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
-                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
-                </div>
-            </form>
+            <!-- Dropdown chọn số lượng / trang -->
+            <div class="flex items-center gap-2" x-data="{
+                perPage: '{{ request('per_page', 10) }}',
+                updatePerPage() {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('per_page', this.perPage);
+                    url.searchParams.set('page', '1');
+                    if (typeof window.fetchAndReplace === 'function') {
+                        window.fetchAndReplace(url.toString());
+                    } else {
+                        window.location.href = url.toString();
+                    }
+                }
+            }">
+                <span class="text-sm text-slate-500">Hiển thị</span>
+                <select x-model="perPage" @change="updatePerPage()" class="h-9 px-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] shadow-sm cursor-pointer outline-none">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
 
             @if ($paginator->hasPages())
             <nav class="flex items-center gap-1.5" aria-label="Pagination">

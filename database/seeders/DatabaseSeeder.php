@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             DonationsSeeder::class,
             InterviewSlotsSeeder::class,
             AdoptionApplicationsSeeder::class,
+            AdoptionQuestionSeeder::class,
         ]);
     }
 }
