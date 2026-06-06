@@ -350,7 +350,7 @@
             </div>
             <!-- Small 1 -->
             <div class="relative rounded-2xl overflow-hidden group h-[180px]">
-                <img src="https://images.unsplash.com/photo-1537151608804-ea2d11ac943e?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Care">
+                <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Care">
                 <div class="absolute bottom-4 left-4 right-4 bg-white/95 rounded-full px-4 py-2 text-center shadow-sm">
                     <span class="text-xs font-bold text-dark">Chăm sóc & phục hồi sức khỏe</span>
                 </div>
@@ -441,8 +441,8 @@
             
             <div class="relative w-full h-[350px] rounded-[40px] overflow-hidden flex border-4 border-white shadow-xl">
                 <!-- Before -->
-                <div class="w-1/2 relative grayscale relative border-r-2 border-white">
-                    <img src="https://images.unsplash.com/photo-1533479133446-953e5eaf8802?q=80&w=500&auto=format&fit=crop" class="w-full h-full object-cover" alt="Before">
+                <div class="w-1/2 relative grayscale border-r-2 border-white">
+                    <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=500&auto=format&fit=crop" class="w-full h-full object-cover" alt="Before">
                     <div class="absolute bottom-6 left-6 text-white font-black text-xl tracking-widest">TRƯỚC</div>
                 </div>
                 <!-- After -->
