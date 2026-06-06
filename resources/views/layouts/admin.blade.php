@@ -321,14 +321,22 @@
                 if (e.target && e.target.classList.contains('confirm-delete')) {
                     e.preventDefault();
                     Swal.fire({
-                        title: 'Bạn có chắc chắn?',
-                        text: "Hành động này không thể hoàn tác!",
+                        title: 'Xóa dữ liệu này?',
+                        text: "Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#0f766e', // teal-700
-                        cancelButtonColor: '#dc2626', // red-600
-                        confirmButtonText: 'Vâng, xóa nó!',
-                        cancelButtonText: 'Hủy'
+                        confirmButtonText: 'Vâng, Xóa',
+                        cancelButtonText: 'Hủy',
+                        buttonsStyling: false,
+                        customClass: {
+                            popup: 'bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 max-w-sm',
+                            title: 'text-xl font-black text-slate-900 tracking-tight mb-2',
+                            htmlContainer: 'text-sm font-medium text-slate-500 m-0',
+                            icon: 'border-red-500 text-red-500 scale-75 mt-0 mb-4',
+                            actions: 'flex items-center gap-3 w-full mt-8',
+                            confirmButton: 'flex-1 bg-red-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-red-700 transition-all m-0',
+                            cancelButton: 'flex-1 bg-white text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 hover:text-slate-900 transition-all m-0'
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             e.target.submit();
