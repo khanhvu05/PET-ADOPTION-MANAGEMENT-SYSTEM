@@ -25,9 +25,9 @@ class DashboardController extends Controller
         // Assuming percent can be pending/total just for display
         $adoptionsPercent = $totalAdoptions > 0 ? round(($pendingAdoptions / $totalAdoptions) * 100, 1) : 0;
 
-        $totalDonations = Donation::where('Trang_thai_thanh_toan', 'thanh_cong')->sum('So_tien');
+        $totalDonations = Donation::where('Trang_thai', 'success')->sum('So_tien');
         // Calculate recent donations (e.g. this month vs last month for trend)
-        $thisMonthDonations = Donation::where('Trang_thai_thanh_toan', 'thanh_cong')
+        $thisMonthDonations = Donation::where('Trang_thai', 'success')
             ->whereMonth('created_at', Carbon::now()->month)
             ->sum('So_tien');
         $donationsPercent = $totalDonations > 0 ? round(($thisMonthDonations / $totalDonations) * 100, 1) : 0;
