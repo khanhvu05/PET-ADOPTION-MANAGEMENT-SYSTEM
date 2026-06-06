@@ -26,6 +26,7 @@ class RemindUnconfirmedAdoptions extends Command
 
         $count = 0;
 
+        /** @var \App\Models\AdoptionApplication $app */
         foreach ($remindApplications as $app) {
             $app->update(['da_nhac_nho_phong_van' => true]);
 

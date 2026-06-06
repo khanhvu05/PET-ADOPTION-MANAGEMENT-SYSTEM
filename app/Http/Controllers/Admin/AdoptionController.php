@@ -134,7 +134,7 @@ class AdoptionController extends Controller
 
         // Nếu hủy hoặc từ chối một đơn đã approved hoặc cho_phong_van, đưa pet quay lại trạng thái sẵn sàng
         if (in_array($newStatus, ['cancelled', 'rejected']) && in_array($application->Trang_thai, ['approved', 'cho_phong_van'])) {
-            $petToRevert = \App\Models\Pet::find($application->Ma_thu_cung);
+            $petToRevert = Pet::find($application->Ma_thu_cung);
             if ($petToRevert && $petToRevert->Trang_thai === 'cho_phong_van') {
                 $petToRevert->update(['Trang_thai' => 'san_sang']);
             }
@@ -308,6 +308,7 @@ class AdoptionController extends Controller
                 $pet->update(['Trang_thai' => 'da_nhan_nuoi']);
 
                 // Từ chối các đơn pending/pre_approved khác của cùng bé thú cưng này
+                /** @var \App\Models\AdoptionApplication $app */
                 foreach ($rejectedApps as $app) {
                     $app->update([
                         'Trang_thai'    => 'rejected',

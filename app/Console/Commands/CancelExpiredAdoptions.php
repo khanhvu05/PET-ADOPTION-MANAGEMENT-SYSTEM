@@ -23,6 +23,7 @@ class CancelExpiredAdoptions extends Command
 
         $count = 0;
 
+        /** @var \App\Models\AdoptionApplication $app */
         foreach ($expiredApplications as $app) {
             $app->update([
                 'Trang_thai' => 'cancelled',
