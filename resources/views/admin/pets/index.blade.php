@@ -12,7 +12,7 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex flex-col">
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Quản Lý Thú Cưng</h2>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Quản Lý Thú Cưng</h2>
                 <p class="text-sm font-medium text-slate-500 mt-1">Quản lý thông tin và hồ sơ của tất cả thú cưng trong hệ thống</p>
             </div>
             

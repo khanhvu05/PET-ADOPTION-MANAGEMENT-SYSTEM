@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Route;
 
 // ── Trang chủ ───────────────────────────────────────────────────────────────
 Route::get('/', function () {
-    return view('welcome');
+    $featuredPets = \App\Models\Pet::where('Noi_bat', 1)
+        ->where('Trang_thai', 'san_sang')
+        ->latest('Ngay_tao')
+        ->take(12)
+        ->get();
+    return view('welcome', compact('featuredPets'));
 })->name('home');
 
 // ── Giao diện người dùng (Frontend) ─────────────────────────────────────────

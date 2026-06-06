@@ -12,7 +12,7 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex flex-col">
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Quản Lý Đơn Nhận Nuôi</h2>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Quản Lý Đơn Nhận Nuôi</h2>
                 <p class="text-sm font-medium text-slate-500 mt-1">Theo dõi và quản lý tất cả các yêu cầu nhận nuôi thú cưng.</p>
             </div>
             
@@ -27,20 +27,20 @@
 
         <!-- Metrics Cards Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            <x-admin.kpi-card title="Tổng Đơn" value="{{ $stats['total'] }}" percent="0" />
-            <x-admin.kpi-card title="Đang Xử Lý" value="{{ $stats['pending'] }}" percent="0" />
-            <x-admin.kpi-card title="Đã Phê Duyệt" value="{{ $stats['approved'] }}" percent="0" />
-            <x-admin.kpi-card title="Đã Từ Chối" value="{{ $stats['rejected'] }}" percent="0" />
-            <x-admin.kpi-card title="Đã Nhận Nuôi" value="{{ $stats['completed'] }}" percent="0" />
+            <x-admin.kpi-card title="Tổng Đơn" value="{{ $stats['total']['count'] }}" percent="{{ $stats['total']['percent'] }}" />
+            <x-admin.kpi-card title="Đang Xử Lý" value="{{ $stats['pending']['count'] }}" percent="{{ $stats['pending']['percent'] }}" />
+            <x-admin.kpi-card title="Đã Phê Duyệt" value="{{ $stats['approved']['count'] }}" percent="{{ $stats['approved']['percent'] }}" />
+            <x-admin.kpi-card title="Đã Từ Chối" value="{{ $stats['rejected']['count'] }}" percent="{{ $stats['rejected']['percent'] }}" />
+            <x-admin.kpi-card title="Đã Nhận Nuôi" value="{{ $stats['completed']['count'] }}" percent="{{ $stats['completed']['percent'] }}" />
         </div>
 
         <!-- Filter & Table Card -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden">
+        <div class="bg-white border border-slate-200 rounded-xl shadow flex flex-col mb-10 w-full overflow-hidden" id="table-card-container">
             
             <!-- Filters Section -->
             <form method="GET" action="{{ route('admin.adoptions.index') }}" class="p-6 pb-4 border-b border-slate-100 overflow-x-auto custom-scrollbar" id="filterForm">
                 <!-- Preserve pagination size -->
-                <input type="hidden" name="per_page" value="{{ request('per_page', 8) }}">
+                <input type="hidden" name="per_page" id="per_page_input" value="{{ request('per_page', 5) }}">
                 
                 <div class="flex items-end gap-4 min-w-[900px]">
                     <!-- Search Input -->
@@ -59,7 +59,7 @@
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <div class="relative">
-                                <select name="trang_thai" onchange="document.getElementById('filterForm').submit()" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
+                                <select name="trang_thai" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
                                     <option value="">Tất cả trạng thái</option>
                                     <option value="pending" {{ request('trang_thai') == 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
                                     <option value="pre_approved" {{ request('trang_thai') == 'pre_approved' ? 'selected' : '' }}>Duyệt sơ bộ</option>
@@ -78,7 +78,7 @@
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-xs font-bold text-slate-700">Loài thú cưng</label>
                             <div class="relative">
-                                <select name="loai_thu_cung" onchange="document.getElementById('filterForm').submit()" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
+                                <select name="loai_thu_cung" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm appearance-none cursor-pointer">
                                     <option value="">Tất cả loài</option>
                                     <option value="cho" {{ request('loai_thu_cung') == 'cho' ? 'selected' : '' }}>Chó</option>
                                     <option value="meo" {{ request('loai_thu_cung') == 'meo' ? 'selected' : '' }}>Mèo</option>
@@ -93,13 +93,13 @@
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-xs font-bold text-slate-700">Từ ngày</label>
                             <div class="relative">
-                                <input type="date" name="ngay_tu" value="{{ request('ngay_tu') }}" onchange="document.getElementById('filterForm').submit()" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm">
+                                <input type="date" name="ngay_tu" value="{{ request('ngay_tu') }}" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm">
                             </div>
                         </div>
                         <div class="flex flex-col gap-1.5 flex-1">
                             <label class="text-xs font-bold text-slate-700">Đến ngày</label>
                             <div class="relative">
-                                <input type="date" name="ngay_den" value="{{ request('ngay_den') }}" onchange="document.getElementById('filterForm').submit()" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm">
+                                <input type="date" name="ngay_den" value="{{ request('ngay_den') }}" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-teal-500 shadow-sm">
                             </div>
                         </div>
 
@@ -109,16 +109,21 @@
                                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                 Làm mới
                             </a>
-                            <button type="submit" class="flex items-center justify-center gap-2 h-11 px-4 bg-teal-600 border border-transparent rounded-xl font-bold text-sm text-white shadow-sm hover:bg-teal-700 transition-all">
-                                Lọc
-                            </button>
                         </div>
                     </div>
                 </div>
             </form>
 
-            <!-- Table Container -->
-            <div class="p-4 overflow-x-auto custom-scrollbar">
+            <div class="relative min-h-[400px]">
+                <!-- Overlay Spinner (Hidden by default) -->
+                <div id="loading-overlay" class="absolute inset-0 bg-white/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-center rounded-b-xl">
+                    <div class="w-10 h-10 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin"></div>
+                    <span class="mt-2 text-sm font-bold text-teal-700">Đang tải dữ liệu...</span>
+                </div>
+
+                <!-- Table Container -->
+                <div id="ajax-data-container">
+                    <div class="p-4 overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left border-collapse min-w-[1100px] whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
@@ -242,20 +247,20 @@
 
             <!-- Pagination Bar -->
             @if($applications->hasPages())
-            <div class="px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100">
+            <div class="px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-100 flex-wrap">
                 <span class="text-sm font-medium text-slate-500">
                     Hiển thị {{ $applications->firstItem() }} đến {{ $applications->lastItem() }} của {{ $applications->total() }} kết quả
                 </span>
                 
-                <div class="flex items-center gap-6">
+                <div class="flex flex-col sm:flex-row items-center gap-6 overflow-x-auto max-w-full pb-2 sm:pb-0 custom-scrollbar">
                     <!-- Items per page -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 shrink-0">
                         <span class="text-sm font-medium text-slate-500">Hiển thị</span>
                         <div class="relative">
-                            <select onchange="window.location.href=this.value" class="h-9 pl-3 pr-8 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-teal-500 appearance-none cursor-pointer">
-                                <option value="{{ request()->fullUrlWithQuery(['per_page' => 8]) }}" {{ request('per_page', 8) == 8 ? 'selected' : '' }}>8</option>
-                                <option value="{{ request()->fullUrlWithQuery(['per_page' => 15]) }}" {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>
-                                <option value="{{ request()->fullUrlWithQuery(['per_page' => 30]) }}" {{ request('per_page') == 30 ? 'selected' : '' }}>30</option>
+                            <select name="per_page_select" class="h-9 pl-3 pr-8 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-teal-500 appearance-none cursor-pointer">
+                                <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
+                                <option value="15" {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>
+                                <option value="30" {{ request('per_page') == 30 ? 'selected' : '' }}>30</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -276,7 +281,108 @@
                 </span>
             </div>
             @endif
+                </div>
+            </div>
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterForm = document.getElementById('filterForm');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const ajaxDataContainer = document.getElementById('ajax-data-container');
+        const perPageInput = document.getElementById('per_page_input');
+
+        function fetchAdoptions(url) {
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newContainer = doc.getElementById('ajax-data-container');
+                if (newContainer) {
+                    ajaxDataContainer.innerHTML = newContainer.innerHTML;
+                }
+                
+                attachPaginationListeners();
+                window.history.pushState({}, '', url);
+            })
+            .catch(error => console.error('Error loading data:', error))
+            .finally(() => {
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
+            });
+        }
+
+        function handleFormSubmit(e) {
+            if (e) e.preventDefault();
+            const url = new URL(filterForm.action);
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams();
+            
+            for (const [key, value] of formData.entries()) {
+                if (value) params.append(key, value);
+            }
+            
+            url.search = params.toString();
+            fetchAdoptions(url.toString());
+        }
+
+        filterForm.addEventListener('submit', handleFormSubmit);
+
+        filterForm.querySelectorAll('select, input[type="date"]').forEach(el => {
+            el.addEventListener('change', handleFormSubmit);
+        });
+
+        let searchTimeout;
+        const searchInput = filterForm.querySelector('input[name="search"]');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(handleFormSubmit, 500);
+            });
+        }
+
+        function attachPaginationListeners() {
+            const paginationLinks = ajaxDataContainer.querySelectorAll('nav[role="navigation"] a');
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    fetchAdoptions(this.href);
+                });
+            });
+
+            const perPageSelect = ajaxDataContainer.querySelector('select[name="per_page_select"]');
+            if (perPageSelect) {
+                perPageSelect.addEventListener('change', function() {
+                    perPageInput.value = this.value;
+                    handleFormSubmit();
+                });
+            }
+        }
+
+        attachPaginationListeners();
+
+        const resetBtn = filterForm.querySelector('a[href="' + filterForm.action + '"]');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                filterForm.reset();
+                perPageInput.value = 5;
+                fetchAdoptions(this.href);
+            });
+        }
+    });
+    </script>
+    @endpush
 </x-admin-layout>

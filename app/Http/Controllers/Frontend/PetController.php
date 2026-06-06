@@ -64,7 +64,7 @@ class PetController extends Controller
             $query->where('Ten', 'like', '%' . $request->search . '%');
         }
 
-        $pets = $query->paginate(8)->withQueryString();
+        $pets = $query->paginate(8)->onEachSide(1)->withQueryString();
 
         return view('frontend.adoptions.index', compact('pets'));
     }

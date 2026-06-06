@@ -44,17 +44,38 @@ class AdoptionController extends Controller
             $query->whereBetween('Ngay_tao', [$request->ngay_tu . ' 00:00:00', $request->ngay_den . ' 23:59:59']);
         }
 
-        $perPage = $request->input('per_page', 8);
+        $perPage = $request->input('per_page', 5);
         $applications = $query->paginate($perPage)->withQueryString();
 
         // Stats thật
+        $currentMonth = \Carbon\Carbon::now()->month;
+        $currentYear = \Carbon\Carbon::now()->year;
+        $lastMonth = \Carbon\Carbon::now()->subMonth()->month;
+        $lastMonthYear = \Carbon\Carbon::now()->subMonth()->year;
+
+        $calcMetric = function($query) use ($currentMonth, $currentYear, $lastMonth, $lastMonthYear) {
+            $totalCurrent = (clone $query)->count();
+            $newThisMonth = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->count();
+            $newLastMonth = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->count();
+            
+            if ($newLastMonth > 0) {
+                $pct = round((($newThisMonth - $newLastMonth) / $newLastMonth) * 100, 1);
+            } else {
+                $pct = $newThisMonth > 0 ? 100 : 0;
+            }
+            return [
+                'count' => $totalCurrent,
+                'percent' => $pct
+            ];
+        };
+
         $stats = [
-            'total'        => AdoptionApplication::count(),
-            'pending'      => AdoptionApplication::whereIn('Trang_thai', ['pending', 'pre_approved'])->count(),
-            'approved'     => AdoptionApplication::where('Trang_thai', 'approved')->count(),
-            'completed'    => AdoptionApplication::where('Trang_thai', 'completed')->count(),
-            'rejected'     => AdoptionApplication::where('Trang_thai', 'rejected')->count(),
-            'cancelled'    => AdoptionApplication::where('Trang_thai', 'cancelled')->count(),
+            'total'        => $calcMetric(AdoptionApplication::query()),
+            'pending'      => $calcMetric(AdoptionApplication::whereIn('Trang_thai', ['pending', 'pre_approved'])),
+            'approved'     => $calcMetric(AdoptionApplication::where('Trang_thai', 'approved')),
+            'completed'    => $calcMetric(AdoptionApplication::where('Trang_thai', 'completed')),
+            'rejected'     => $calcMetric(AdoptionApplication::where('Trang_thai', 'rejected')),
+            'cancelled'    => $calcMetric(AdoptionApplication::where('Trang_thai', 'cancelled')),
         ];
 
         return view('admin.adoptions.index', compact('applications', 'stats'));

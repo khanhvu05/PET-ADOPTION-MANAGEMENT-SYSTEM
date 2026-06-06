@@ -18,10 +18,10 @@
                 <p class="text-sm text-slate-500">Cập nhật thông tin cho thú cưng {{ $pet->Ma_hien_thi }} - {{ $pet->Ten }}.</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.pets.show', $pet->Ma_thu_cung) }}" class="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-sm transition-all shadow-sm">
+                <a href="{{ route('admin.pets.show', $pet->Ma_thu_cung) }}" class="bg-white border border-slate-200 text-sidebar-blue px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-sm transition-all shadow-sm">
                     Hủy
                 </a>
-                <button type="submit" form="edit-pet-form" class="bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                <button type="submit" form="edit-pet-form" class="bg-sidebar-blue text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     Lưu Thay Đổi
                 </button>

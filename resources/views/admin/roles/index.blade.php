@@ -76,7 +76,7 @@
     <div x-data="{ activeTab: 'roles', showRoleModal: false, showPermissionModal: false }" class="space-y-6 max-w-[1400px] mx-auto pb-10">
         <!-- Header Section -->
         <div class="flex flex-col">
-            <h2 class="text-[28px] font-black text-slate-900 tracking-tight">Phân quyền & Vai trò</h2>
+            <h2 class="text-[28px] font-bold text-slate-800 tracking-tight">Phân quyền & Vai trò</h2>
             <p class="text-[15px] text-slate-500 mt-1">Quản lý quyền hạn truy cập của các nhóm người dùng trong hệ thống.</p>
         </div>
 
@@ -283,7 +283,7 @@
     <div x-show="showRoleModal" style="display: none;" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
         <div @click.away="showRoleModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-lg font-black text-slate-900 tracking-tight">Thêm Vai Trò Mới</h3>
+                <h3 class="text-lg font-bold text-slate-800 tracking-tight">Thêm Vai Trò Mới</h3>
                 <button type="button" @click="showRoleModal = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -314,7 +314,7 @@
     <div x-show="showPermissionModal" style="display: none;" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
         <div @click.away="showPermissionModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-lg font-black text-slate-900 tracking-tight">Thêm Quyền Mới</h3>
+                <h3 class="text-lg font-bold text-slate-800 tracking-tight">Thêm Quyền Mới</h3>
                 <button type="button" @click="showPermissionModal = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>

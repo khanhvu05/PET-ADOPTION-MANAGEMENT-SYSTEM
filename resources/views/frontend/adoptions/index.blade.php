@@ -143,8 +143,7 @@
                 </div>
             </div>
 
-            <!-- Grid Container -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
                 
                 @forelse($pets as $pet)
                 <!-- Pet Card -->
@@ -198,7 +197,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="col-span-1 sm:col-span-2 md:col-span-3 xl:col-span-3 2xl:col-span-4 text-center py-10 mb-10">
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 xl:col-span-4 text-center py-10 mb-10">
                     <img src="{{ asset('images/no-data.png') }}" alt="Không tìm thấy kết quả" class="w-32 h-32 object-contain mx-auto mb-4 opacity-50">
                     <p class="text-gray-500 font-medium text-sm">Không tìm thấy thú cưng nào phù hợp với bộ lọc.</p>
                 </div>

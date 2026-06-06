@@ -8,7 +8,7 @@
          x-transition:leave="transition ease-in duration-200 transform"
          x-transition:leave-start="opacity-100 translate-y-0 scale-100"
          x-transition:leave-end="opacity-0 translate-y-8 scale-95"
-         class="w-[360px] h-[530px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-100 overflow-hidden mb-4"
+         class="w-[340px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-100 overflow-hidden mb-4"
          style="display: none;">
          
         <!-- HEADER -->
@@ -128,6 +128,7 @@
                     <input type="text" 
                            x-model="inputMessage" 
                            @keydown.enter="sendMessage" 
+                           @paste="handlePaste"
                            :placeholder="isGuest ? 'Vui lòng đăng nhập để chat...' : 'Nhập tin nhắn...'" 
                            :disabled="isGuest"
                            class="flex-1 bg-transparent border-none outline-none focus:ring-0 p-0 text-slate-700 text-sm placeholder-slate-400 disabled:opacity-60">
@@ -159,7 +160,8 @@
     <!-- ICON CHATBOX NỔI (Style Avatar bé cún có tooltip khi hover) -->
     <div class="relative flex flex-col items-center group cursor-pointer" @click="toggleChatbox()">
         <!-- Tooltip khi hover (ở bên trái) -->
-        <div class="absolute right-16 bottom-2 w-72 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-100 p-3.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 flex gap-2.5 items-start">
+        <div :class="showTooltip ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'" 
+             class="absolute right-16 bottom-2 w-72 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-100 p-3.5 pointer-events-none transition-all duration-500 z-50 flex gap-2.5 items-start">
             <img src="{{ asset('images/ai-advisor.png') }}" class="w-8 h-8 rounded-full object-cover border border-slate-100" />
             <div class="flex flex-col text-[11px] leading-normal text-left">
                 <span class="font-bold text-[#E06B25] mb-0.5">Xin chào!</span>
@@ -170,7 +172,7 @@
         </div>
 
         <!-- Avatar cún cưng tròn -->
-        <div class="relative w-16 h-16 rounded-full bg-teal-50 border-2 border-teal-650/20 shadow-xl overflow-visible hover:scale-105 active:scale-95 transition-transform flex items-center justify-center">
+        <div class="relative w-16 h-16 rounded-full bg-teal-50 border-2 border-teal-600/20 shadow-xl overflow-visible hover:scale-105 active:scale-95 transition-transform flex items-center justify-center animate-bounce hover:animate-none" style="animation-duration: 3s;">
             <img src="{{ asset('images/ai-advisor.png') }}" class="w-full h-full rounded-full object-cover" />
             
             <!-- Badge đỏ đếm tin chưa đọc -->
@@ -189,6 +191,7 @@
     document.addEventListener('alpine:init', () => {
         Alpine.data('petjamChatbox', () => ({
             isOpen: false,
+            showTooltip: false,
             messages: [],
             isLoading: false,
             inputMessage: '',
@@ -199,6 +202,16 @@
             storageKey: 'petjam_chat_messages_{{ Auth::id() }}',
 
             init() {
+                // Tự động mở tooltip sau 2 giây, và đóng lại sau 8 giây
+                setTimeout(() => {
+                    if (!this.isOpen) {
+                        this.showTooltip = true;
+                        setTimeout(() => {
+                            this.showTooltip = false;
+                        }, 8000);
+                    }
+                }, 2000);
+
                 // Check if page was reloaded (F5)
                 const navEntries = performance.getEntriesByType('navigation');
                 const isReload = navEntries.length > 0 && navEntries[0].type === 'reload';
@@ -265,6 +278,36 @@
             removeImage() {
                 this.imagePreview = null;
                 this.$refs.fileInput.value = '';
+            },
+
+            handlePaste(event) {
+                if (this.isGuest) return;
+
+                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (let index in items) {
+                    const item = items[index];
+                    if (item.kind === 'file' && item.type.startsWith('image/')) {
+                        const blob = item.getAsFile();
+                        
+                        // Mô phỏng việc đính kèm file bằng DataTransfer
+                        const dataTransfer = new DataTransfer();
+                        // Chuyển Blob thành File object để tương thích tốt hơn
+                        const file = new File([blob], "pasted-image.png", { type: item.type });
+                        dataTransfer.items.add(file);
+                        this.$refs.fileInput.files = dataTransfer.files;
+
+                        // Preview
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.imagePreview = e.target.result;
+                        };
+                        reader.readAsDataURL(blob);
+
+                        // Prevent pasting image representation directly into input text
+                        event.preventDefault();
+                        break;
+                    }
+                }
             },
 
             async sendMessage() {
