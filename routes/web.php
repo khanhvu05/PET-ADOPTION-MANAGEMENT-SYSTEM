@@ -43,9 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Ủng hộ (Đã di chuyển ra ngoài để cho phép khách vãng lai ủng hộ)
 
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/tai-khoan', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/tai-khoan', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/tai-khoan', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Lịch sử nhận nuôi & ủng hộ của user
     Route::get('/tai-khoan/lich-su-nhan-nuoi', [\App\Http\Controllers\Frontend\UserAdoptionController::class, 'index'])
@@ -59,60 +59,57 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // Global Search
-    Route::get('/admin/search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('admin.search');
+    Route::get('/quan-tri/tim-kiem', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('admin.search');
 
     // Notifications
-    Route::get('/admin/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notifications.index');
-    Route::post('/admin/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('admin.notifications.read');
-    Route::post('/admin/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('admin.notifications.readAll');
+    Route::get('/quan-tri/thong-bao', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::post('/quan-tri/thong-bao/{id}/doc', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('admin.notifications.read');
+    Route::post('/quan-tri/thong-bao/doc-tat-ca', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('admin.notifications.readAll');
 
     // Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/bang-dieu-khien', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // Quản lý Phân Quyền (Roles & Permissions)
-    Route::get('/admin/roles', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('admin.roles.index');
-    Route::post('/admin/roles', [\App\Http\Controllers\Admin\RolePermissionController::class, 'storeRole'])->name('admin.roles.store');
-    Route::delete('/admin/roles/{role}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'destroyRole'])->name('admin.roles.destroy');
-    Route::post('/admin/roles/{role}/permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'updatePermissions'])->name('admin.roles.permissions.update');
-    Route::post('/admin/permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'storePermission'])->name('admin.permissions.store');
-    Route::delete('/admin/permissions/{permission}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'destroyPermission'])->name('admin.permissions.destroy');
+    Route::get('/quan-tri/vai-tro', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('admin.roles.index');
+    Route::post('/quan-tri/vai-tro', [\App\Http\Controllers\Admin\RolePermissionController::class, 'storeRole'])->name('admin.roles.store');
+    Route::delete('/quan-tri/vai-tro/{role}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'destroyRole'])->name('admin.roles.destroy');
+    Route::post('/quan-tri/vai-tro/{role}/quyen', [\App\Http\Controllers\Admin\RolePermissionController::class, 'updatePermissions'])->name('admin.roles.permissions.update');
+    Route::post('/quan-tri/quyen', [\App\Http\Controllers\Admin\RolePermissionController::class, 'storePermission'])->name('admin.permissions.store');
+    Route::delete('/quan-tri/quyen/{permission}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'destroyPermission'])->name('admin.permissions.destroy');
 
     // Quản lý gán Role cho User
-    Route::patch('/admin/users/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.role.update');
+    Route::patch('/quan-tri/nguoi-dung/{user}/vai-tro', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.role.update');
 
     // Thú cưng (full CRUD)
-    Route::resource('admin/pets', \App\Http\Controllers\Admin\PetController::class, ['as' => 'admin']);
+    Route::resource('quan-tri/thu-cung', \App\Http\Controllers\Admin\PetController::class)->names('admin.pets')->parameters(['thu-cung' => 'pet']);
 
     // Đơn nhận nuôi (full CRUD + update status)
-    Route::resource('admin/adoptions', \App\Http\Controllers\Admin\AdoptionController::class, ['as' => 'admin']);
+    Route::resource('quan-tri/don-nhan-nuoi', \App\Http\Controllers\Admin\AdoptionController::class)->names('admin.adoptions')->parameters(['don-nhan-nuoi' => 'adoption']);
 
     // Lịch phỏng vấn
-    Route::put('admin/interview_schedules/{id}/hide', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'hide'])->name('admin.interview_schedules.hide');
-    Route::resource('admin/interview_schedules', \App\Http\Controllers\Admin\InterviewScheduleController::class, ['as' => 'admin']);
+    Route::put('quan-tri/lich-phong-van/{id}/an', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'hide'])->name('admin.interview_schedules.hide');
+    Route::resource('quan-tri/lich-phong-van', \App\Http\Controllers\Admin\InterviewScheduleController::class)->names('admin.interview_schedules')->parameters(['lich-phong-van' => 'interview_schedule']);
 
     // Chiến dịch ủng hộ
-    Route::put('admin/donation_campaigns/{id}/close', [\App\Http\Controllers\Admin\DonationCampaignController::class, 'close'])->name('admin.donation_campaigns.close');
-    Route::resource('admin/donation_campaigns', \App\Http\Controllers\Admin\DonationCampaignController::class, ['as' => 'admin']);
+    Route::put('quan-tri/chien-dich-ung-ho/{id}/dong', [\App\Http\Controllers\Admin\DonationCampaignController::class, 'close'])->name('admin.donation_campaigns.close');
+    Route::resource('quan-tri/chien-dich-ung-ho', \App\Http\Controllers\Admin\DonationCampaignController::class)->names('admin.donation_campaigns')->parameters(['chien-dich-ung-ho' => 'donation_campaign']);
 
     // Donations
-    // Route::get('admin/donations/statistics', [\App\Http\Controllers\Admin\DonationController::class, 'statistics'])->name('admin.donations.statistics');
-    Route::resource('admin/donations', \App\Http\Controllers\Admin\DonationController::class, ['as' => 'admin'])->only(['index', 'show']);
-        
-    // Quản lý ca phỏng vấn (sử dụng interview_schedules)
+    Route::resource('quan-tri/ung-ho', \App\Http\Controllers\Admin\DonationController::class)->names('admin.donations')->parameters(['ung-ho' => 'donation'])->only(['index', 'show']);
 
     // Bài đăng / Tin tức
-    Route::resource('admin/posts', \App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
+    Route::resource('quan-tri/bai-dang', \App\Http\Controllers\Admin\PostController::class)->names('admin.posts')->parameters(['bai-dang' => 'post']);
 
     // Người dùng
-    Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
+    Route::resource('quan-tri/nguoi-dung', \App\Http\Controllers\Admin\UserController::class)->names('admin.users')->parameters(['nguoi-dung' => 'user']);
 
     // Cài đặt
-    Route::resource('admin/settings', \App\Http\Controllers\Admin\SettingController::class, ['as' => 'admin']);
+    Route::resource('quan-tri/cai-dat', \App\Http\Controllers\Admin\SettingController::class)->names('admin.settings')->parameters(['cai-dat' => 'setting']);
 
     // Cấu hình Chatbox AI (Admin)
-    Route::post('admin/chatbox/settings/limit', [\App\Http\Controllers\ChatboxController::class, 'updateLimit'])->name('admin.chatbox.limit.update');
-    Route::post('admin/chatbox/settings/keys', [\App\Http\Controllers\ChatboxController::class, 'addKey'])->name('admin.chatbox.keys.add');
-    Route::delete('admin/chatbox/settings/keys', [\App\Http\Controllers\ChatboxController::class, 'deleteKey'])->name('admin.chatbox.keys.delete');
+    Route::post('quan-tri/chatbox/cai-dat/gioi-han', [\App\Http\Controllers\ChatboxController::class, 'updateLimit'])->name('admin.chatbox.limit.update');
+    Route::post('quan-tri/chatbox/cai-dat/keys', [\App\Http\Controllers\ChatboxController::class, 'addKey'])->name('admin.chatbox.keys.add');
+    Route::delete('quan-tri/chatbox/cai-dat/keys', [\App\Http\Controllers\ChatboxController::class, 'deleteKey'])->name('admin.chatbox.keys.delete');
 });
 
 // API Chatbox Message (Authenticated Users)
