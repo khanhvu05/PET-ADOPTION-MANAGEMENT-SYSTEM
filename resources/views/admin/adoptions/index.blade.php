@@ -218,7 +218,7 @@
                                     </a>
                                     
                                     @if(in_array($app->Trang_thai, ['rejected', 'cancelled']))
-                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="inline" onsubmit="return confirm('Bạn có chắc muốn xóa đơn này không?');">
+                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="inline confirm-delete">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Xóa">
