@@ -13,6 +13,27 @@
     </x-slot>
 
     @php
+        $permissionNames = [
+            'view pets' => 'Xem thú cưng',
+            'manage pets' => 'Quản lý thú cưng',
+            'delete pets' => 'Xóa thú cưng',
+            'manage rescue cases' => 'Quản lý cứu hộ',
+            'manage vaccination history' => 'Quản lý tiêm phòng',
+            'view any adoptions' => 'Xem đơn nhận nuôi',
+            'approve adoptions' => 'Duyệt đơn nhận nuôi',
+            'pre-approve adoptions' => 'Duyệt sơ bộ',
+            'manage interview slots' => 'Quản lý lịch phỏng vấn',
+            'manage campaigns' => 'Quản lý chiến dịch',
+            'view any donations' => 'Xem lịch sử ủng hộ',
+            'manage users' => 'Quản lý người dùng',
+            'manage roles' => 'Quản lý phân quyền',
+            'view activity logs' => 'Xem nhật ký hoạt động',
+            'view tokens' => 'Xem token AI',
+            'manage tokens' => 'Quản lý token AI',
+            'manage posts' => 'Quản lý bài viết',
+            'manage settings' => 'Cài đặt hệ thống',
+        ];
+
         $permissionDescriptions = [
             'view pets' => 'Xem thông tin và danh sách thú cưng',
             'manage pets' => 'Thêm, sửa, cập nhật thông tin thú cưng',
@@ -52,7 +73,7 @@
         ];
     @endphp
 
-    <div x-data="{ activeTab: 'roles' }" class="space-y-6 max-w-[1400px] mx-auto pb-10">
+    <div x-data="{ activeTab: 'roles', showRoleModal: false, showPermissionModal: false }" class="space-y-6 max-w-[1400px] mx-auto pb-10">
         <!-- Header Section -->
         <div class="flex flex-col">
             <h2 class="text-[28px] font-black text-slate-900 tracking-tight">Phân quyền & Vai trò</h2>
@@ -95,11 +116,11 @@
             </div>
             
             <div class="pb-3 flex gap-3">
-                <button x-show="activeTab === 'permissions'" style="display: none;" onclick="document.getElementById('createPermissionModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-indigo-700 transition-all shrink-0">
+                <button x-show="activeTab === 'permissions'" style="display: none;" @click="showPermissionModal = true" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-indigo-700 transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Thêm quyền mới
                 </button>
-                <button x-show="activeTab === 'roles'" onclick="document.getElementById('createRoleModal').classList.remove('hidden')" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-teal-700 transition-all shrink-0">
+                <button x-show="activeTab === 'roles'" @click="showRoleModal = true" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-600 text-white rounded-lg font-bold text-[14px] shadow-sm hover:bg-teal-700 transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Thêm vai trò mới
                 </button>
@@ -170,7 +191,7 @@
                             @foreach($perms as $permission)
                                 <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                                     <td class="py-4 px-6 text-slate-600 h-full">
-                                        <div class="font-bold text-slate-800 text-[14px]">{{ trans('permissions.' . $permission->name) ?? ucfirst($permission->name) }}</div>
+                                        <div class="font-bold text-slate-800 text-[14px]">{{ $permissionNames[$permission->name] ?? ucfirst($permission->name) }}</div>
                                         <div class="text-[13px] text-slate-500 mt-1 whitespace-normal max-w-sm leading-relaxed">
                                             {{ $permissionDescriptions[$permission->name] ?? 'Mô tả quyền hạn truy cập' }}
                                         </div>
@@ -236,7 +257,7 @@
                             @forelse($perms as $permission)
                                 <li class="flex items-start justify-between group">
                                     <div class="flex flex-col">
-                                        <span class="font-semibold text-slate-700 text-sm">{{ $permission->name }}</span>
+                                        <span class="font-semibold text-slate-700 text-sm">{{ $permissionNames[$permission->name] ?? ucfirst($permission->name) }}</span>
                                         <span class="text-xs text-slate-500">{{ $permissionDescriptions[$permission->name] ?? 'Mô tả quyền hạn truy cập' }}</span>
                                     </div>
                                     <form action="{{ route('admin.permissions.destroy', $permission) }}" method="POST" onsubmit="return confirm('Xóa quyền này có thể ảnh hưởng đến hệ thống. Bạn có chắc chắn?');" class="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -259,24 +280,24 @@
     </div>
 
     <!-- Modal Tạo Vai Trò -->
-    <div id="createRoleModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
+    <div x-show="showRoleModal" style="display: none;" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
+        <div @click.away="showRoleModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 class="text-lg font-black text-slate-900 tracking-tight">Thêm Vai Trò Mới</h3>
-                <button type="button" onclick="document.getElementById('createRoleModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
+                <button type="button" @click="showRoleModal = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <form action="{{ route('admin.roles.store') }}" method="POST" class="p-6">
                 @csrf
                 <div class="mb-6">
-                    <label for="name" class="block text-sm font-bold text-slate-700 mb-2">Tên Vai Trò (Tiếng Anh, không dấu)</label>
+                    <label for="name" class="block text-sm font-bold text-slate-700 mb-2">Tên Vai Trò</label>
                     <input type="text" name="name" id="name" required
                         class="w-full border-slate-200 rounded-xl shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm px-4 py-3 bg-slate-50 focus:bg-white transition-colors"
-                        placeholder="Ví dụ: manager, editor, support...">
+                        placeholder="Ví dụ: Kế toán, Quản lý kho, Hỗ trợ...">
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
-                    <button type="button" onclick="document.getElementById('createRoleModal').classList.add('hidden')"
+                    <button type="button" @click="showRoleModal = false"
                         class="px-5 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl font-bold hover:bg-slate-50 hover:text-slate-900 transition-colors">
                         Hủy
                     </button>
@@ -290,25 +311,25 @@
     </div>
 
     <!-- Modal Tạo Quyền -->
-    <div id="createPermissionModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
+    <div x-show="showPermissionModal" style="display: none;" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity">
+        <div @click.away="showPermissionModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                 <h3 class="text-lg font-black text-slate-900 tracking-tight">Thêm Quyền Mới</h3>
-                <button type="button" onclick="document.getElementById('createPermissionModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
+                <button type="button" @click="showPermissionModal = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition-colors outline-none">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <form action="{{ route('admin.permissions.store') }}" method="POST" class="p-6">
                 @csrf
                 <div class="mb-6">
-                    <label for="permission_name" class="block text-sm font-bold text-slate-700 mb-2">Tên Quyền (Tiếng Anh, không dấu)</label>
+                    <label for="permission_name" class="block text-sm font-bold text-slate-700 mb-2">Tên Quyền</label>
                     <input type="text" name="name" id="permission_name" required
                         class="w-full border-slate-200 rounded-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3 bg-slate-50 focus:bg-white transition-colors"
-                        placeholder="Ví dụ: manage reports, view users...">
+                        placeholder="Ví dụ: Xem báo cáo, Quản lý nhân sự...">
                     <p class="mt-2 text-xs text-slate-500">Quyền mới sẽ tự động được thêm vào nhóm "Khác". Bạn có thể gán quyền này cho các vai trò ở tab Vai trò.</p>
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
-                    <button type="button" onclick="document.getElementById('createPermissionModal').classList.add('hidden')"
+                    <button type="button" @click="showPermissionModal = false"
                         class="px-5 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl font-bold hover:bg-slate-50 hover:text-slate-900 transition-colors">
                         Hủy
                     </button>
