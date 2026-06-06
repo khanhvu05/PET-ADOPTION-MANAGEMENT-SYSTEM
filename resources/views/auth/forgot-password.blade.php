@@ -24,7 +24,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="vidu@email.com" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="email" type="email" name="email" :value="old('email')" autofocus autocomplete="username" placeholder="vidu@email.com" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>

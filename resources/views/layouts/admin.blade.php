@@ -54,23 +54,42 @@
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
-                            <input type="text" placeholder="Search..." class="w-64 h-9 pl-10 pr-12 bg-slate-50/50 border border-slate-200/80 rounded-full text-sm focus:outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20 text-slate-700 placeholder-slate-400 transition-all shadow-sm">
+                            <input type="text" id="global-search-input" placeholder="Search..." class="w-64 h-9 pl-10 pr-12 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20 text-slate-700 placeholder-slate-400 transition-all shadow-sm">
                             <div class="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-                                <span class="text-[10px] text-slate-400 font-medium border border-slate-200/80 bg-white rounded-full px-1.5 py-0.5 shadow-sm">⌘K</span>
+                                <span class="text-[10px] text-slate-400 font-medium border border-slate-200/80 bg-white rounded-md px-1.5 py-0.5 shadow-sm">⌘K</span>
+                            </div>
+                            
+                            <!-- Search Results Dropdown -->
+                            <div id="global-search-results" class="absolute top-full left-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50 hidden flex-col max-h-[400px] overflow-y-auto">
+                                <div class="p-2 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-50/50 border-b border-slate-100">Kết quả tìm kiếm</div>
+                                <div id="search-results-list" class="flex flex-col"></div>
                             </div>
                         </div>
 
                         <!-- Notification Icon -->
-                        <button class="relative w-10 h-10 rounded-full bg-slate-50/50 border border-slate-200/80 flex items-center justify-center text-slate-500 hover:text-orange-brand hover:bg-slate-100 transition-all shadow-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                            <span class="absolute top-2 right-2.5 w-2 h-2 rounded-full bg-red-500 border-2 border-white"></span>
-                        </button>
+                        <div class="relative">
+                            <button id="notification-button" class="relative w-10 h-10 rounded-xl bg-slate-50/50 border border-slate-200/80 flex items-center justify-center text-slate-500 hover:text-orange-brand hover:bg-slate-100 transition-all shadow-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                                <span id="notification-badge" class="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full bg-red-400 text-[10px] font-bold text-white border-2 border-white shadow-sm hidden">0</span>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div id="notification-dropdown" class="absolute top-full right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50 hidden flex-col max-h-[400px]">
+                                <div class="flex items-center justify-between p-3 border-b border-slate-100 bg-slate-50/50">
+                                    <h3 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Thông báo</h3>
+                                    <button id="mark-all-read-btn" class="text-xs text-orange-brand hover:text-orange-600 font-medium">Đánh dấu tất cả đã đọc</button>
+                                </div>
+                                <div id="notification-list" class="flex flex-col overflow-y-auto">
+                                    <div class="p-4 text-sm text-slate-500 text-center">Đang tải...</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- User Avatar -->
-                        <button class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200/80 ring-2 ring-transparent hover:ring-orange-brand/20 flex items-center justify-center overflow-hidden shrink-0 transition-all shadow-sm cursor-pointer relative group">
+                        <button class="w-10 h-10 rounded-[1rem] bg-slate-100 border-0 ring-2 ring-transparent hover:ring-orange-brand/30 flex items-center justify-center overflow-hidden shrink-0 transition-all shadow-md cursor-pointer relative group">
                             <!-- Placeholder image or initial -->
                             <span class="text-sm font-bold text-slate-600 group-hover:text-orange-brand transition-colors">AD</span>
-                            <div class="absolute inset-0 rounded-full ring-1 ring-inset ring-black/5"></div>
+                            <div class="absolute inset-0 rounded-[1rem] ring-1 ring-inset ring-slate-900/10"></div>
                         </button>
                     </div>
                 </header>
@@ -314,6 +333,152 @@
                     });
                 }
             };
+
+            // Global Search Logic
+            const searchInput = document.getElementById('global-search-input');
+            const searchResults = document.getElementById('global-search-results');
+            const searchList = document.getElementById('search-results-list');
+            let searchTimeout = null;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const q = e.target.value.trim();
+                    
+                    clearTimeout(searchTimeout);
+                    
+                    if (q.length < 2) {
+                        searchResults.classList.add('hidden');
+                        searchResults.classList.remove('flex');
+                        return;
+                    }
+
+                    searchTimeout = setTimeout(() => {
+                        fetch(`/admin/search?q=${encodeURIComponent(q)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                searchList.innerHTML = '';
+                                
+                                if (data.length === 0) {
+                                    searchList.innerHTML = `<div class="p-4 text-sm text-slate-500 text-center">Không tìm thấy kết quả nào</div>`;
+                                } else {
+                                    data.forEach(item => {
+                                        searchList.innerHTML += `
+                                            <a href="${item.url}" class="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0">
+                                                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                                                    ${item.icon}
+                                                </div>
+                                                <div class="flex flex-col min-w-0">
+                                                    <span class="text-xs text-slate-500">${item.type}</span>
+                                                    <span class="text-sm font-medium text-slate-700 truncate">${item.title}</span>
+                                                </div>
+                                            </a>
+                                        `;
+                                    });
+                                }
+                                
+                                searchResults.classList.remove('hidden');
+                                searchResults.classList.add('flex');
+                            })
+                            .catch(err => console.error(err));
+                    }, 300);
+                });
+
+                // Hotkey for search
+                document.addEventListener('keydown', e => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                });
+
+                // Hide dropdown when clicking outside
+                document.addEventListener('click', e => {
+                    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                        searchResults.classList.add('hidden');
+                        searchResults.classList.remove('flex');
+                    }
+                });
+            }
+
+            // Notification Logic
+            const notifButton = document.getElementById('notification-button');
+            const notifDropdown = document.getElementById('notification-dropdown');
+            const notifList = document.getElementById('notification-list');
+            const notifBadge = document.getElementById('notification-badge');
+            const markAllReadBtn = document.getElementById('mark-all-read-btn');
+            
+            function fetchNotifications() {
+                fetch('/admin/notifications')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.unread_count > 0) {
+                            notifBadge.textContent = data.unread_count > 99 ? '99+' : data.unread_count;
+                            notifBadge.classList.remove('hidden');
+                        } else {
+                            notifBadge.classList.add('hidden');
+                        }
+
+                        notifList.innerHTML = '';
+                        if (data.notifications.length === 0) {
+                            notifList.innerHTML = `<div class="p-4 text-sm text-slate-500 text-center">Không có thông báo mới</div>`;
+                        } else {
+                            data.notifications.forEach(notif => {
+                                notifList.innerHTML += `
+                                    <div class="flex flex-col gap-1 p-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 relative">
+                                        <a href="${notif.url}" class="text-sm font-medium text-slate-800 pr-6">${notif.title}</a>
+                                        <p class="text-xs text-slate-500">${notif.message}</p>
+                                        <span class="text-[10px] text-slate-400 mt-1">${notif.created_at}</span>
+                                        <button onclick="markAsRead('${notif.id}')" class="absolute top-3 right-3 text-slate-300 hover:text-green-500 transition-colors" title="Đánh dấu đã đọc">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        </button>
+                                    </div>
+                                `;
+                            });
+                        }
+                    });
+            }
+
+            window.markAsRead = function(id) {
+                fetch(`/admin/notifications/${id}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                }).then(() => fetchNotifications());
+            };
+
+            if (notifButton) {
+                notifButton.addEventListener('click', () => {
+                    const isHidden = notifDropdown.classList.contains('hidden');
+                    if (isHidden) {
+                        notifDropdown.classList.remove('hidden');
+                        notifDropdown.classList.add('flex');
+                        fetchNotifications();
+                    } else {
+                        notifDropdown.classList.add('hidden');
+                        notifDropdown.classList.remove('flex');
+                    }
+                });
+
+                document.addEventListener('click', e => {
+                    if (!notifButton.contains(e.target) && !notifDropdown.contains(e.target)) {
+                        notifDropdown.classList.add('hidden');
+                        notifDropdown.classList.remove('flex');
+                    }
+                });
+
+                markAllReadBtn.addEventListener('click', () => {
+                    fetch(`/admin/notifications/read-all`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(() => fetchNotifications());
+                });
+
+                // Initial fetch
+                fetchNotifications();
+            }
         </script>
 
         @stack('scripts')

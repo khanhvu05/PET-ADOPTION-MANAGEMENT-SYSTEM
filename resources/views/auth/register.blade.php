@@ -21,7 +21,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
-                <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nhập họ và tên của bạn" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="name" type="text" name="name" :value="old('name')" autofocus autocomplete="name" placeholder="Nhập họ và tên của bạn" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
             </div>
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
         </div>
@@ -35,7 +35,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <input id="email" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="vidu@email.com" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="email" type="email" name="email" :value="old('email')" autocomplete="username" placeholder="vidu@email.com" class="block w-full pl-10 pr-4 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
@@ -49,7 +49,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
-                <input id="password" :type="show ? 'text' : 'password'" type="password" name="password" required autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="password" :type="show ? 'text' : 'password'" type="password" name="password" autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer text-text-muted hover:text-white transition focus:outline-none">
                     <svg x-show="show" style="display: none;" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -72,7 +72,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
-                <input id="password_confirmation" :type="show ? 'text' : 'password'" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="password_confirmation" :type="show ? 'text' : 'password'" type="password" name="password_confirmation" autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer text-text-muted hover:text-white transition focus:outline-none">
                     <svg x-show="show" style="display: none;" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -89,7 +89,7 @@
         <!-- Terms and Conditions -->
         <div class="flex items-center py-1">
             <label for="terms" class="relative flex items-center cursor-pointer group">
-                <input id="terms" type="checkbox" required class="peer sr-only" name="terms">
+                <input id="terms" type="checkbox" class="peer sr-only" name="terms">
                 <div class="w-4.5 h-4.5 border border-white/20 bg-input-dark rounded flex items-center justify-center transition-all duration-200 peer-checked:bg-orange-brand peer-checked:border-orange-brand group-hover:border-white/40 shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-orange-brand/50 text-transparent peer-checked:text-white">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />

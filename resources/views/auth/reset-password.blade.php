@@ -24,7 +24,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <input id="email" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" readonly class="block w-full pl-10 pr-4 py-2.5 bg-input-dark opacity-70 text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all cursor-not-allowed" />
+                <input id="email" type="email" name="email" :value="old('email', $request->email)" autofocus autocomplete="username" readonly class="block w-full pl-10 pr-4 py-2.5 bg-input-dark opacity-70 text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all cursor-not-allowed" />
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
@@ -38,7 +38,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
-                <input id="password" :type="show ? 'text' : 'password'" type="password" name="password" required autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="password" :type="show ? 'text' : 'password'" type="password" name="password" autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer text-text-muted hover:text-white transition focus:outline-none">
                     <svg x-show="show" style="display: none;" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -61,7 +61,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                 </div>
-                <input id="password_confirmation" :type="show ? 'text' : 'password'" type="password" name="password_confirmation" required autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
+                <input id="password_confirmation" :type="show ? 'text' : 'password'" type="password" name="password_confirmation" autocomplete="new-password" placeholder="••••••••" class="block w-full pl-10 pr-10 py-2.5 bg-input-dark text-white border border-transparent rounded-xl text-sm font-bold focus:ring-2 focus:ring-orange-brand/50 focus:outline-none transition-all" />
                 <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-3.5 flex items-center cursor-pointer text-text-muted hover:text-white transition focus:outline-none">
                     <svg x-show="show" style="display: none;" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

@@ -53,5 +53,24 @@
     @if (!request()->routeIs('login', 'register'))
         @include('components.chatbox-widget')
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find the first error message
+            const firstError = document.querySelector('.auth-error-message');
+            if (firstError) {
+                // Find the input wrapper
+                const wrapper = firstError.closest('.space-y-1\\.5') || firstError.parentElement;
+                if (wrapper) {
+                    const input = wrapper.querySelector('input');
+                    if (input) {
+                        input.focus();
+                        // Scroll to it if necessary
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

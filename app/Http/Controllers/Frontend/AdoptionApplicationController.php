@@ -138,6 +138,14 @@ class AdoptionApplicationController extends Controller
                 return $application;
             });
             
+            // Gửi thông báo hệ thống cho Admin
+            try {
+                $admins = \App\Models\User::where('Vai_tro', 'admin')->get();
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\NewAdoptionApplication($application));
+            } catch (\Exception $e) {
+                \Log::error('Lỗi gửi thông báo cho Admin: ' . $e->getMessage());
+            }
+
             // Gửi email xác nhận đã nhận đơn
             try {
                 $user = Auth::user();

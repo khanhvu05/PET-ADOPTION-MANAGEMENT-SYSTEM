@@ -56,6 +56,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // ── Khu vực Admin ───────────────────────────────────────────────────────────
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
+    // Global Search
+    Route::get('/admin/search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('admin.search');
+
+    // Notifications
+    Route::get('/admin/notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::post('/admin/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('admin.notifications.read');
+    Route::post('/admin/notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('admin.notifications.readAll');
+
     // Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
