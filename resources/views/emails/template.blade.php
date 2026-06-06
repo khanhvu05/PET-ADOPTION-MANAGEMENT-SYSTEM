@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
     <title>{{ $subject ?? 'Thông báo từ PetJam' }}</title>
     <style>
         /* Base typography & reset */
+        :root {
+            color-scheme: light;
+            supported-color-schemes: light;
+        }
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7fb;
+            background-color: #f4f7fb !important;
             margin: 0;
             padding: 0;
-            color: #334155;
+            color: #334155 !important;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
@@ -25,7 +31,7 @@
         .email-container {
             max-width: 500px;
             margin: 0 auto;
-            background-color: #ffffff;
+            background-color: #ffffff !important;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
@@ -69,7 +75,7 @@
         }
         
         .body-content h1, .body-content h2, .body-content h3 {
-            color: #0f172a;
+            color: #0f172a !important;
             margin-top: 0;
         }
 
@@ -138,7 +144,7 @@
         .pet-card {
             display: flex;
             align-items: center;
-            background-color: #fff;
+            background-color: #ffffff !important;
             border: 1px solid #f1f5f9;
             border-radius: 16px;
             padding: 15px;
@@ -147,7 +153,7 @@
         }
         .pet-card-large {
             display: block;
-            background-color: #fff;
+            background-color: #ffffff !important;
             border: 1px solid #f1f5f9;
             border-radius: 16px;
             overflow: hidden;
@@ -257,8 +263,8 @@
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="email-container">
+    <div class="wrapper" style="background-color: #f4f7fb;">
+        <div class="email-container" style="background-color: #ffffff;">
             
             <!-- Header -->
             <div class="header">
@@ -272,7 +278,7 @@
             </div>
 
             <!-- Body -->
-            <div class="body-content">
+            <div class="body-content" style="background-color: #ffffff;">
                 {!! $content !!}
             </div>
 

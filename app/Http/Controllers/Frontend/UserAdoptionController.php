@@ -75,7 +75,7 @@ class UserAdoptionController extends Controller
                 }
                 
                 // Load lại slot để gửi email
-                $application->load('interviewSlot');
+                $application->load(['interviewSlot', 'thuCung']);
             });
 
             // Gửi email xác nhận
