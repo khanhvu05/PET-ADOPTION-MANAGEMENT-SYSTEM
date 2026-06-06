@@ -15,26 +15,40 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Thống Kê Tổng Quan (KPIs)
-        $totalPets = Pet::count();
-        $availablePets = Pet::where('Trang_thai', 'san_sang')->count();
-        $petsPercent = $totalPets > 0 ? round(($availablePets / $totalPets) * 100, 1) : 0;
+        // 1. Thống Kê Tổng Quan (KPIs) - Trọng tâm vào Đơn Nhận Nuôi
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $lastMonth = Carbon::now()->subMonth()->month;
+        $lastMonthYear = Carbon::now()->subMonth()->year;
 
-        $totalAdoptions = AdoptionApplication::count();
-        $pendingAdoptions = AdoptionApplication::where('Trang_thai', 'pending')->count();
-        // Assuming percent can be pending/total just for display
-        $adoptionsPercent = $totalAdoptions > 0 ? round(($pendingAdoptions / $totalAdoptions) * 100, 1) : 0;
+        $kpiStats = [];
+        $statuses = [
+            'total' => ['label' => 'TỔNG ĐƠN', 'status' => null],
+            'pending' => ['label' => 'ĐANG XỬ LÝ', 'status' => 'pending'],
+            'approved' => ['label' => 'ĐÃ PHÊ DUYỆT', 'status' => 'approved'],
+            'rejected' => ['label' => 'ĐÃ TỪ CHỐI', 'status' => 'rejected'],
+            'completed' => ['label' => 'ĐÃ NHẬN NUÔI', 'status' => 'completed']
+        ];
 
-        $totalDonations = Donation::where('Trang_thai', 'success')->sum('So_tien');
-        // Calculate recent donations (e.g. this month vs last month for trend)
-        $thisMonthDonations = Donation::where('Trang_thai', 'success')
-            ->whereMonth('Ngay_tao', Carbon::now()->month)
-            ->sum('So_tien');
-        $donationsPercent = $totalDonations > 0 ? round(($thisMonthDonations / $totalDonations) * 100, 1) : 0;
+        foreach ($statuses as $key => $data) {
+            $query = AdoptionApplication::query();
+            if ($data['status']) {
+                $query->where('Trang_thai', $data['status']);
+            }
+            
+            $totalCount = (clone $query)->count();
+            $currentCount = (clone $query)->whereYear('Ngay_tao', $currentYear)->whereMonth('Ngay_tao', $currentMonth)->count();
+            $lastCount = (clone $query)->whereYear('Ngay_tao', $lastMonthYear)->whereMonth('Ngay_tao', $lastMonth)->count();
 
-        $totalUsers = User::count();
-        $recentUsers = User::whereMonth('Ngay_tao', Carbon::now()->month)->count();
-        $usersPercent = $totalUsers > 0 ? round(($recentUsers / $totalUsers) * 100, 1) : 0;
+            $percentChange = $lastCount > 0 ? round((($currentCount - $lastCount) / $lastCount) * 100, 1) : ($currentCount > 0 ? 100 : 0);
+            
+            $kpiStats[$key] = [
+                'label' => $data['label'],
+                'count' => $totalCount,
+                'percent' => $percentChange,
+                'is_positive' => $percentChange >= 0
+            ];
+        }
 
         // 2. Dữ liệu Biểu đồ (Charts)
         // Main Chart: Adoption Trends (Last 6 Months)
@@ -62,10 +76,7 @@ class DashboardController extends Controller
                                 ->get();
 
         return view('dashboard', compact(
-            'totalPets', 'availablePets', 'petsPercent',
-            'totalAdoptions', 'pendingAdoptions', 'adoptionsPercent',
-            'totalDonations', 'thisMonthDonations', 'donationsPercent',
-            'totalUsers', 'recentUsers', 'usersPercent',
+            'kpiStats',
             'chartLabels', 'adoptionsTrendData', 'petBreakdownData',
             'recentApplications'
         ));

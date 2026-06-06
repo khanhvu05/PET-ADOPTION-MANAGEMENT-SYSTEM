@@ -4,83 +4,35 @@
     <!-- Main Content Area -->
     <div class="space-y-6">
         
-        <!-- Metrics Grid (4 columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Metric Card 1 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4 relative z-10">
+        <!-- Metrics Grid (5 columns) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            @foreach($kpiStats as $stat)
+            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-end mb-3">
                     <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tổng Thú Cưng</p>
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalPets) }}</h3>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">{{ $stat['label'] }}</p>
+                        <h3 class="text-[28px] leading-none font-bold text-slate-800">{{ number_format($stat['count']) }}</h3>
                     </div>
-                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                    <!-- Sparkline Bars matching image -->
+                    <div class="flex gap-1 items-end h-6 pb-0.5">
+                        <div class="w-1.5 h-3 bg-orange-brand/30 rounded-t-sm"></div>
+                        <div class="w-1.5 h-4 bg-orange-brand/50 rounded-t-sm"></div>
+                        <div class="w-1.5 h-5 bg-orange-brand/70 rounded-t-sm"></div>
+                        <div class="w-1.5 h-4 bg-orange-brand/90 rounded-t-sm"></div>
+                        <div class="w-1.5 h-6 bg-orange-brand rounded-t-sm"></div>
                     </div>
                 </div>
-                <div class="flex items-center text-xs font-semibold relative z-10">
-                    <span class="{{ $petsPercent > 0 ? 'text-emerald-600' : 'text-slate-500' }} flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
-                        {{ $availablePets }} sẵn sàng
-                    </span>
-                    <span class="text-slate-400 ml-2 font-medium truncate">/ tổng số</span>
+                
+                <hr class="border-slate-100 my-3">
+                
+                <div class="text-xs font-medium text-slate-500 flex items-center gap-1.5">
+                    <span class="text-slate-400 font-bold tracking-widest text-[10px] uppercase">
+                        {{ $stat['percent'] >= 0 ? '+' : '' }}{{ $stat['percent'] }}%
+                    </span> 
+                    so với tháng trước
                 </div>
             </div>
-
-            <!-- Metric Card 2 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4 relative z-10">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Đơn Nhận Nuôi</p>
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalAdoptions) }}</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    </div>
-                </div>
-                <div class="flex items-center text-xs font-semibold relative z-10">
-                    <span class="{{ $pendingAdoptions > 0 ? 'text-amber-600' : 'text-slate-500' }} flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
-                        {{ $pendingAdoptions }} chờ duyệt
-                    </span>
-                    <span class="text-slate-400 ml-2 font-medium truncate">/ tổng số</span>
-                </div>
-            </div>
-
-            <!-- Metric Card 3 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4 relative z-10">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Tổng Quyên Góp</p>
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalDonations, 0, ',', '.') }}đ</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                </div>
-                <div class="flex items-center text-xs font-semibold relative z-10">
-                    <span class="text-emerald-600 flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
-                        + {{ number_format($thisMonthDonations, 0, ',', '.') }}đ
-                    </span>
-                    <span class="text-slate-400 ml-2 font-medium truncate">tháng này</span>
-                </div>
-            </div>
-
-            <!-- Metric Card 4 -->
-            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4 relative z-10">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Người Dùng</p>
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight">{{ number_format($totalUsers) }}</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-orange-brand/10 group-hover:text-orange-brand transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                </div>
-                <div class="flex items-center text-xs font-semibold relative z-10">
-                    <span class="text-emerald-600 flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-slate-100 shadow-sm">
-                        + {{ number_format($recentUsers) }} 
-                    </span>
-                    <span class="text-slate-400 ml-2 font-medium truncate">tháng này</span>
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <!-- Charts Section (12 columns) -->
