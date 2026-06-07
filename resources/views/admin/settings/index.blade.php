@@ -5,6 +5,43 @@
         <span class="text-slate-900 font-medium">Cài Đặt</span>
     </x-slot>
 
+    @php
+        $permissionNames = [
+            'access_pets' => 'Quản lý Thú cưng & Cứu hộ',
+            'access_adoptions' => 'Quản lý Đơn nhận nuôi',
+            'access_donations' => 'Quản lý Chiến dịch ủng hộ',
+            'access_posts' => 'Quản lý Bài viết',
+            'access_users' => 'Quản lý Người dùng',
+            'access_settings' => 'Cài đặt hệ thống',
+            'access_tokens' => 'Quản lý AI Tokens',
+        ];
+
+        $permissionDescriptions = [
+            'access_pets' => 'Quyền truy cập toàn bộ module Thú cưng và Cứu hộ',
+            'access_adoptions' => 'Quyền truy cập module Quản lý và duyệt đơn nhận nuôi',
+            'access_donations' => 'Quyền truy cập module Chiến dịch ủng hộ',
+            'access_posts' => 'Quyền truy cập module Quản trị Bài viết & Blog',
+            'access_users' => 'Quyền truy cập module Quản lý tài khoản Người dùng',
+            'access_settings' => 'Quyền chỉnh sửa Cài đặt hệ thống chung, vai trò và phân quyền',
+            'access_tokens' => 'Quyền xem và cấp phát token AI Chatbot',
+        ];
+
+        $roleColors = [
+            0 => ['icon_color' => 'text-orange-500', 'icon_bg' => 'bg-orange-100', 'checkbox' => 'text-orange-500 focus:ring-orange-500'],
+            1 => ['icon_color' => 'text-teal-500', 'icon_bg' => 'bg-teal-100', 'checkbox' => 'text-teal-500 focus:ring-teal-500'],
+            2 => ['icon_color' => 'text-indigo-500', 'icon_bg' => 'bg-indigo-100', 'checkbox' => 'text-indigo-500 focus:ring-indigo-500'],
+            3 => ['icon_color' => 'text-emerald-500', 'icon_bg' => 'bg-emerald-100', 'checkbox' => 'text-emerald-500 focus:ring-emerald-500'],
+            4 => ['icon_color' => 'text-amber-500', 'icon_bg' => 'bg-amber-100', 'checkbox' => 'text-amber-500 focus:ring-amber-500'],
+            5 => ['icon_color' => 'text-blue-500', 'icon_bg' => 'bg-blue-100', 'checkbox' => 'text-blue-500 focus:ring-blue-500'],
+        ];
+
+        $roleSubtitles = [
+            'admin' => 'Toàn quyền',
+            'staff' => 'Quyền quản lý',
+            'user' => 'Người dùng',
+        ];
+    @endphp
+
     <div class="max-w-7xl mx-auto space-y-6" x-data="{ activeTab: window.location.hash ? window.location.hash.substring(1) : 'general' }" @hashchange.window="activeTab = window.location.hash ? window.location.hash.substring(1) : 'general'">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
@@ -73,21 +110,41 @@
             <div class="flex-1 space-y-6">
                 <!-- General Info View -->
                 <div x-show="activeTab === 'general'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: none;" class="space-y-6">
+                    <form action="{{ route('admin.settings.storeGeneral') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        @csrf
                     <!-- Basic Info Card -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
                         <h3 class="text-lg font-bold text-slate-900 mb-6">Thông Tin Cơ Bản</h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Logo Upload -->
-                            <div class="col-span-1 md:col-span-2 flex items-start gap-6">
-                                <div class="w-24 h-24 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-300 flex items-center justify-center shrink-0 relative group cursor-pointer hover:bg-slate-100 hover:border-teal-500 transition-colors">
-                                    <svg class="w-8 h-8 text-slate-400 group-hover:text-teal-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    <!-- <img src="logo.png" class="w-full h-full object-cover rounded-2xl" /> -->
+                            <div class="col-span-1 md:col-span-2 flex items-start gap-6" x-data="{ photoName: null, photoPreview: null }">
+                                <div class="w-24 h-24 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-300 flex items-center justify-center shrink-0 relative group cursor-pointer hover:bg-slate-100 hover:border-teal-500 transition-colors overflow-hidden" @click="$refs.logoInput.click()">
+                                    <!-- Hiển thị ảnh hiện tại hoặc ảnh preview -->
+                                    <div x-show="!photoPreview">
+                                        @if(isset($settings['site_logo']) && $settings['site_logo'])
+                                            <img src="{{ asset('storage/' . $settings['site_logo']) }}" class="w-full h-full object-cover rounded-xl" />
+                                        @else
+                                            <svg class="w-8 h-8 text-slate-400 group-hover:text-teal-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        @endif
+                                    </div>
+                                    <div x-show="photoPreview" style="display: none;" class="w-full h-full relative">
+                                        <span class="block w-full h-full bg-cover bg-no-repeat bg-center rounded-xl" x-bind:style="'background-image: url(\'' + photoPreview + '\');'"></span>
+                                    </div>
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="font-semibold text-slate-900 mb-1">Logo Hệ Thống</span>
                                     <span class="text-xs text-slate-500 mb-3 leading-relaxed max-w-sm">Tải lên logo để hiển thị ở góc trái trên cùng của màn hình admin và trang chủ. Khuyên dùng ảnh PNG vuông hoặc chữ nhật ngang (Max 2MB).</span>
-                                    <button type="button" class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors w-fit">
+                                    <input type="file" name="site_logo" x-ref="logoInput" class="hidden" accept="image/*"
+                                        x-on:change="
+                                            photoName = $refs.logoInput.files[0].name;
+                                            const reader = new FileReader();
+                                            reader.onload = (e) => {
+                                                photoPreview = e.target.result;
+                                            };
+                                            reader.readAsDataURL($refs.logoInput.files[0]);
+                                        ">
+                                    <button type="button" @click="$refs.logoInput.click()" class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors w-fit">
                                         Tải ảnh lên
                                     </button>
                                 </div>
@@ -96,31 +153,31 @@
                             <!-- System Name -->
                             <div class="col-span-1 md:col-span-2">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Tên Hệ Thống</label>
-                                <input type="text" value="PetAdoption Admin" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
+                                <input type="text" name="site_name" value="{{ $settings['site_name'] ?? 'PetAdoption Admin' }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
                             </div>
 
                             <!-- Slogan -->
                             <div class="col-span-1 md:col-span-2">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Slogan / Mô tả ngắn</label>
-                                <input type="text" value="Nền tảng quản lý nhận nuôi thú cưng hàng đầu" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
+                                <input type="text" name="site_slogan" value="{{ $settings['site_slogan'] ?? 'Nền tảng quản lý nhận nuôi thú cưng hàng đầu' }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
                             </div>
 
                             <!-- Email -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Email Liên Hệ</label>
-                                <input type="email" value="contact@petadoption.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
+                                <input type="email" name="site_email" value="{{ $settings['site_email'] ?? 'contact@petadoption.com' }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
                             </div>
 
                             <!-- Hotline -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Hotline</label>
-                                <input type="text" value="1900 1234" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
+                                <input type="text" name="site_hotline" value="{{ $settings['site_hotline'] ?? '1900 1234' }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900">
                             </div>
 
                             <!-- Address -->
                             <div class="col-span-1 md:col-span-2">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Địa Chỉ Trụ Sở</label>
-                                <textarea rows="2" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900 resize-none">123 Đường Xuân Thủy, Cầu Giấy, Hà Nội</textarea>
+                                <textarea rows="2" name="site_address" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900 resize-none">{{ $settings['site_address'] ?? '123 Đường Xuân Thủy, Cầu Giấy, Hà Nội' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -133,37 +190,37 @@
                             <!-- Language -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Ngôn Ngữ Mặc Định</label>
-                                <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
-                                    <option>Tiếng Việt (vi)</option>
-                                    <option>English (en)</option>
+                                <select name="default_language" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
+                                    <option value="vi" {{ ($settings['default_language'] ?? 'vi') === 'vi' ? 'selected' : '' }}>Tiếng Việt (vi)</option>
+                                    <option value="en" {{ ($settings['default_language'] ?? 'vi') === 'en' ? 'selected' : '' }}>English (en)</option>
                                 </select>
                             </div>
 
                             <!-- Timezone -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Múi Giờ</label>
-                                <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
-                                    <option>Asia/Ho_Chi_Minh (+07:00)</option>
-                                    <option>Asia/Bangkok (+07:00)</option>
+                                <select name="timezone" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
+                                    <option value="Asia/Ho_Chi_Minh" {{ ($settings['timezone'] ?? 'Asia/Ho_Chi_Minh') === 'Asia/Ho_Chi_Minh' ? 'selected' : '' }}>Asia/Ho_Chi_Minh (+07:00)</option>
+                                    <option value="Asia/Bangkok" {{ ($settings['timezone'] ?? 'Asia/Ho_Chi_Minh') === 'Asia/Bangkok' ? 'selected' : '' }}>Asia/Bangkok (+07:00)</option>
                                 </select>
                             </div>
 
                             <!-- Date Format -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Định Dạng Ngày</label>
-                                <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
-                                    <option>DD/MM/YYYY</option>
-                                    <option>MM/DD/YYYY</option>
-                                    <option>YYYY-MM-DD</option>
+                                <select name="date_format" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
+                                    <option value="d/m/Y" {{ ($settings['date_format'] ?? 'd/m/Y') === 'd/m/Y' ? 'selected' : '' }}>DD/MM/YYYY</option>
+                                    <option value="m/d/Y" {{ ($settings['date_format'] ?? 'd/m/Y') === 'm/d/Y' ? 'selected' : '' }}>MM/DD/YYYY</option>
+                                    <option value="Y-m-d" {{ ($settings['date_format'] ?? 'd/m/Y') === 'Y-m-d' ? 'selected' : '' }}>YYYY-MM-DD</option>
                                 </select>
                             </div>
 
                             <!-- Time Format -->
                             <div class="col-span-1">
                                 <label class="block text-sm font-bold text-slate-700 mb-1.5">Định Dạng Giờ</label>
-                                <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
-                                    <option>24 Giờ (14:30)</option>
-                                    <option>12 Giờ (02:30 PM)</option>
+                                <select name="time_format" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 appearance-none shadow-sm text-slate-900">
+                                    <option value="H:i" {{ ($settings['time_format'] ?? 'H:i') === 'H:i' ? 'selected' : '' }}>24 Giờ (14:30)</option>
+                                    <option value="h:i A" {{ ($settings['time_format'] ?? 'H:i') === 'h:i A' ? 'selected' : '' }}>12 Giờ (02:30 PM)</option>
                                 </select>
                             </div>
                         </div>
@@ -175,20 +232,23 @@
                         
                         <div class="space-y-6">
                             <!-- Toggle 1 -->
-                            <div class="flex items-center justify-between" x-data="{ on: true }">
+                            <div class="flex items-center justify-between" x-data="{ on: {{ ($settings['allow_registration'] ?? '1') === '1' ? 'true' : 'false' }} }">
                                 <div>
                                     <h4 class="font-bold text-slate-900 mb-1">Cho phép Đăng ký Tài khoản mới</h4>
                                     <p class="text-sm text-slate-500">Mở cổng đăng ký tài khoản cho khách truy cập vãng lai.</p>
                                 </div>
+                                <input type="hidden" name="allow_registration" :value="on ? '1' : '0'" x-bind:disabled="!on" disabled>
                                 <button type="button" @click="on = !on" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2" :class="on ? 'bg-teal-500' : 'bg-slate-200'">
                                     <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" :class="on ? 'translate-x-5' : 'translate-x-0'"></span>
                                 </button>
+                                <!-- Form input for Toggle 1 -->
+                                <input type="checkbox" name="allow_registration" value="1" x-model="on" class="hidden">
                             </div>
 
                             <hr class="border-slate-100">
 
                             <!-- Toggle 2 -->
-                            <div class="flex items-center justify-between" x-data="{ on: false }">
+                            <div class="flex items-center justify-between" x-data="{ on: {{ ($settings['maintenance_mode'] ?? '0') === '1' ? 'true' : 'false' }} }">
                                 <div>
                                     <h4 class="font-bold text-slate-900 mb-1">Chế Độ Bảo Trì</h4>
                                     <p class="text-sm text-slate-500">Tạm dừng tất cả giao dịch và hiển thị thông báo bảo trì cho người dùng ngoài Admin.</p>
@@ -196,13 +256,24 @@
                                 <button type="button" @click="on = !on" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" :class="on ? 'bg-red-500' : 'bg-slate-200'">
                                     <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" :class="on ? 'translate-x-5' : 'translate-x-0'"></span>
                                 </button>
+                                <!-- Form input for Toggle 2 -->
+                                <input type="checkbox" name="maintenance_mode" value="1" x-model="on" class="hidden">
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="flex justify-end gap-3">
+                        <button type="submit" class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-bold text-sm shadow hover:bg-teal-700 transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Lưu Cài Đặt
+                        </button>
+                    </div>
+                    </form>
                 </div>
 
                 <!-- Roles Info View -->
                 <div x-show="activeTab === 'roles'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" style="display: none;" class="space-y-6">
+                    <!-- User Role Assignment -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
                         @if (isset($users) && count($users) > 0)
                             @include('profile.partials.manage-roles-form')
@@ -212,6 +283,115 @@
                             </div>
                         @endif
                     </div>
+
+                    <!-- Role Permissions Matrix -->
+                    @if(isset($roles) && isset($groupedPermissions))
+                    <div class="bg-white border border-slate-200 rounded-xl shadow overflow-hidden">
+                        <div class="p-6 lg:p-8 border-b border-slate-200 bg-white">
+                            <h2 class="text-lg font-bold text-slate-900">Cấu hình phân quyền Module</h2>
+                            <p class="mt-1 text-sm text-slate-500">Chi tiết quyền hạn truy cập của các vai trò vào từng khu vực trên hệ thống.</p>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar p-0">
+                            <table class="w-full text-left border-collapse min-w-[800px] whitespace-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th class="py-5 px-6 text-[13px] font-bold uppercase tracking-wider text-slate-700 min-w-[300px] border-b border-slate-200 bg-slate-50 align-middle">
+                                            NHÓM QUYỀN / CHỨC NĂNG
+                                        </th>
+                                        @foreach($roles as $index => $role)
+                                            @php
+                                                $color = $roleColors[$index % count($roleColors)];
+                                                $subtitle = $roleSubtitles[$role->name] ?? 'Khác';
+                                            @endphp
+                                            <th class="py-4 px-4 font-bold text-center border-l border-b border-slate-200 bg-slate-50 min-w-[160px] align-middle relative group">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-10 h-10 rounded-full {{ $color['icon_bg'] }} {{ $color['icon_color'] }} flex items-center justify-center">
+                                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                                        </div>
+                                                        <div class="text-left">
+                                                            <div class="uppercase tracking-wide text-[13px] font-black text-slate-800">{{ $role->name }}</div>
+                                                            <div class="text-[12px] font-normal text-slate-500 mt-0.5">{{ $subtitle }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Action buttons -->
+                                                <div class="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button type="submit" form="form-role-{{ $role->id }}" class="text-[11px] font-bold bg-white text-teal-600 border border-teal-200 hover:bg-teal-50 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
+                                                        Lưu quyền
+                                                    </button>
+                                                </div>
+                                                
+                                                <form action="{{ route('admin.roles.permissions.update', $role) }}" method="POST" id="form-role-{{ $role->id }}">
+                                                    @csrf
+                                                </form>
+                                            </th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    @foreach($groupedPermissions as $groupName => $perms)
+                                        <tr class="bg-slate-50/70 border-b border-slate-200">
+                                            <td colspan="{{ count($roles) + 1 }}" class="py-3 px-6 text-[13px] font-bold text-slate-800 tracking-wide flex items-center gap-2">
+                                                {{ $groupName }}
+                                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                            </td>
+                                        </tr>
+                                        @foreach($perms as $permission)
+                                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                                <td class="py-4 px-6 text-slate-600 h-full">
+                                                    <div class="font-bold text-slate-800 text-[14px]">{{ $permissionNames[$permission->name] ?? ucfirst($permission->name) }}</div>
+                                                    <div class="text-[13px] text-slate-500 mt-1 whitespace-normal max-w-sm leading-relaxed">
+                                                        {{ $permissionDescriptions[$permission->name] ?? 'Mô tả quyền hạn truy cập' }}
+                                                    </div>
+                                                </td>
+                                                
+                                                @foreach($roles as $index => $role)
+                                                    @php
+                                                        $color = $roleColors[$index % count($roleColors)];
+                                                    @endphp
+                                                    <td class="py-4 px-6 text-center border-l border-slate-100">
+                                                        @if($role->name === 'admin')
+                                                            <!-- Admin luôn full quyền -->
+                                                            <div class="flex justify-center items-center h-full">
+                                                                <input type="checkbox" checked disabled class="w-5 h-5 rounded border-orange-500 text-orange-500 bg-orange-500 focus:ring-0 shadow-sm opacity-100" style="background-image: url(&quot;data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e&quot;);">
+                                                            </div>
+                                                            <input type="hidden" name="permissions[]" value="{{ $permission->name }}" form="form-role-{{ $role->id }}">
+                                                        @else
+                                                            <div class="flex justify-center items-center h-full">
+                                                                <input type="checkbox" 
+                                                                       name="permissions[]" 
+                                                                       value="{{ $permission->name }}" 
+                                                                       form="form-role-{{ $role->id }}"
+                                                                       {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}
+                                                                       class="w-5 h-5 rounded border-slate-300 {{ $color['checkbox'] }} cursor-pointer shadow-sm transition-all hover:border-slate-400 bg-white">
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="bg-slate-50 border-t border-slate-200 py-4 px-6 flex items-center gap-8">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded bg-orange-500 border border-orange-500 flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <span class="text-sm text-slate-600 font-medium">Có quyền</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded bg-white border border-slate-300"></div>
+                                <span class="text-sm text-slate-600 font-medium">Không có quyền</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- CẤU HÌNH CHATBOX AI TAB -->

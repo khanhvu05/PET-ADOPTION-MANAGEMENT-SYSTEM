@@ -33,7 +33,7 @@
                     }
                 </script>
                 
-                <a href="{{ route('admin.donation_campaigns.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-teal-600 text-white rounded-xl font-bold text-sm shadow-sm hover:bg-teal-700 transition-all shrink-0">
+                <a href="{{ route('admin.donation_campaigns.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#3f899a] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#3f899a]/80 hover:shadow-md transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Tạo Chiến Dịch
                 </a>

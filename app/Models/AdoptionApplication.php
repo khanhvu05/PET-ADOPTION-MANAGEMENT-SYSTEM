@@ -59,12 +59,13 @@ class AdoptionApplication extends Model
     public function getTrangThaiLabelAttribute(): string
     {
         return match ($this->Trang_thai) {
-            'pending'       => 'Chờ xử lý',
-            'approved'      => 'Đã duyệt',
-            'cho_phong_van' => 'Chờ phỏng vấn',
-            'completed'     => 'Hoàn tất',
-            'rejected'      => 'Từ chối',
-            default         => 'Không rõ',
+            'cho_duyet'       => 'Chờ xử lý',
+            'cho_xac_nhan_don'=> 'Chờ chọn lịch PV',
+            'cho_phong_van'   => 'Chờ phỏng vấn',
+            'da_duyet'        => 'PV thành công',
+            'hoan_thanh'      => 'Đã nhận nuôi',
+            'tu_choi'         => 'Từ chối / Hủy',
+            default           => 'Không rõ',
         };
     }
 }

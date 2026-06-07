@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\InterviewSlot;
+use App\Models\InterviewSchedule;
+use App\Models\AdoptionApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -11,20 +13,49 @@ class InterviewScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        // Get slots from today onwards, ordered by Date and Start Time
-        $slotsQuery = InterviewSlot::where('Ngay', '>=', Carbon::today())
-            ->orderBy('Ngay')
-            ->orderBy('Gio_bat_dau');
-            
-        if ($request->filled('status')) {
-            $slotsQuery->where('Trang_thai', $request->status);
+        $query = InterviewSlot::query();
+
+        // 1. Date Range Filter
+        if ($request->filled('dateRange')) {
+            $dates = explode(' to ', $request->dateRange);
+            if (count($dates) == 2) {
+                try {
+                    $start = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
+                    $end = Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
+                    $query->whereBetween('Ngay', [$start, $end]);
+                } catch (\Exception $e) {}
+            } elseif (count($dates) == 1) {
+                try {
+                    $date = Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
+                    $query->whereDate('Ngay', $date);
+                } catch (\Exception $e) {}
+            }
+        } else {
+            // Default show from today onwards
+            $query->where('Ngay', '>=', Carbon::today());
         }
 
-        $slots = $slotsQuery->get()->groupBy(function($slot) {
+        // Pagination
+        $slotsPaginated = $query->orderBy('Ngay')->orderBy('Gio_bat_dau')->paginate(4)->withQueryString();
+
+        $slots = $slotsPaginated->groupBy(function($slot) {
             return Carbon::parse($slot->Ngay)->format('Y-m-d');
         });
 
-        return view('admin.interview_schedules.index', compact('slots'));
+        $pendingApplications = AdoptionApplication::with(['nguoiDung', 'thuCung'])
+            ->whereIn('Trang_thai', ['cho_phong_van'])
+            ->get();
+
+        // Get all upcoming slots for the dropdown in modal
+        $allUpcomingSlots = InterviewSlot::whereDate('Ngay', '>=', now())
+            ->orderBy('Ngay')
+            ->orderBy('Gio_bat_dau')
+            ->get();
+
+        return response()->view('admin.interview_schedules.index', compact('slots', 'slotsPaginated', 'pendingApplications', 'allUpcomingSlots'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     public function store(Request $request)
@@ -123,5 +154,103 @@ class InterviewScheduleController extends Controller
 
         return redirect()->route('admin.interview_schedules.index')
             ->with('success', 'Đã chuyển trạng thái slot thành Ẩn/Hủy!');
+    }
+
+    public function showDetails($id)
+    {
+        $slot = InterviewSlot::with(['schedules.donNhanNuoi.thuCung', 'schedules.donNhanNuoi.nguoiDung'])->findOrFail($id);
+        
+        $scheduled = $slot->schedules->filter(function($s) {
+            return in_array($s->Ket_qua_phong_van, [null, '']) && in_array($s->Trang_thai, ['cho_xac_nhan_don', 'cho_duyet', 'da_xac_nhan', 'da_doi_lich']);
+        });
+
+        $history = $slot->schedules->filter(function($s) {
+            return in_array($s->Ket_qua_phong_van, ['dat', 'tu_choi', 'vang_mat']);
+        });
+
+        $pending = AdoptionApplication::with(['nguoiDung', 'thuCung'])
+            ->whereIn('Trang_thai', ['cho_xac_nhan_don', 'cho_phong_van'])
+            ->whereNull('interview_slot_id')
+            ->get();
+
+        $html = view('admin.interview_schedules.partials.slot-details', compact('slot', 'scheduled', 'history', 'pending'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
+    public function updateResult(Request $request, $schedule_id)
+    {
+        $request->validate([
+            'result' => 'required|in:dat,tu_choi,vang_mat'
+        ]);
+
+        $schedule = InterviewSchedule::with(['donNhanNuoi.nguoiDung', 'donNhanNuoi.thuCung'])->findOrFail($schedule_id);
+        $schedule->update(['Ket_qua_phong_van' => $request->result]);
+
+        $application = $schedule->donNhanNuoi;
+
+        if ($application) {
+            if ($request->result === 'dat') {
+                $application->update(['Trang_thai' => 'da_duyet']);
+                if ($application->nguoiDung && $application->nguoiDung->email) {
+                    \Illuminate\Support\Facades\Mail::to($application->nguoiDung->email)
+                        ->send(new \App\Mail\InterviewPassedEmail($application));
+                }
+            } else {
+                // tu_choi hoặc vang_mat
+                $ghiChu = $request->result === 'vang_mat' ? 'Bạn đã vắng mặt trong buổi phỏng vấn mà không báo trước.' : 'Rất tiếc bạn chưa phù hợp qua vòng phỏng vấn.';
+                $application->update([
+                    'Trang_thai' => 'tu_choi',
+                    'Ghi_chu_admin' => $ghiChu
+                ]);
+                if ($application->nguoiDung && $application->nguoiDung->email) {
+                    \Illuminate\Support\Facades\Mail::to($application->nguoiDung->email)
+                        ->send(new \App\Mail\ApplicationRejectedEmail($application, $ghiChu));
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Cập nhật kết quả thành công và đã gửi email.']);
+    }
+
+    public function addApplication(Request $request, $id)
+    {
+        $request->validate([
+            'application_id' => 'required|exists:adoption_applications,Ma_don'
+        ]);
+
+        $slot = InterviewSlot::findOrFail($id);
+        $application = AdoptionApplication::findOrFail($request->application_id);
+
+        if ($slot->So_luong_hien_tai >= $slot->So_luong_toi_da) {
+            return response()->json(['success' => false, 'message' => 'Slot này đã đầy, không thể thêm!'], 400);
+        }
+
+        // Tạo hoặc update schedule cho application này
+        $schedule = InterviewSchedule::firstOrNew(['Ma_don' => $application->Ma_don]);
+        
+        // Nếu đã có slot cũ, giảm số lượng hiện tại của slot cũ đi 1
+        if ($schedule->exists && $schedule->Ma_slot && $schedule->Ma_slot != $slot->Ma_slot) {
+            $oldSlot = InterviewSlot::find($schedule->Ma_slot);
+            if ($oldSlot && $oldSlot->So_luong_hien_tai > 0) {
+                $oldSlot->decrement('So_luong_hien_tai');
+            }
+        }
+
+        $schedule->Ma_slot = $slot->Ma_slot;
+        $schedule->Trang_thai = 'da_doi_lich'; // Có thể là da_xac_nhan hoặc da_doi_lich tuỳ yêu cầu
+        $schedule->save();
+
+        $application->update([
+            'Trang_thai' => 'cho_phong_van',
+            'interview_slot_id' => $slot->Ma_slot
+        ]);
+
+        // Tăng số lượng hiện tại của slot mới
+        $slot->increment('So_luong_hien_tai');
+
+        return response()->json(['success' => true, 'message' => 'Cập nhật/Thêm hồ sơ vào lịch thành công!']);
     }
 }

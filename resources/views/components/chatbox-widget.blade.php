@@ -21,7 +21,7 @@
                     </svg>
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-semibold text-[15px] leading-tight">PetAdoption Support</span>
+                    <span class="font-semibold text-[15px] leading-tight">PetJam Support</span>
                     <span class="text-xs text-teal-100/90 flex items-center gap-1.5 mt-0.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
                         Đang hoạt động
@@ -229,7 +229,7 @@
                     this.messages = [
                         {
                             sender: 'bot',
-                            text: 'Xin chào! Mình là trợ lý AI của PetAdoption. Bạn cần hỗ trợ gì hôm nay?',
+                            text: 'Xin chào! Mình là trợ lý AI của PetJam. Bạn cần hỗ trợ gì hôm nay?',
                             time: welcomeTime,
                             redirect: null
                         }

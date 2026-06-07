@@ -97,7 +97,7 @@ class UserController extends Controller
 
     public function updateRole(Request $request, User $user)
     {
-        if (!$request->user()->can('manage roles') && !$request->user()->hasRole('admin')) {
+        if (!$request->user()->can('access_users') && !$request->user()->hasRole('admin')) {
             abort(403, 'Bạn không có quyền thực hiện hành động này.');
         }
 
@@ -135,13 +135,7 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user)
     {
-        if ($request->user()->Ma_nguoi_dung === $user->Ma_nguoi_dung) {
-            return back()->with('error', 'Không thể tự xóa tài khoản của bản thân.');
-        }
-
-        $user->delete();
-
-        return back()->with('success', 'Đã xóa người dùng thành công.');
+        return back()->with('error', 'Chức năng xóa người dùng đã bị vô hiệu hóa vì lý do nghiệp vụ.');
     }
 
     public function export(Request $request)

@@ -13,11 +13,12 @@
     <div x-data="{ activeTab: 'details' }" class="max-w-7xl mx-auto space-y-6 lg:space-y-8 font-sans" x-cloak>
         @php
             $badgeColor = match($application->Trang_thai) {
-                'pending' => 'bg-slate-100 text-slate-600 border-slate-200',
-                'approved' => 'bg-green-50 text-green-600 border-green-200',
+                'cho_duyet' => 'bg-slate-100 text-slate-600 border-slate-200',
+                'cho_xac_nhan_don' => 'bg-yellow-50 text-yellow-600 border-yellow-200',
                 'cho_phong_van' => 'bg-blue-50 text-blue-600 border-blue-200',
-                'completed' => 'bg-purple-50 text-purple-600 border-purple-200',
-                'rejected' => 'bg-red-50 text-red-600 border-red-200',
+                'da_duyet' => 'bg-green-50 text-green-600 border-green-200',
+                'hoan_thanh' => 'bg-purple-50 text-purple-600 border-purple-200',
+                'tu_choi' => 'bg-red-50 text-red-600 border-red-200',
                 default => 'bg-slate-100 text-slate-600 border-slate-200',
             };
         @endphp
@@ -360,16 +361,16 @@
                         <span class="{{ $badgeColor }} text-xs font-semibold px-2.5 py-1 rounded-[6px] border">{{ $application->trang_thai_label }}</span>
                     </div>
                     
-                    @if(in_array($application->Trang_thai, ['pending', 'approved']))
+                    @if(in_array($application->Trang_thai, ['cho_duyet', 'da_duyet']))
                     <form id="action-form" action="{{ route('admin.adoptions.update', $application->Ma_don) }}" method="POST" class="space-y-3">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="Trang_thai" id="trang_thai_input" value="">
                         
 
-                        @if($application->Trang_thai === 'pending')
-                            <button type="button" onclick="confirmAction('approved', 'Hệ thống sẽ gửi email mời phỏng vấn đến ứng viên. Bạn có chắc chắn?')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
-                                Phê duyệt & Hẹn phỏng vấn
+                        @if($application->Trang_thai === 'cho_duyet')
+                            <button type="button" onclick="confirmAction('cho_xac_nhan_don', 'Hệ thống sẽ gửi email mời phỏng vấn đến ứng viên. Ứng viên có 24h để chọn lịch. Bạn có chắc chắn?')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
+                                Duyệt sơ bộ & Gửi mail mời Phỏng vấn
                             </button>
                             
                             <div class="mt-4 border-t border-slate-100 pt-4">
@@ -384,27 +385,10 @@
                             </div>
                         @endif
 
-                        @if(in_array($application->Trang_thai, ['approved', 'cho_phong_van']))
-                            <button type="button" onclick="confirmAction('completed', 'Xác nhận ứng viên đã phỏng vấn thành công và đón bé về? Trạng thái bé sẽ chuyển thành Đã nhận nuôi và các đơn khác sẽ tự động bị từ chối.')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
-                                {{ $application->Trang_thai == 'cho_phong_van' ? 'Phỏng vấn thành công' : 'Xác nhận Đã nhận nuôi' }}
+                        @if($application->Trang_thai === 'da_duyet')
+                            <button type="button" onclick="confirmAction('hoan_thanh', 'Xác nhận đã bàn giao thú cưng cho người nhận nuôi thành công?')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
+                                Hoàn tất bàn giao & Đã nhận nuôi
                             </button>
-
-                            @if($application->Trang_thai == 'cho_phong_van')
-                                <div class="mt-4 border-t border-slate-100 pt-4">
-                                    <p class="text-sm font-medium text-red-600 mb-2">Phỏng vấn thất bại</p>
-                                    <textarea name="Ghi_chu_admin" id="ghi_chu_reject" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-[8px] px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-red-500 transition-colors" placeholder="Lý do phỏng vấn thất bại (bắt buộc, sẽ gửi cho ứng viên)..."></textarea>
-                                    @error('Ghi_chu_admin')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                    <button type="button" onclick="confirmReject()" class="w-full mt-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 font-medium text-sm py-2.5 rounded-[8px] transition-colors">
-                                        Xác nhận phỏng vấn thất bại
-                                    </button>
-                                </div>
-                            @else
-
-                                    Hủy đơn
-                                </button>
-                            @endif
                         @endif
                     </form>
                     @endif

@@ -18,10 +18,10 @@
             
             <div class="flex items-center gap-3">
                 <!-- Export Button -->
-                <button class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
+                <a href="{{ route('admin.adoptions.export', request()->all()) }}" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
                     <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Xuất Excel
-                </button>
+                </a>
                 
                 <!-- Add New Button -->
                 <a href="{{ route('admin.adoptions.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#41859c] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#32697b] transition-all shrink-0">
@@ -61,11 +61,10 @@
 
                     <!-- Dropdowns -->
                     <div class="flex flex-wrap items-end gap-3 flex-1">
-                        <!-- Dropdown 1 -->
                         <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
                             open: false, 
                             value: '{{ request('trang_thai', '') }}', 
-                            options: {'': 'Tất cả trạng thái', 'pending': 'Chờ xử lý', 'approved': 'Đã duyệt', 'cho_phong_van': 'Chờ phỏng vấn', 'completed': 'Hoàn tất', 'rejected': 'Từ chối'} 
+                            options: {'': 'Tất cả trạng thái', 'cho_duyet': 'Chờ xử lý', 'cho_xac_nhan_don': 'Chờ chọn lịch PV', 'cho_phong_van': 'Chờ phỏng vấn', 'da_duyet': 'PV thành công', 'hoan_thanh': 'Đã nhận nuôi', 'tu_choi': 'Từ chối / Hủy'} 
                         }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
@@ -155,7 +154,7 @@
 
                 <!-- Table Container -->
                 <div id="ajax-data-container">
-                    <div class="p-4 overflow-x-auto custom-scrollbar">
+                    <div class="p-4 overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[1100px] whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
@@ -165,7 +164,7 @@
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Thông Tin Liên Hệ</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Ngày Tạo</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Trạng Thái</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center rounded-r-xl">Thao Tác</th>
+                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center rounded-r-xl w-[140px]">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -218,25 +217,29 @@
                                 </div>
                             </td>
                             <td class="py-3 px-4">
-                                @if($app->Trang_thai == 'pending')
+                                @if($app->Trang_thai == 'cho_duyet')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-600 bg-slate-100 border border-slate-200">
                                         Chờ xử lý
                                     </span>
-                                @elseif($app->Trang_thai == 'approved')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-green-600 bg-green-50 border border-green-200">
-                                        Đã duyệt
+                                @elseif($app->Trang_thai == 'cho_xac_nhan_don')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-yellow-600 bg-yellow-50 border border-yellow-200">
+                                        Chờ chọn lịch PV
                                     </span>
                                 @elseif($app->Trang_thai == 'cho_phong_van')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-200">
                                         Chờ phỏng vấn
                                     </span>
-                                @elseif($app->Trang_thai == 'rejected')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-red-600 bg-red-50 border border-red-200">
-                                        Từ chối
+                                @elseif($app->Trang_thai == 'da_duyet')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-green-600 bg-green-50 border border-green-200">
+                                        PV thành công
                                     </span>
-                                @elseif($app->Trang_thai == 'completed')
+                                @elseif($app->Trang_thai == 'tu_choi')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-red-600 bg-red-50 border border-red-200">
+                                        Từ chối / Hủy
+                                    </span>
+                                @elseif($app->Trang_thai == 'hoan_thanh')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-purple-600 bg-purple-50 border border-purple-200">
-                                        Hoàn tất
+                                        Đã nhận nuôi
                                     </span>
                                 @endif
                             </td>
@@ -248,7 +251,7 @@
                                     <a href="{{ route('admin.adoptions.edit', $app->Ma_don) }}" class="p-1.5 text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors border border-teal-200" title="Chỉnh sửa">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                     </a>
-                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="inline-block confirm-delete">
+                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="hidden confirm-delete">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-1.5 text-[#e75e5b] bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-200" title="Xóa">
@@ -276,7 +279,7 @@
                     Hiển thị {{ $applications->firstItem() }} đến {{ $applications->lastItem() }} của {{ $applications->total() }} kết quả
                 </span>
                 
-                <div class="flex flex-col sm:flex-row items-center gap-6 overflow-x-auto max-w-full pb-2 sm:pb-0 custom-scrollbar">
+                <div class="flex flex-col sm:flex-row items-center gap-6 overflow-x-auto max-w-full pb-2 sm:pb-0">
                     <!-- Items per page -->
                     <div class="flex items-center gap-2 shrink-0">
                         <span class="text-sm font-medium text-slate-500">Hiển thị</span>

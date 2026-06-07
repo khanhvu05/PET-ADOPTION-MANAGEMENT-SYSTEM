@@ -35,6 +35,11 @@ class InterviewSlot extends Model
         return $this->hasMany(AdoptionApplication::class, 'interview_slot_id', 'Ma_slot');
     }
 
+    public function schedules()
+    {
+        return $this->hasMany(InterviewSchedule::class, 'Ma_slot', 'Ma_slot');
+    }
+
     public function nhanVien()
     {
         return $this->belongsTo(User::class, 'Nhan_vien_xu_ly', 'Ma_nguoi_dung');

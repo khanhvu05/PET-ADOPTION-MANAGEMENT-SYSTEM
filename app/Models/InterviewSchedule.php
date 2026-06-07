@@ -17,7 +17,7 @@ class InterviewSchedule extends Model
 
     protected $fillable = [
         'Ma_lich', 'Ma_don', 'Ma_slot', 'Loai_lich', 'Thoi_gian_du_kien', 
-        'Thoi_gian_xac_nhan', 'Nhan_vien_xu_ly', 'Trang_thai', 'Email_da_gui', 'Ghi_chu'
+        'Thoi_gian_xac_nhan', 'Nhan_vien_xu_ly', 'Trang_thai', 'Ket_qua_phong_van', 'Email_da_gui', 'Ghi_chu'
     ];
 
     protected $casts = [

@@ -70,7 +70,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/bang-dieu-khien', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
     // Quản lý Phân Quyền (Roles & Permissions)
-    Route::get('/quan-tri/vai-tro', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('admin.roles.index');
     Route::post('/quan-tri/vai-tro', [\App\Http\Controllers\Admin\RolePermissionController::class, 'storeRole'])->name('admin.roles.store');
     Route::delete('/quan-tri/vai-tro/{role}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'destroyRole'])->name('admin.roles.destroy');
     Route::post('/quan-tri/vai-tro/{role}/quyen', [\App\Http\Controllers\Admin\RolePermissionController::class, 'updatePermissions'])->name('admin.roles.permissions.update');
@@ -85,10 +84,14 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('quan-tri/thu-cung', \App\Http\Controllers\Admin\PetController::class)->names('admin.pets')->parameters(['thu-cung' => 'pet']);
 
     // Đơn nhận nuôi (full CRUD + update status)
+    Route::get('quan-tri/don-nhan-nuoi/xuat-excel', [\App\Http\Controllers\Admin\AdoptionController::class, 'export'])->name('admin.adoptions.export');
     Route::resource('quan-tri/don-nhan-nuoi', \App\Http\Controllers\Admin\AdoptionController::class)->names('admin.adoptions')->parameters(['don-nhan-nuoi' => 'adoption']);
 
     // Lịch phỏng vấn
     Route::put('quan-tri/lich-phong-van/{id}/an', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'hide'])->name('admin.interview_schedules.hide');
+    Route::get('quan-tri/lich-phong-van/{id}/details', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'showDetails'])->name('admin.interview_schedules.details');
+    Route::put('quan-tri/lich-phong-van/update-result/{schedule_id}', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'updateResult'])->name('admin.interview_schedules.update_result');
+    Route::post('quan-tri/lich-phong-van/{id}/add-application', [\App\Http\Controllers\Admin\InterviewScheduleController::class, 'addApplication'])->name('admin.interview_schedules.add_application');
     Route::resource('quan-tri/lich-phong-van', \App\Http\Controllers\Admin\InterviewScheduleController::class)->names('admin.interview_schedules')->parameters(['lich-phong-van' => 'interview_schedule']);
 
     // Chiến dịch ủng hộ
@@ -107,6 +110,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::resource('quan-tri/nguoi-dung', \App\Http\Controllers\Admin\UserController::class)->names('admin.users')->parameters(['nguoi-dung' => 'user']);
 
     // Cài đặt
+    Route::post('quan-tri/cai-dat/thong-tin-chung', [\App\Http\Controllers\Admin\SettingController::class, 'storeGeneral'])->name('admin.settings.storeGeneral');
     Route::resource('quan-tri/cai-dat', \App\Http\Controllers\Admin\SettingController::class)->names('admin.settings')->parameters(['cai-dat' => 'setting']);
 
     // Cấu hình Chatbox AI (Admin)

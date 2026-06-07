@@ -16,38 +16,17 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 1. Tạo Permissions
         $permissions = [
-            // M1 - Thú cưng & Cứu hộ
-            'view pets',
-            'manage pets',
-            'delete pets',
-            'manage rescue cases',
-            'manage vaccination history',
-
-            // M2 - Nhận nuôi
-            'view any adoptions',
-            'approve adoptions',
-            'pre-approve adoptions',
-            'manage interview slots',
-
-            // M3 - Ủng hộ
-            'manage campaigns',
-            'view any donations',
-
-            // M4 - Người dùng & Hệ thống
-            'manage users',
-            'manage roles',
-            'view activity logs',
-
-            // M5 - Chat AI & Tokens
-            'view tokens',
-            'manage tokens',
-
-            // M6 - Bài viết
-            'manage posts',
-
-            // M7 - Cài đặt
-            'manage settings',
+            'access_pets',      // Quản lý Thú cưng & Cứu hộ
+            'access_adoptions', // Quản lý Đơn nhận nuôi
+            'access_donations', // Quản lý Chiến dịch ủng hộ
+            'access_posts',     // Quản lý Bài viết
+            'access_users',     // Quản lý Người dùng
+            'access_settings',  // Cài đặt hệ thống (Quyền & Vai trò, Cài đặt chung)
+            'access_tokens',    // Quản lý AI Tokens
         ];
+
+        // Xóa các permission cũ không còn dùng nữa
+        Permission::whereNotIn('name', $permissions)->delete();
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
@@ -61,15 +40,10 @@ class RolesAndPermissionsSeeder extends Seeder
         // Staff (Nhân viên / Tình nguyện viên)
         $staffRole = Role::firstOrCreate(['name' => 'staff']);
         $staffRole->syncPermissions([
-            'view pets',
-            'manage pets',
-            'manage rescue cases',
-            'manage vaccination history',
-            'view any adoptions',
-            'approve adoptions',
-            'pre-approve adoptions',
-            'manage interview slots',
-            'manage posts',
+            'access_pets',
+            'access_adoptions',
+            'access_donations',
+            'access_posts',
         ]);
 
         // Customer (Người dùng phổ thông - không cần quyền đặc biệt để thao tác basic)
