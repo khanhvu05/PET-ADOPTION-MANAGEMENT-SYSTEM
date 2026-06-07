@@ -508,13 +508,13 @@
                                     <!-- Right side -->
                                     <div class="flex flex-col justify-between items-start md:items-end">
                                         <div class="space-y-2.5 mb-4 md:mb-0 w-full md:w-auto">
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">{{ $application->created_at->format('d/m/Y H:i') }}</span></p>
+                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày tạo:</span> <span class="text-slate-800 font-medium">{{ $application->Ngay_tao->format('d/m/Y H:i') }}</span></p>
                                             <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Trạng thái:</span> 
                                                 <span class="{{ str_replace('text', 'border', $iconClass) }} text-[11px] font-bold px-2.5 py-0.5 rounded-full border">
                                                     {{ $application->trang_thai_label }}
                                                 </span>
                                             </p>
-                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Ngày xử lý:</span> <span class="text-slate-800 font-medium">{{ $application->Ngay_cap_nhat_trang_thai ? $application->Ngay_cap_nhat_trang_thai->format('d/m/Y H:i') : '-' }}</span></p>
+                                            <p class="text-sm flex items-center justify-between md:justify-end gap-3"><span class="text-slate-500 font-medium">Cập nhật:</span> <span class="text-slate-800 font-medium">{{ $application->Ngay_cap_nhat ? $application->Ngay_cap_nhat->format('d/m/Y H:i') : '-' }}</span></p>
                                         </div>
                                         <a href="{{ route('admin.adoptions.show', $application->Ma_don) }}" class="px-4 py-1.5 border border-teal-200 text-teal-600 font-bold text-sm rounded-lg hover:bg-teal-50 transition-colors w-full md:w-auto text-center">Xem chi tiết</a>
                                     </div>
