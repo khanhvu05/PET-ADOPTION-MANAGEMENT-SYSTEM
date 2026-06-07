@@ -29,7 +29,7 @@ class AdoptionApplicationsSeeder extends Seeder
             'Kinh_nghiem'     => 'Đã từng nuôi mèo 3 năm trước khi bé qua đời vì tuổi già',
             'Ly_do_nhan_nuoi' => 'Tôi yêu thú cưng và muốn mang lại ngôi nhà ấm áp cho Miu. Tôi hiểu rõ cách chăm sóc mèo và sẵn sàng dành thời gian cho bé.',
             'Cam_ket'         => true,
-            'Trang_thai'      => 'pending',
+            'Trang_thai'      => 'cho_duyet',
             'Ghi_chu_admin'   => null,
             'Ngay_tao'        => now(),
             'Ngay_cap_nhat'   => now(),
@@ -49,7 +49,7 @@ class AdoptionApplicationsSeeder extends Seeder
             'Kinh_nghiem'     => 'Chưa từng nuôi thú cưng nhưng đã nghiên cứu kỹ về Poodle',
             'Ly_do_nhan_nuoi' => 'Gia đình tôi muốn có một người bạn đồng hành. Chúng tôi có sân rộng và nhiều thời gian cho bé vui chơi.',
             'Cam_ket'         => true,
-            'Trang_thai'      => 'pending',
+            'Trang_thai'      => 'cho_duyet',
             'Ghi_chu_admin'   => null,
             'Ngay_tao'        => now()->subDays(2),
             'Ngay_cap_nhat'   => now()->subDays(2),
@@ -69,7 +69,7 @@ class AdoptionApplicationsSeeder extends Seeder
             'Kinh_nghiem'     => 'Đã nuôi chó Golden 5 năm, có kinh nghiệm chăm sóc chó cỡ vừa và lớn',
             'Ly_do_nhan_nuoi' => 'Tôi sống một mình và muốn có người bạn đồng hành. Corgi rất phù hợp với lối sống năng động của tôi.',
             'Cam_ket'         => true,
-            'Trang_thai'      => 'approved',
+            'Trang_thai'      => 'cho_xac_nhan_don',
             'Ghi_chu_admin'   => 'Hồ sơ tốt, đủ điều kiện phỏng vấn. Người đăng ký có kinh nghiệm nuôi chó.',
             'Ngay_tao'        => now()->subDays(5),
             'Ngay_cap_nhat'   => now()->subDays(1),
@@ -95,7 +95,7 @@ class AdoptionApplicationsSeeder extends Seeder
         $faker = \Faker\Factory::create('vi_VN');
         $randomUserIds = cache()->get('user_ids');
         $randomPetIds = cache()->get('random_pet_ids', []);
-        $trangThaiOptions = ['pending', 'approved', 'cho_phong_van', 'completed', 'rejected'];
+        $trangThaiOptions = ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet', 'hoan_thanh', 'tu_choi'];
         
         $totalItems = 150;
         for ($i = 0; $i < $totalItems; $i++) {
@@ -137,9 +137,9 @@ class AdoptionApplicationsSeeder extends Seeder
             DB::table('adoption_applications')->insert($application);
             
             // Randomly generate an interview schedule
-            if (in_array($trangThai, ['approved', 'cho_phong_van', 'completed', 'rejected'])) {
-                // If rejected, 50% chance it was rejected after an interview
-                if ($trangThai === 'rejected' && !$faker->boolean(50)) {
+            if (in_array($trangThai, ['cho_xac_nhan_don', 'cho_phong_van', 'da_duyet', 'hoan_thanh', 'tu_choi'])) {
+                // If tu_choi, 50% chance it was rejected after an interview
+                if ($trangThai === 'tu_choi' && !$faker->boolean(50)) {
                     continue; 
                 }
 
@@ -148,10 +148,10 @@ class AdoptionApplicationsSeeder extends Seeder
                 $ketQuaPhongVan = null;
                 $trangThaiLich = 'cho_xac_nhan_don';
                 
-                if (in_array($trangThai, ['completed', 'approved'])) {
+                if (in_array($trangThai, ['hoan_thanh', 'da_duyet'])) {
                     $ketQuaPhongVan = 'dat';
                     $trangThaiLich = 'da_xac_nhan';
-                } elseif ($trangThai === 'rejected') {
+                } elseif ($trangThai === 'tu_choi') {
                     $ketQuaPhongVan = $faker->randomElement(['tu_choi', 'vang_mat']);
                     $trangThaiLich = 'da_xac_nhan'; // Finished interview with failed result
                 }
