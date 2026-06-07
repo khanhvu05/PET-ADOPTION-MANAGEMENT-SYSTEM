@@ -14,7 +14,7 @@
         <p>Vui lòng nhấp vào nút dưới đây để chọn lịch ngay, nếu không đơn của bạn sẽ bị hủy tự động:</p>
         
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ url('/adoptions/interviews/' . $application->Ma_don) }}" style="background-color: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            <a href="{{ route('frontend.user.adoptions.index') }}" style="background-color: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Chọn Lịch Ngay
             </a>
         </div>
