@@ -162,6 +162,66 @@ class DonationsSeeder extends Seeder
             DB::table('donations')->insert($donation);
         }
 
-        $this->command->info('✅ DonationsSeeder hoàn thành: 9 giao dịch (7 success, 1 failed, 1 pending).');
+        // Generate 200 random donations over the last 6 months
+        $faker = \Faker\Factory::create('vi_VN');
+        $randomUserIds = cache()->get('user_ids');
+        $allCampaignIds = cache()->get('campaign_ids');
+        $bankOptions = ['VCB', 'TCB', 'MB', 'ACB', 'BIDV', 'VPB', 'VIB'];
+
+        $totalItems = 200;
+        for ($i = 0; $i < $totalItems; $i++) {
+            $p = $i / $totalItems;
+            if ($p < 0.05) { $monthsAgo = 5; }
+            elseif ($p < 0.12) { $monthsAgo = 4; }
+            elseif ($p < 0.22) { $monthsAgo = 3; }
+            elseif ($p < 0.37) { $monthsAgo = 2; }
+            elseif ($p < 0.62) { $monthsAgo = 1; }
+            else { $monthsAgo = 0; }
+            
+            $start = now()->subMonthsNoOverflow($monthsAgo)->startOfMonth();
+            $end = $monthsAgo == 0 ? now() : now()->subMonthsNoOverflow($monthsAgo)->endOfMonth();
+            $ngayTao = \Carbon\Carbon::createFromTimestamp(mt_rand($start->timestamp, $end->timestamp));
+            
+            $campaignId = $faker->randomElement($allCampaignIds);
+
+            $isAnonymous = $faker->boolean(30);
+            $userId = $faker->boolean(80) ? $faker->randomElement($randomUserIds) : null;
+            
+            $trangThaiOptions = ['success', 'success', 'success', 'failed', 'pending'];
+            $trangThai = $faker->randomElement($trangThaiOptions);
+
+            // Scale amounts significantly up over time to guarantee positive revenue KPI
+            $minMultiplier = 1 + floor($p * 15); // ranges from 1 to 16
+            $maxMultiplier = 5 + floor($p * 45); // ranges from 5 to 50
+            $soTien = mt_rand($minMultiplier, $maxMultiplier) * 100000;
+
+            $donation = [
+                'Ma_ung_ho'                => Str::uuid()->toString(),
+                'Ma_nguoi_dung'            => $userId,
+                'Ma_chien_dich'            => $campaignId,
+                'Ten_nguoi_ung_ho'         => $isAnonymous ? 'Ẩn danh' : $faker->name,
+                'An_danh'                  => $isAnonymous,
+                'So_tien'                  => $soTien,
+                'Loi_nhan'                 => $faker->boolean(40) ? $faker->sentence : null,
+                'Ma_giao_dich_he_thong'    => 'PETJAM' . $ngayTao->format('YmdHis') . str_pad($i, 3, '0', STR_PAD_LEFT),
+                'Ma_giao_dich_vnpay'       => $trangThai === 'success' ? 'VNP' . $ngayTao->format('Ymd') . str_pad($i, 3, '0', STR_PAD_LEFT) : null,
+                'Ma_phan_hoi_vnpay'        => $trangThai === 'success' ? '00' : ($trangThai === 'failed' ? '24' : null),
+                'Ma_ngan_hang'             => $trangThai === 'success' ? $faker->randomElement($bankOptions) : null,
+                'Trang_thai'               => $trangThai,
+                'Thoi_diem_thanh_toan'     => $trangThai === 'success' ? $ngayTao->format('Y-m-d H:i:s') : null,
+                'Ngay_tao'                 => $ngayTao,
+                'Ngay_cap_nhat'            => $ngayTao,
+            ];
+
+            DB::table('donations')->insert($donation);
+
+            if ($trangThai === 'success') {
+                DB::table('donation_campaigns')
+                    ->where('Ma_chien_dich', $campaignId)
+                    ->increment('So_tien_hien_tai', $soTien);
+            }
+        }
+
+        $this->command->info('✅ DonationsSeeder hoàn thành: Giao dịch cố định + 200 giao dịch ngẫu nhiên.');
     }
 }

@@ -122,6 +122,53 @@ class VaccinationHistorySeeder extends Seeder
                 ->update(['Da_tiem_phong' => true]);
         }
 
-        $this->command->info('✅ VaccinationHistorySeeder hoàn thành: 8 lịch tiêm, 5 thú cưng được cập nhật Da_tiem_phong.');
+        // Generate random vaccinations for 70% of the random pets
+        $randomPetIds = cache()->get('random_pet_ids', []);
+        $faker = \Faker\Factory::create('vi_VN');
+        $vacOptions = ['Vắc-xin dại', 'Vắc-xin combo 5 bệnh (chó)', 'Vắc-xin combo 7 bệnh (chó)', 'Vắc-xin dại (mèo)', 'Vắc-xin combo 3 bệnh (mèo)'];
+        $noiTiemOptions = ['Phòng khám thú y PetCare', 'Bệnh viện thú y Hà Nội', 'Trạm thú y phường'];
+
+        $randomVaccinatedPets = [];
+
+        foreach ($randomPetIds as $petId) {
+            if ($faker->boolean(70)) {
+                $numVacs = $faker->numberBetween(1, 3);
+                $petTotalChiPhi = 0;
+
+                for ($i = 0; $i < $numVacs; $i++) {
+                    $chiPhi = $faker->numberBetween(1, 4) * 50000;
+                    $petTotalChiPhi += $chiPhi;
+                    $ngayTiem = $faker->dateTimeBetween('-6 months', 'now');
+                    $ngayTiemNhacTiep = (clone $ngayTiem)->modify('+1 year');
+
+                    $vac = [
+                        'Ma_lan_tiem'         => Str::uuid()->toString(),
+                        'Ma_thu_cung'         => $petId,
+                        'Ten_vac_xin'         => $faker->randomElement($vacOptions),
+                        'Ngay_tiem'           => $ngayTiem->format('Y-m-d'),
+                        'Ngay_tiem_nhac_tiep' => $ngayTiemNhacTiep->format('Y-m-d'),
+                        'Nguoi_thuc_hien'     => $adminId,
+                        'Ten_noi_tiem'        => $faker->randomElement($noiTiemOptions),
+                        'Chi_phi'             => $chiPhi,
+                    ];
+
+                    DB::table('vaccination_history')->insert($vac);
+                }
+
+                DB::table('pets')
+                    ->where('Ma_thu_cung', $petId)
+                    ->increment('Phi_nhan_nuoi', $petTotalChiPhi);
+                    
+                $randomVaccinatedPets[$petId] = true;
+            }
+        }
+
+        foreach (array_keys($randomVaccinatedPets) as $petId) {
+            DB::table('pets')
+                ->where('Ma_thu_cung', $petId)
+                ->update(['Da_tiem_phong' => true]);
+        }
+
+        $this->command->info('✅ VaccinationHistorySeeder hoàn thành: Lịch tiêm cố định + ngẫu nhiên.');
     }
 }

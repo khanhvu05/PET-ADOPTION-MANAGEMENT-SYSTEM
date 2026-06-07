@@ -15,11 +15,19 @@
                     </div>
                     <!-- Sparkline Bars matching image -->
                     <div class="flex gap-1 items-end h-6 pb-0.5 shrink-0">
-                        <div class="w-1.5 h-3 bg-orange-brand/30 rounded-t-sm"></div>
-                        <div class="w-1.5 h-4 bg-orange-brand/50 rounded-t-sm"></div>
-                        <div class="w-1.5 h-5 bg-orange-brand/70 rounded-t-sm"></div>
-                        <div class="w-1.5 h-4 bg-orange-brand/90 rounded-t-sm"></div>
-                        <div class="w-1.5 h-6 bg-orange-brand rounded-t-sm"></div>
+                        @if($stat['is_positive'])
+                            <div class="w-1.5 h-3 bg-emerald-500/30 rounded-t-sm"></div>
+                            <div class="w-1.5 h-4 bg-emerald-500/50 rounded-t-sm"></div>
+                            <div class="w-1.5 h-5 bg-emerald-500/70 rounded-t-sm"></div>
+                            <div class="w-1.5 h-4 bg-emerald-500/90 rounded-t-sm"></div>
+                            <div class="w-1.5 h-6 bg-emerald-500 rounded-t-sm"></div>
+                        @else
+                            <div class="w-1.5 h-6 bg-rose-500/30 rounded-t-sm"></div>
+                            <div class="w-1.5 h-5 bg-rose-500/50 rounded-t-sm"></div>
+                            <div class="w-1.5 h-4 bg-rose-500/70 rounded-t-sm"></div>
+                            <div class="w-1.5 h-5 bg-rose-500/90 rounded-t-sm"></div>
+                            <div class="w-1.5 h-3 bg-rose-500 rounded-t-sm"></div>
+                        @endif
                     </div>
                 </div>
                 

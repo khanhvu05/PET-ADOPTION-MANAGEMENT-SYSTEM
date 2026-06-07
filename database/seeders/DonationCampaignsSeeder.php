@@ -56,6 +56,71 @@ class DonationCampaignsSeeder extends Seeder
 
         cache()->put('campaign_ids', $campaignIds, 600);
 
-        $this->command->info('✅ DonationCampaignsSeeder hoàn thành: 3 chiến dịch.');
+        // Generate 10 random campaigns over the last 6 months
+        $faker = \Faker\Factory::create('vi_VN');
+        $randomCampaignIds = [];
+        $campaignTitles = [
+            'Cứu trợ mùa đông cho mèo hoang',
+            'Chung tay xây nhà mới cho chó bị bỏ rơi',
+            'Gây quỹ phẫu thuật cho thú cưng',
+            'Hỗ trợ thức ăn cho trạm cứu hộ',
+            'Chiến dịch triệt sản miễn phí',
+            'Ủng hộ y tế cho các bé sơ sinh',
+            'Mang mùa xuân đến cho thú cưng',
+            'Sưởi ấm những đôi chân nhỏ',
+            'Quỹ vắc-xin phòng bệnh dại',
+            'Tiếp sức cho các tình nguyện viên',
+            'Gây quỹ mái che mùa mưa',
+            'Hỗ trợ chi phí đi lại cứu hộ'
+        ];
+
+        $totalItems = 10;
+        for ($i = 0; $i < $totalItems; $i++) {
+            $p = $i / $totalItems;
+            if ($p < 0.05) { $monthsAgo = 5; }
+            elseif ($p < 0.12) { $monthsAgo = 4; }
+            elseif ($p < 0.22) { $monthsAgo = 3; }
+            elseif ($p < 0.37) { $monthsAgo = 2; }
+            elseif ($p < 0.62) { $monthsAgo = 1; }
+            else { $monthsAgo = 0; }
+            
+            $start = now()->subMonthsNoOverflow($monthsAgo)->startOfMonth();
+            $end = $monthsAgo == 0 ? now() : now()->subMonthsNoOverflow($monthsAgo)->endOfMonth();
+            $ngayBatDau = \Carbon\Carbon::createFromTimestamp(mt_rand($start->timestamp, $end->timestamp));
+            
+            $isCompleted = $faker->boolean(40);
+            
+            if ($isCompleted) {
+                $ngayKetThuc = $faker->dateTimeBetween($ngayBatDau, 'now');
+                $trangThai = 'closed';
+            } else {
+                $ngayKetThuc = $faker->boolean(70) ? $faker->dateTimeBetween('now', '+3 months') : null;
+                $trangThai = 'active';
+            }
+
+            $maChienDich = Str::uuid()->toString();
+            $campaign = [
+                'Ma_chien_dich'    => $maChienDich,
+                'Tieu_de'          => $faker->randomElement($campaignTitles) . ' ' . $faker->year(),
+                'Mo_ta'            => $faker->realText(200),
+                'Anh_dai_dien'     => null,
+                'So_tien_muc_tieu' => $faker->randomElement([5000000, 10000000, 20000000, 50000000, 100000000]),
+                'So_tien_hien_tai' => $faker->numberBetween(0, 50000000),
+                'Ngay_bat_dau'     => $ngayBatDau->format('Y-m-d'),
+                'Ngay_ket_thuc'    => $ngayKetThuc ? $ngayKetThuc->format('Y-m-d') : null,
+                'Trang_thai'       => $trangThai,
+                'Ngay_tao'         => $ngayBatDau->format('Y-m-d H:i:s'),
+                'Ngay_cap_nhat'    => $ngayBatDau->format('Y-m-d H:i:s'),
+            ];
+
+            DB::table('donation_campaigns')->insert($campaign);
+            $randomCampaignIds[] = $maChienDich;
+        }
+
+        $allCampaignIds = array_merge($campaignIds, $randomCampaignIds);
+        cache()->put('campaign_ids', $allCampaignIds, 600);
+        cache()->put('random_campaign_ids', $randomCampaignIds, 600);
+
+        $this->command->info('✅ DonationCampaignsSeeder hoàn thành: 3 chiến dịch cố định + 10 chiến dịch ngẫu nhiên.');
     }
 }

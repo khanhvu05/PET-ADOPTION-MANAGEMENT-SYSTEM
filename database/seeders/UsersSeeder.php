@@ -119,10 +119,52 @@ class UsersSeeder extends Seeder
             $userRoleMap[$role][] = $userData['Ma_nguoi_dung'];
         }
 
+        // Generate 50 random users over the last 6 months
+        $faker = \Faker\Factory::create('vi_VN');
+        $randomUsers = [];
+        
+        $totalItems = 50;
+        for ($i = 0; $i < $totalItems; $i++) {
+            $p = $i / $totalItems;
+            if ($p < 0.05) { $monthsAgo = 5; }
+            elseif ($p < 0.12) { $monthsAgo = 4; }
+            elseif ($p < 0.22) { $monthsAgo = 3; }
+            elseif ($p < 0.37) { $monthsAgo = 2; }
+            elseif ($p < 0.62) { $monthsAgo = 1; }
+            else { $monthsAgo = 0; }
+            
+            $start = now()->subMonthsNoOverflow($monthsAgo)->startOfMonth();
+            $end = $monthsAgo == 0 ? now() : now()->subMonthsNoOverflow($monthsAgo)->endOfMonth();
+            $createdAt = \Carbon\Carbon::createFromTimestamp(mt_rand($start->timestamp, $end->timestamp));
+            
+            $userData = [
+                'Ma_nguoi_dung'    => Str::uuid()->toString(),
+                'Ho_ten'           => $faker->name,
+                'Email'            => $faker->unique()->safeEmail,
+                'So_dien_thoai'    => $faker->numerify('09########'),
+                'Mat_khau_hash'    => Hash::make('User@123456'),
+                'Ngay_sinh'        => $faker->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
+                'Loai_tai_khoan'   => 'ca_nhan',
+                'Trang_thai'       => 'hoat_dong',
+                'Nguon_dang_ky'    => $faker->randomElement(['web', 'ung_dung', 'nhan_vien_tao']),
+                'Email_da_xac_thuc' => $faker->boolean(80),
+                'email_verified_at' => $createdAt,
+                'Ngay_tao'       => $createdAt,
+                'Ngay_cap_nhat'       => $createdAt,
+            ];
+
+            DB::table('users')->insert($userData);
+            
+            $userModel = \App\Models\User::find($userData['Ma_nguoi_dung']);
+            $userModel->assignRole('customer');
+            
+            $userRoleMap['user'][] = $userData['Ma_nguoi_dung'];
+        }
+
         // Cache admin ID và user IDs để seeders khác dùng
         cache()->put('admin_id', $userRoleMap['admin'][0], 600);
         cache()->put('user_ids', $userRoleMap['user'], 600);
 
-        $this->command->info('✅ UsersSeeder hoàn thành: 1 admin + 5 users.');
+        $this->command->info('✅ UsersSeeder hoàn thành: 1 admin + 5 users cố định + 50 users ngẫu nhiên.');
     }
 }

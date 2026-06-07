@@ -146,6 +146,39 @@ class RescueCasesSeeder extends Seeder
                 ->increment('Phi_nhan_nuoi', $case['Chi_phi_cuu_ho']);
         }
 
-        $this->command->info('✅ RescueCasesSeeder hoàn thành: 10 ca cứu hộ + cập nhật Phi_nhan_nuoi.');
+        // Generate random rescue cases for 80% of the random pets
+        $randomPetIds = cache()->get('random_pet_ids', []);
+        $faker = \Faker\Factory::create('vi_VN');
+        $loaiCuuHoOptions = ['lang_thang', 'bi_bo_roi', 'bi_nguoc_dai', 'lac_duong'];
+        $trangThaiCaOptions = ['dang_xu_ly', 'dang_dieu_tri', 'da_dong'];
+
+        foreach ($randomPetIds as $petId) {
+            if ($faker->boolean(80)) {
+                $chiPhi = $faker->numberBetween(1, 10) * 50000;
+                $ngayCuuHo = $faker->dateTimeBetween('-6 months', 'now');
+                
+                $case = [
+                    'Ma_ca_cuu_ho'    => Str::uuid()->toString(),
+                    'Ma_thu_cung'     => $petId,
+                    'Ngay_cuu_ho'     => $ngayCuuHo->format('Y-m-d'),
+                    'Dia_diem_cuu_ho' => $faker->address,
+                    'Loai_cuu_ho'     => $faker->randomElement($loaiCuuHoOptions),
+                    'Nguoi_bao_cao'   => $faker->name . ' (' . $faker->numerify('09########') . ')',
+                    'Nguoi_thuc_hien' => $adminId,
+                    'Chi_phi_cuu_ho'  => $chiPhi,
+                    'Trang_thai_ca'   => $faker->randomElement($trangThaiCaOptions),
+                    'Ghi_chu'         => $faker->sentence,
+                    'Ngay_tao'        => $ngayCuuHo,
+                ];
+
+                DB::table('rescue_cases')->insert($case);
+
+                DB::table('pets')
+                    ->where('Ma_thu_cung', $petId)
+                    ->increment('Phi_nhan_nuoi', $chiPhi);
+            }
+        }
+
+        $this->command->info('✅ RescueCasesSeeder hoàn thành: 10 ca cứu hộ cố định + ca cứu hộ ngẫu nhiên.');
     }
 }

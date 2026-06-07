@@ -69,7 +69,7 @@ class AdoptionApplicationsSeeder extends Seeder
             'Kinh_nghiem'     => 'Đã nuôi chó Golden 5 năm, có kinh nghiệm chăm sóc chó cỡ vừa và lớn',
             'Ly_do_nhan_nuoi' => 'Tôi sống một mình và muốn có người bạn đồng hành. Corgi rất phù hợp với lối sống năng động của tôi.',
             'Cam_ket'         => true,
-            'Trang_thai'      => 'pre_approved',
+            'Trang_thai'      => 'approved',
             'Ghi_chu_admin'   => 'Hồ sơ tốt, đủ điều kiện phỏng vấn. Người đăng ký có kinh nghiệm nuôi chó.',
             'Ngay_tao'        => now()->subDays(5),
             'Ngay_cap_nhat'   => now()->subDays(1),
@@ -91,6 +91,89 @@ class AdoptionApplicationsSeeder extends Seeder
             'Ngay_cap_nhat'        => now()->subDays(1),
         ]);
 
-        $this->command->info('✅ AdoptionApplicationsSeeder hoàn thành: 2 đơn pending, 1 đơn pre_approved + lịch phỏng vấn.');
+        // Generate 150 random adoption applications over the last 6 months
+        $faker = \Faker\Factory::create('vi_VN');
+        $randomUserIds = cache()->get('user_ids');
+        $randomPetIds = cache()->get('random_pet_ids', []);
+        $trangThaiOptions = ['pending', 'approved', 'cho_phong_van', 'completed', 'rejected'];
+        
+        $totalItems = 150;
+        for ($i = 0; $i < $totalItems; $i++) {
+            $p = $i / $totalItems;
+            if ($p < 0.05) { $monthsAgo = 5; }
+            elseif ($p < 0.12) { $monthsAgo = 4; }
+            elseif ($p < 0.22) { $monthsAgo = 3; }
+            elseif ($p < 0.37) { $monthsAgo = 2; }
+            elseif ($p < 0.62) { $monthsAgo = 1; }
+            else { $monthsAgo = 0; }
+            
+            $start = now()->subMonthsNoOverflow($monthsAgo)->startOfMonth();
+            $end = $monthsAgo == 0 ? now() : now()->subMonthsNoOverflow($monthsAgo)->endOfMonth();
+            $ngayTao = \Carbon\Carbon::createFromTimestamp(mt_rand($start->timestamp, $end->timestamp));
+            
+            $petId = $faker->randomElement($randomPetIds);
+            $userId = $faker->randomElement($randomUserIds);
+            $trangThai = $faker->randomElement($trangThaiOptions);
+
+            $maDon = Str::uuid()->toString();
+            $application = [
+                'Ma_don'          => $maDon,
+                'Ma_nguoi_dung'   => $userId,
+                'Ma_thu_cung'     => $petId,
+                'Ho_ten'          => $faker->name,
+                'So_dien_thoai'   => $faker->numerify('09########'),
+                'Dia_chi'         => $faker->address,
+                'Nghe_nghiep'     => $faker->jobTitle,
+                'Loai_nha_o'      => $faker->randomElement(['Chung cư', 'Nhà riêng', 'Nhà thuê']),
+                'Kinh_nghiem'     => $faker->boolean(70) ? 'Đã từng nuôi thú cưng' : 'Chưa có kinh nghiệm',
+                'Ly_do_nhan_nuoi' => $faker->sentence,
+                'Cam_ket'         => true,
+                'Trang_thai'      => $trangThai,
+                'Ghi_chu_admin'   => $faker->boolean(30) ? $faker->sentence : null,
+                'Ngay_tao'        => $ngayTao->format('Y-m-d H:i:s'),
+                'Ngay_cap_nhat'   => $ngayTao->format('Y-m-d H:i:s'),
+            ];
+
+            DB::table('adoption_applications')->insert($application);
+            
+            // Randomly generate an interview schedule
+            if (in_array($trangThai, ['approved', 'cho_phong_van', 'completed', 'rejected'])) {
+                // If rejected, 50% chance it was rejected after an interview
+                if ($trangThai === 'rejected' && !$faker->boolean(50)) {
+                    continue; 
+                }
+
+                $thoiGianDuKien = (clone $ngayTao)->modify('+' . $faker->numberBetween(1, 5) . ' days');
+                
+                $ketQuaPhongVan = null;
+                $trangThaiLich = 'cho_xac_nhan_don';
+                
+                if (in_array($trangThai, ['completed', 'approved'])) {
+                    $ketQuaPhongVan = 'dat';
+                    $trangThaiLich = 'da_xac_nhan';
+                } elseif ($trangThai === 'rejected') {
+                    $ketQuaPhongVan = $faker->randomElement(['tu_choi', 'vang_mat']);
+                    $trangThaiLich = 'da_xac_nhan'; // Finished interview with failed result
+                }
+
+                DB::table('interview_schedules')->insert([
+                    'Ma_lich'              => Str::uuid()->toString(),
+                    'Ma_don'               => $maDon,
+                    'Ma_slot'              => null,
+                    'Loai_lich'            => $faker->randomElement(['slot_co_dinh', 'lich_khac']),
+                    'Thoi_gian_du_kien'    => $thoiGianDuKien->format('Y-m-d H:i:s'),
+                    'Thoi_gian_xac_nhan'   => $thoiGianDuKien->format('Y-m-d H:i:s'),
+                    'Nhan_vien_xu_ly'      => $adminId,
+                    'Trang_thai'           => $trangThaiLich,
+                    'Ket_qua_phong_van'    => $ketQuaPhongVan,
+                    'Email_da_gui'         => true,
+                    'Ghi_chu'              => $faker->sentence,
+                    'Ngay_tao'             => $ngayTao->format('Y-m-d H:i:s'),
+                    'Ngay_cap_nhat'        => $ngayTao->format('Y-m-d H:i:s'),
+                ]);
+            }
+        }
+
+        $this->command->info('✅ AdoptionApplicationsSeeder hoàn thành: Đơn cố định + 150 đơn ngẫu nhiên.');
     }
 }

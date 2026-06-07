@@ -219,7 +219,7 @@ class PetsSeeder extends Seeder
                 'Gioi_tinh'      => 'cai',
                 'Da_tiem_phong'  => false,
                 'Da_triet_san'   => false,
-                'Trang_thai'     => 'dang_cuu_ho',
+                'Trang_thai'     => 'chua_san_sang',
                 'Vi_tri'         => 'phong_kham',
                 'Than_thien_nguoi' => true,
                 'Than_thien_cho'   => false,
@@ -268,6 +268,69 @@ class PetsSeeder extends Seeder
 
         cache()->put('pet_ids', $petIds, 600);
 
-        $this->command->info('✅ PetsSeeder hoàn thành: 10 thú cưng.');
+        // Generate 150 random pets over the last 6 months
+        $faker = \Faker\Factory::create('vi_VN');
+        $randomPetIds = [];
+        $loaiOptions = ['cho', 'meo', 'khac'];
+        $trangThaiOptions = ['chua_san_sang', 'san_sang', 'da_nhan_nuoi', 'da_mat'];
+        $viTriOptions = ['noi_tru', 'phong_kham'];
+
+        $totalItems = 150;
+        for ($i = 0; $i < $totalItems; $i++) {
+            $loai = $faker->randomElement($loaiOptions);
+            $p = $i / $totalItems;
+            if ($p < 0.05) { $monthsAgo = 5; }
+            elseif ($p < 0.12) { $monthsAgo = 4; }
+            elseif ($p < 0.22) { $monthsAgo = 3; }
+            elseif ($p < 0.37) { $monthsAgo = 2; }
+            elseif ($p < 0.62) { $monthsAgo = 1; }
+            else { $monthsAgo = 0; }
+            
+            $start = now()->subMonthsNoOverflow($monthsAgo)->startOfMonth();
+            $end = $monthsAgo == 0 ? now() : now()->subMonthsNoOverflow($monthsAgo)->endOfMonth();
+            $ngayTiepNhan = \Carbon\Carbon::createFromTimestamp(mt_rand($start->timestamp, $end->timestamp));
+            $mucPhi = $faker->boolean(70) ? $faker->numberBetween(10, 50) * 10000 : 0;
+            
+            $maThuCung = Str::uuid()->toString();
+            $maHienThi = 'PET-' . str_pad($i + 11, 3, '0', STR_PAD_LEFT);
+            
+            $petData = [
+                'Ma_thu_cung'    => $maThuCung,
+                'Ma_hien_thi'    => $maHienThi,
+                'Ten'            => $faker->firstName,
+                'Loai'           => $loai,
+                'Giong'          => $loai == 'cho' ? $faker->randomElement(['Poodle', 'Corgi', 'Husky', 'Golden', 'Phốc', 'Chó cỏ']) : ($loai == 'meo' ? $faker->randomElement(['Mèo Anh', 'Mèo ta', 'Munchkin', 'Maine Coon', 'Mèo Ba Tư']) : 'Khác'),
+                'Nhom_tuoi'      => $faker->randomElement(['so_sinh', 'nho', 'truong_thanh', 'gia']),
+                'Can_nang'       => $faker->randomFloat(1, 0.5, 30),
+                'Gioi_tinh'      => $faker->randomElement(['duc', 'cai', 'chua_xac_dinh']),
+                'Da_tiem_phong'  => $faker->boolean(70),
+                'Da_triet_san'   => $faker->boolean(50),
+                'Trang_thai'     => $faker->randomElement($trangThaiOptions),
+                'Vi_tri'         => $faker->randomElement($viTriOptions),
+                'Than_thien_nguoi' => $faker->boolean(80),
+                'Than_thien_cho'   => $faker->boolean(60),
+                'Than_thien_meo'   => $faker->boolean(50),
+                'Che_do_an_dac_biet' => $faker->boolean(20) ? $faker->sentence : null,
+                'Ngay_tiep_nhan' => $ngayTiepNhan->format('Y-m-d'),
+                'Phi_nhan_nuoi'  => $faker->numberBetween(0, 20) * 100000,
+                'Noi_bat'        => $faker->boolean(10),
+                'Mo_ta'          => $faker->paragraph,
+                'Nguoi_phu_trach' => $adminId,
+                'Anh_dai_dien'   => null,
+                'Ngay_tao'       => $ngayTiepNhan,
+                'Ngay_cap_nhat'  => $ngayTiepNhan,
+            ];
+
+            DB::table('pets')->insert($petData);
+            $randomPetIds[$maHienThi] = $maThuCung;
+        }
+
+        // Cập nhật lại cache pet_ids bao gồm cả pet mới
+        $allPetIds = array_merge($petIds, $randomPetIds);
+        cache()->put('pet_ids', $allPetIds, 600);
+        // Lưu riêng danh sách id pet random để dùng cho các bảng random
+        cache()->put('random_pet_ids', array_values($randomPetIds), 600);
+
+        $this->command->info('✅ PetsSeeder hoàn thành: 10 thú cưng cố định + 150 thú cưng ngẫu nhiên.');
     }
 }
