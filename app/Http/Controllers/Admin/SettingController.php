@@ -48,8 +48,21 @@ class SettingController extends Controller
             $user->chatbox_remaining_tokens = max(0, $limit - $used);
         }
 
+        // Xóa cache của Spatie trước khi load view để tránh lỗi PermissionDoesNotExist do cache cũ trên môi trường deploy
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
         // Lấy dữ liệu phân quyền (tương tự như RolePermissionController cũ)
         $roles = \Spatie\Permission\Models\Role::whereIn('name', ['admin', 'staff'])->with('permissions')->get();
+        
+        // Đảm bảo các quyền cần thiết luôn tồn tại trong DB trước khi load view
+        $requiredPermissions = [
+            'access_pets', 'access_adoptions', 'access_donations', 'access_posts',
+            'access_users', 'access_settings', 'access_tokens'
+        ];
+        foreach ($requiredPermissions as $perm) {
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $perm, 'guard_name' => 'web']);
+        }
+        
         $permissions = \Spatie\Permission\Models\Permission::all();
         
         $groupedPermissions = [
