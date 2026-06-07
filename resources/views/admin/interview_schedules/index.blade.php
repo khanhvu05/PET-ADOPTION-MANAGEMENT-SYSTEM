@@ -209,6 +209,18 @@
                 loading: false,
                 detailHtml: '',
 
+                init() {
+                    window.addEventListener('reload-active-slot', () => {
+                        if (this.activeSlot) {
+                            const slotId = this.activeSlot;
+                            this.activeSlot = null;
+                            this.loadSlotDetails(slotId);
+                        } else {
+                            window.location.reload();
+                        }
+                    });
+                },
+
                 async loadSlotDetails(id) {
                     if (this.activeSlot === id) return; // Đang chọn rồi
                     
@@ -286,19 +298,13 @@
                     
                     if (response.ok) {
                         window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'success', message: data.message }}));
-                        // Refresh the active slot details
-                        const currentSlot = document.querySelector('[x-data="interviewManager()"]').__x.$data.activeSlot;
-                        if(currentSlot) {
-                            const mgr = document.querySelector('[x-data="interviewManager()"]').__x.$data;
-                            mgr.activeSlot = null; // force reload
-                            mgr.loadSlotDetails(currentSlot);
-                        } else {
-                            window.location.reload();
-                        }
+                        // Trigger reload via Alpine component event
+                        window.dispatchEvent(new CustomEvent('reload-active-slot'));
                     } else {
                         window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'error', message: data.message || 'Lỗi!' }}));
                     }
                 } catch(error) {
+                    console.error(error);
                     window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'error', message: 'Lỗi máy chủ!' }}));
                 }
             };

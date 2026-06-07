@@ -11,7 +11,7 @@
         <p>Để tiếp tục quy trình, mời bạn truy cập vào đường link bên dưới để chọn lịch phỏng vấn phù hợp nhất với bạn (Trực tiếp tại trạm hoặc Online):</p>
         
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ url('/adoptions/interviews/' . $application->Ma_don) }}" style="background-color: #0d9488; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            <a href="{{ route('frontend.user.adoptions.index') }}" style="background-color: #0d9488; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Chọn Lịch Phỏng Vấn
             </a>
         </div>
