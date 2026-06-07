@@ -24,7 +24,7 @@ class StorePetRequest extends FormRequest
             'Gioi_tinh'        => 'required|in:duc,cai,chua_xac_dinh',
             'Da_tiem_phong'    => 'boolean',
             'Da_triet_san'     => 'boolean',
-            'Trang_thai'       => 'required|in:dang_cuu_ho,chua_san_sang,san_sang,da_nhan_nuoi,da_mat',
+            'Trang_thai'       => 'required|in:chua_san_sang,san_sang,da_nhan_nuoi,da_mat',
             'Vi_tri'           => 'nullable|in:noi_tru,phong_kham',
             'Than_thien_nguoi' => 'nullable|boolean',
             'Than_thien_cho'   => 'nullable|boolean',

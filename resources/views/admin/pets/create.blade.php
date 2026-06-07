@@ -175,7 +175,7 @@
                                 <div class="relative">
                                     <select name="Trang_thai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Trang_thai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
                                         <option value="san_sang" {{ old('Trang_thai', 'san_sang') === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
-                                        <option value="dang_cuu_ho" {{ old('Trang_thai') === 'dang_cuu_ho' ? 'selected' : '' }}>Đang điều trị / cứu hộ</option>
+
                                         <option value="chua_san_sang" {{ old('Trang_thai') === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
                                     </select>
                                     <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6-6-6"/></svg>

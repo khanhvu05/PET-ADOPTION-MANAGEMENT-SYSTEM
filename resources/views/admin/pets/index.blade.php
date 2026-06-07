@@ -18,10 +18,10 @@
             
             <div class="flex items-center gap-3">
                 <!-- Export Button -->
-                <button class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
+                <a href="{{ route('admin.pets.export', request()->query()) }}" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
                     <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Xuất Excel
-                </button>
+                </a>
                 
                 <!-- Add New Button -->
                 <a href="{{ route('admin.pets.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#41859c] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#32697b] transition-all shrink-0">
@@ -159,7 +159,7 @@
                         <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
                             open: false, 
                             value: '{{ request('trang_thai', 'all') }}', 
-                            options: {'all': 'Tất cả', 'san_sang': 'Sẵn sàng', 'dang_cuu_ho': 'Đang cứu hộ', 'chua_san_sang': 'Chưa sẵn sàng', 'da_nhan_nuoi': 'Đã nhận nuôi', 'da_mat': 'Đã mất'} 
+                            options: {'all': 'Tất cả', 'san_sang': 'Sẵn sàng', 'chua_san_sang': 'Chưa sẵn sàng', 'da_nhan_nuoi': 'Đã nhận nuôi', 'da_mat': 'Đã mất'} 
                         }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
@@ -237,10 +237,10 @@
             <!-- Changed background to plain Tailwind class to ensure it compiles -->
             <!-- Using standard border-b instead of divide-y to prevent thick black lines -->
             <div class="p-4 overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse min-w-[1000px] whitespace-nowrap">
+                <table class="w-full text-left border-collapse min-w-[1100px] whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
-                            <th class="py-3 px-4 w-12 text-center rounded-l-xl">
+                            <th class="py-3 px-4 w-12 text-center rounded-l-xl hidden">
                                 <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600 bg-white shadow-sm cursor-pointer">
                             </th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Thú Cưng</th>
@@ -257,14 +257,14 @@
                     <tbody class="text-sm">
                         @forelse($pets as $pet)
                         <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
-                            <td class="py-3 px-4 text-center">
+                            <td class="py-3 px-4 text-center hidden">
                                 <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600 bg-white shadow-sm cursor-pointer">
                             </td>
                             <td class="py-3 px-4">
                                 <div class="flex items-center gap-3">
                                     <img src="{{ $pet->anh_url }}" class="w-10 h-10 rounded-lg object-cover border border-slate-200" alt="{{ $pet->Ten }}">
                                     <div class="flex flex-col">
-                                        <span class="font-bold text-slate-800">{{ $pet->Ten }}</span>
+                                        <span class="font-bold text-slate-800 truncate block max-w-[180px]" title="{{ $pet->Ten }}">{{ $pet->Ten }}</span>
                                         <span class="text-[11px] text-slate-500">#{{ $pet->Ma_hien_thi }}</span>
                                     </div>
                                 </div>

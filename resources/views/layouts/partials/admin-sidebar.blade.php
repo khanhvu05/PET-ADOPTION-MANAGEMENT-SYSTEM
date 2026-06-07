@@ -9,8 +9,8 @@
             <!-- Logo Image -->
             <img src="{{ asset('favicon.ico') }}" class="w-10 h-10 object-contain shrink-0" alt="Logo">
             <div class="flex flex-col" x-show="expanded">
-                <span class="text-[16px] font-black tracking-tight text-white leading-none">PetAdoption</span>
-                <span class="text-[9px] font-bold text-white/70 tracking-[0.22em] uppercase mt-1">Admin Panel</span>
+                <span class="text-[16px] font-black tracking-tight text-white leading-none">PetJam</span>
+                <span class="text-[9px] font-bold text-white/70 tracking-[0.22em] uppercase mt-1">Trang quản trị</span>
             </div>
         </a>
 
@@ -123,6 +123,7 @@
                 <span class="text-[12px] truncate" x-show="expanded">Bài Viết</span>
             </a>
 
+            @can('manage users')
             <!-- Quản Lý Người Dùng -->
             <a href="{{ route('admin.users.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.users.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -132,15 +133,19 @@
                 </div>
                 <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Người Dùng</span>
             </a>
+            @endcan
         </div>
 
+        @canany(['manage roles', 'manage settings'])
         <!-- SECTION: CÀI ĐẶT -->
         <div class="mt-3 mb-1">
             <h3 x-show="expanded" class="px-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">Cài Đặt</h3>
             <div x-show="!expanded" class="h-3 border-b border-white/10 mx-2 mb-2"></div>
         </div>
+        @endcanany
 
         <div class="space-y-0.5">
+            @can('manage roles')
             <!-- Quản Lý Phân Quyền -->
             <a href="{{ route('admin.roles.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.roles.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -150,7 +155,9 @@
                 </div>
                 <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Phân Quyền</span>
             </a>
+            @endcan
             
+            @can('manage settings')
             <!-- Cài Đặt Hệ Thống -->
             <a href="{{ route('admin.settings.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.settings.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -160,6 +167,7 @@
                 </div>
                 <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Hệ Thống</span>
             </a>
+            @endcan
 
             <!-- Cài Đặt Tài Khoản -->
             <a href="{{ route('profile.edit') }}" 

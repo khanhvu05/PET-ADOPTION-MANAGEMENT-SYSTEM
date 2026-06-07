@@ -120,10 +120,8 @@ class Pet extends Model
     public function getTrangThaiLabelAttribute(): string
     {
         return match ($this->Trang_thai) {
-            'dang_cuu_ho'   => 'Đang cứu hộ',
             'chua_san_sang' => 'Chưa sẵn sàng',
             'san_sang'      => 'Sẵn sàng',
-            'cho_phong_van' => 'Chờ phỏng vấn',
             'da_nhan_nuoi'  => 'Đã nhận nuôi',
             'da_mat'        => 'Đã mất',
             default         => 'Không rõ',
@@ -135,9 +133,7 @@ class Pet extends Model
     {
         return match ($this->Trang_thai) {
             'san_sang'      => 'green',
-            'dang_cuu_ho'   => 'yellow',
             'chua_san_sang' => 'orange',
-            'cho_phong_van' => 'blue',
             'da_nhan_nuoi'  => 'purple',
             'da_mat'        => 'red',
             default         => 'slate',

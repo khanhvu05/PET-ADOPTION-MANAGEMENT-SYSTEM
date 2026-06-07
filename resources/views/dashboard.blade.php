@@ -120,9 +120,8 @@
                                         'pending' => 'bg-amber-500/10 text-amber-600 border-amber-500/20 dot-amber-500',
                                         'approved' => 'bg-green-500/10 text-green-600 border-green-500/20 dot-green-500',
                                         'rejected' => 'bg-red-500/10 text-red-600 border-red-500/20 dot-red-500',
-                                        'cancelled' => 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500',
                                         'cho_phong_van' => 'bg-blue-500/10 text-blue-600 border-blue-500/20 dot-blue-500',
-                                        'hoan_thanh' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dot-emerald-500',
+                                        'completed' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dot-emerald-500',
                                     ];
                                     $colorClass = $statusColors[$app->Trang_thai] ?? 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500';
                                     $parts = explode(' dot-', $colorClass);
@@ -130,12 +129,11 @@
                                     $dotColor = 'bg-' . ($parts[1] ?? 'slate-500');
 
                                     $statusLabels = [
-                                        'pending' => 'Chờ duyệt',
+                                        'pending' => 'Chờ xử lý',
                                         'approved' => 'Đã duyệt',
                                         'rejected' => 'Từ chối',
-                                        'cancelled' => 'Đã hủy',
                                         'cho_phong_van' => 'Chờ phỏng vấn',
-                                        'hoan_thanh' => 'Hoàn thành'
+                                        'completed' => 'Hoàn tất'
                                     ];
                                     $label = $statusLabels[$app->Trang_thai] ?? $app->Trang_thai;
                                 @endphp

@@ -81,6 +81,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::patch('/quan-tri/nguoi-dung/{user}/vai-tro', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('admin.users.role.update');
 
     // Thú cưng (full CRUD)
+    Route::get('quan-tri/thu-cung/xuat-excel', [\App\Http\Controllers\Admin\PetController::class, 'export'])->name('admin.pets.export');
     Route::resource('quan-tri/thu-cung', \App\Http\Controllers\Admin\PetController::class)->names('admin.pets')->parameters(['thu-cung' => 'pet']);
 
     // Đơn nhận nuôi (full CRUD + update status)

@@ -63,10 +63,8 @@
                                 @php
                                     $statusClasses = [
                                         'pending'      => 'bg-amber-50 text-amber-600 border-amber-200',
-                                        'pre_approved' => 'bg-blue-50 text-blue-600 border-blue-200',
-                                        'approved'     => 'bg-green-50 text-green-600 border-green-200',
-                                        'rejected'     => 'bg-red-50 text-red-600 border-red-200',
-                                        'cancelled'    => 'bg-gray-100 text-gray-600 border-gray-200',
+                                        'approved'      => 'bg-green-50 text-green-600 border-green-200',
+                                        'cho_phong_van' => 'bg-blue-50 text-blue-600 border-blue-200',
                                     ];
                                     $statusClass = $statusClasses[$app->Trang_thai] ?? 'bg-gray-100 text-gray-600 border-gray-200';
                                 @endphp
@@ -75,7 +73,7 @@
                                         <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
                                     @elseif($app->Trang_thai === 'approved')
                                         <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
-                                    @elseif($app->Trang_thai === 'rejected' || $app->Trang_thai === 'cancelled')
+                                    @elseif($app->Trang_thai === 'rejected')
                                         <i data-lucide="x-circle" class="w-3 h-3 mr-1"></i>
                                     @else
                                         <i data-lucide="info" class="w-3 h-3 mr-1"></i>

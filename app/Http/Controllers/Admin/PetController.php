@@ -78,11 +78,11 @@ class PetController extends Controller
         $adopted = Pet::where('Trang_thai', 'da_nhan_nuoi')->count();
         $adoptedLast = Pet::where('Trang_thai', 'da_nhan_nuoi')->where('Ngay_tao', '<=', $endOfLastMonth)->count();
 
-        $rescue = Pet::where('Trang_thai', 'dang_cuu_ho')->count();
-        $rescueLast = Pet::where('Trang_thai', 'dang_cuu_ho')->where('Ngay_tao', '<=', $endOfLastMonth)->count();
+        $rescue = Pet::where('Trang_thai', 'chua_san_sang')->count();
+        $rescueLast = Pet::where('Trang_thai', 'chua_san_sang')->where('Ngay_tao', '<=', $endOfLastMonth)->count();
 
-        $unavailable = Pet::whereIn('Trang_thai', ['chua_san_sang', 'da_mat'])->count();
-        $unavailableLast = Pet::whereIn('Trang_thai', ['chua_san_sang', 'da_mat'])->where('Ngay_tao', '<=', $endOfLastMonth)->count();
+        $unavailable = Pet::whereIn('Trang_thai', ['da_mat'])->count();
+        $unavailableLast = Pet::whereIn('Trang_thai', ['da_mat'])->where('Ngay_tao', '<=', $endOfLastMonth)->count();
 
         $stats = [
             'total'       => ['value' => $totalPets, 'growth' => $calcGrowth($totalPets, $totalPetsLast)],
@@ -92,10 +92,63 @@ class PetController extends Controller
             'unavailable' => ['value' => $unavailable, 'growth' => $calcGrowth($unavailable, $unavailableLast)],
         ];
 
-        // Unique values for dropdown filters
+    // Unique values for dropdown filters
         $breeds = Pet::select('Giong')->distinct()->whereNotNull('Giong')->pluck('Giong');
 
         return view('admin.pets.index', compact('pets', 'stats', 'breeds'));
+    }
+
+    /**
+     * Xuất danh sách thú cưng ra Excel
+     */
+    public function export(Request $request)
+    {
+        $query = Pet::with('nguoiPhuTrach')->orderByDesc('Ngay_tao');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $cleanSearch = ltrim($search, '#');
+            $query->where(function($q) use ($search, $cleanSearch) {
+                $q->where('Ten', 'like', '%' . $search . '%')
+                  ->orWhere('Ma_hien_thi', 'like', '%' . $cleanSearch . '%');
+            });
+        }
+        if ($request->filled('loai') && $request->loai !== 'all') {
+            $query->where('Loai', $request->loai);
+        }
+        if ($request->filled('giong') && $request->giong !== 'all') {
+            $query->where('Giong', $request->giong);
+        }
+        if ($request->filled('trang_thai') && $request->trang_thai !== 'all') {
+            $query->where('Trang_thai', $request->trang_thai);
+        }
+        if ($request->filled('gioi_tinh') && $request->gioi_tinh !== 'all') {
+            $query->where('Gioi_tinh', $request->gioi_tinh);
+        }
+
+        $pets = $query->get();
+
+        $writer = \Spatie\SimpleExcel\SimpleExcelWriter::streamDownload('Danh_sach_thu_cung.xlsx');
+
+        foreach ($pets as $pet) {
+            $writer->addRow([
+                'Mã hiển thị' => $pet->Ma_hien_thi,
+                'Tên' => $pet->Ten,
+                'Loài' => $pet->loai_label,
+                'Giống' => $pet->Giong ?? 'Không rõ',
+                'Tuổi' => $pet->nhom_tuoi_label,
+                'Cân nặng (kg)' => $pet->Can_nang,
+                'Giới tính' => $pet->gioi_tinh_label,
+                'Vị trí' => $pet->vi_tri_label,
+                'Trạng thái' => $pet->trang_thai_label,
+                'Ngày tạo' => $pet->Ngay_tao ? $pet->Ngay_tao->format('d/m/Y H:i') : '',
+                'Người phụ trách' => $pet->nguoiPhuTrach ? $pet->nguoiPhuTrach->name : '',
+                'Đã tiêm phòng' => $pet->Da_tiem_phong ? 'Có' : 'Không',
+                'Đã triệt sản' => $pet->Da_triet_san ? 'Có' : 'Không',
+            ]);
+        }
+
+        return $writer->toBrowser();
     }
 
     /**
@@ -186,7 +239,7 @@ class PetController extends Controller
         if ($oldTrangThai !== 'da_nhan_nuoi' && $newTrangThai === 'da_nhan_nuoi') {
             DB::transaction(function () use ($pet) {
                 AdoptionApplication::where('Ma_thu_cung', $pet->Ma_thu_cung)
-                    ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+                    ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
                     ->update([
                         'Trang_thai'    => 'rejected',
                         'Ghi_chu_admin' => 'Tự động từ chối: Bé đã được nhận nuôi bởi đơn khác.',
@@ -252,7 +305,7 @@ class PetController extends Controller
 
         // Kiểm tra còn đơn đang mở không
         $openApplications = AdoptionApplication::where('Ma_thu_cung', $pet->Ma_thu_cung)
-            ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+            ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
             ->count();
 
         if ($openApplications > 0) {

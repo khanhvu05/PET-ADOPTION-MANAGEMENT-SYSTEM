@@ -22,6 +22,12 @@
                     <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Xuất Excel
                 </button>
+                
+                <!-- Add New Button -->
+                <a href="{{ route('admin.adoptions.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#41859c] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#32697b] transition-all shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                    Thêm Đơn Mới
+                </a>
             </div>
         </div>
 
@@ -59,7 +65,7 @@
                         <div class="relative flex flex-col gap-1.5 flex-1 min-w-[150px]" x-data="{ 
                             open: false, 
                             value: '{{ request('trang_thai', '') }}', 
-                            options: {'': 'Tất cả trạng thái', 'pending': 'Chờ duyệt', 'pre_approved': 'Duyệt sơ bộ', 'approved': 'Đã duyệt', 'rejected': 'Từ chối', 'cancelled': 'Đã hủy', 'completed': 'Đã nhận nuôi'} 
+                            options: {'': 'Tất cả trạng thái', 'pending': 'Chờ xử lý', 'approved': 'Đã duyệt', 'cho_phong_van': 'Chờ phỏng vấn', 'completed': 'Hoàn tất', 'rejected': 'Từ chối'} 
                         }">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
@@ -153,22 +159,18 @@
                 <table class="w-full text-left border-collapse min-w-[1100px] whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
-                            <th class="py-3 px-4 w-12 text-center rounded-l-xl">#</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Mã Đơn</th>
+                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 rounded-l-xl">Mã Đơn</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Người Đăng Ký</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Thú Cưng</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Thông Tin Liên Hệ</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Ngày Tạo</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center">Trạng Thái</th>
+                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Trạng Thái</th>
                             <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center rounded-r-xl">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @forelse($applications as $index => $app)
                         <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
-                            <td class="py-3 px-4 text-center text-slate-500 font-medium">
-                                {{ $applications->firstItem() + $index }}
-                            </td>
                             <td class="py-3 px-4">
                                 <span class="font-bold text-slate-800 text-[13px]">#{{ substr($app->Ma_don, 0, 8) }}</span>
                             </td>
@@ -215,54 +217,50 @@
                                     <span class="text-slate-400">{{ $app->Ngay_tao->format('H:i') }}</span>
                                 </div>
                             </td>
-                            <td class="py-3 px-4 text-center">
+                            <td class="py-3 px-4">
                                 @if($app->Trang_thai == 'pending')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-slate-600 bg-slate-100 border border-slate-200">
-                                        Chờ duyệt
-                                    </span>
-                                @elseif($app->Trang_thai == 'pre_approved')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-orange-600 bg-orange-50 border border-orange-200">
-                                        Duyệt sơ bộ
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-600 bg-slate-100 border border-slate-200">
+                                        Chờ xử lý
                                     </span>
                                 @elseif($app->Trang_thai == 'approved')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-green-600 bg-green-50 border border-green-200">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-green-600 bg-green-50 border border-green-200">
                                         Đã duyệt
                                     </span>
+                                @elseif($app->Trang_thai == 'cho_phong_van')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-200">
+                                        Chờ phỏng vấn
+                                    </span>
                                 @elseif($app->Trang_thai == 'rejected')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-red-600 bg-red-50 border border-red-200">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-red-600 bg-red-50 border border-red-200">
                                         Từ chối
                                     </span>
-                                @elseif($app->Trang_thai == 'cancelled')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-gray-600 bg-gray-100 border border-gray-200">
-                                        Đã hủy
-                                    </span>
                                 @elseif($app->Trang_thai == 'completed')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-purple-600 bg-purple-50 border border-purple-200">
-                                        Đã nhận nuôi
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-purple-600 bg-purple-50 border border-purple-200">
+                                        Hoàn tất
                                     </span>
                                 @endif
                             </td>
                             <td class="py-3 px-4">
                                 <div class="flex items-center justify-center gap-2">
-                                    <a href="{{ route('admin.adoptions.show', $app->Ma_don) }}" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-blue-500 hover:bg-blue-50 transition-colors shadow-sm" title="Xem chi tiết">
+                                    <a href="{{ route('admin.adoptions.show', $app->Ma_don) }}" class="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200" title="Xem chi tiết">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </a>
-                                    
-                                    @if(in_array($app->Trang_thai, ['rejected', 'cancelled']))
-                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="inline confirm-delete">
+                                    <a href="{{ route('admin.adoptions.edit', $app->Ma_don) }}" class="p-1.5 text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors border border-teal-200" title="Chỉnh sửa">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    </a>
+                                    <form action="{{ route('admin.adoptions.destroy', $app->Ma_don) }}" method="POST" class="inline-block confirm-delete">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Xóa">
+                                        <button type="submit" class="p-1.5 text-[#e75e5b] bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-200" title="Xóa">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="py-10 text-center text-slate-500">
+                            <td colspan="7" class="py-10 text-center text-slate-500">
                                 Không tìm thấy đơn nhận nuôi nào phù hợp.
                             </td>
                         </tr>

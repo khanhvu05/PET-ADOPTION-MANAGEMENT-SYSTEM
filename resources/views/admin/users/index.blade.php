@@ -80,7 +80,7 @@
                     <div class="w-40 relative" x-data="{ 
                         open: false, 
                         value: '{{ request('role', 'all') }}', 
-                        options: {'all': 'Tất cả', 'admin': 'Admin', 'staff': 'Nhân viên', 'user': 'Người dùng'} 
+                        options: {'all': 'Tất cả', 'admin': 'Admin', 'staff': 'Nhân viên', 'customer': 'Người dùng'} 
                     }">
                         <label class="block text-[11px] font-bold text-slate-500 mb-1.5 ml-1">Vai trò</label>
                         <input type="hidden" name="role" x-model="value" id="role-filter-input">
@@ -237,7 +237,7 @@
 
                                         <div class="border-t border-slate-100 my-1"></div>
 
-                                        <form method="POST" action="{{ route('admin.users.destroy', $user->Ma_nguoi_dung) }}" onsubmit="confirmDeleteUser(event, this)" class="block">
+                                        <form method="POST" action="{{ route('admin.users.destroy', $user->Ma_nguoi_dung) }}" class="block confirm-delete" data-title="Xóa người dùng?" data-text="Bạn có chắc chắn muốn xóa người dùng này vĩnh viễn? Hành động này không thể hoàn tác!">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
@@ -298,7 +298,6 @@
                         @foreach($roles as $role)
                             <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
                         @endforeach
-                        <option value="user">User (Thường)</option>
                     </select>
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
@@ -327,46 +326,18 @@
             document.getElementById('roleModal').classList.add('hidden');
         }
 
-        const swalConfig = {
-            customClass: {
-                popup: 'rounded-[16px] border border-slate-100 shadow-2xl bg-white font-sans',
-                title: 'text-[18px] font-bold text-slate-800 pt-4',
-                htmlContainer: 'text-[14px] text-slate-500 font-medium leading-relaxed mt-2',
-                confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
-                cancelButton: 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm ml-3',
-                actions: 'mt-6 mb-2',
-                icon: 'border-0 scale-110 mb-0'
-            },
-            buttonsStyling: false,
-            backdrop: 'rgba(15, 23, 42, 0.5)'
-        };
+        // Sử dụng window.swalConfig từ admin layout
 
-        function confirmDeleteUser(event, form) {
-            event.preventDefault();
-            Swal.fire({
-                ...swalConfig,
-                title: 'Xóa người dùng?',
-                text: "Bạn có chắc chắn muốn xóa người dùng này vĩnh viễn? Hành động này không thể hoàn tác!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Có, xóa ngay',
-                cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        }
-
+        // Hàm confirmToggleStatus vẫn giữ nguyên vì logic riêng biệt
         function confirmToggleStatus(event, form, actionName) {
             event.preventDefault();
             let isLock = actionName === 'khóa';
             
-            let customConfig = {...swalConfig};
+            let customConfig = {...window.swalConfig};
             if(isLock) {
-                customConfig.customClass = { ...swalConfig.customClass, confirmButton: 'bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
+                customConfig.customClass = { ...window.swalConfig.customClass, confirmButton: 'bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
             } else {
-                customConfig.customClass = { ...swalConfig.customClass, confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
+                customConfig.customClass = { ...window.swalConfig.customClass, confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm' };
             }
 
             Swal.fire({

@@ -12,7 +12,14 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+    @if(session('status'))
+        <script>
+            // Set 60 seconds timer in localStorage on successful request
+            localStorage.setItem('forgot_password_timer', Date.now() + 60000);
+        </script>
+    @endif
+
+    <form id="forgot-password-form" method="POST" action="{{ route('password.email') }}" class="space-y-4">
         @csrf
 
         <!-- Email Address -->
@@ -30,7 +37,7 @@
         </div>
 
         <div class="pt-2">
-            <button type="submit" class="w-full flex justify-center py-3 px-4 bg-orange-brand hover:opacity-90 rounded-full text-white text-sm font-bold shadow-glow transition duration-200">
+            <button id="submit-btn" type="submit" class="w-full flex justify-center items-center py-3 px-4 bg-orange-brand hover:opacity-90 rounded-full text-white text-sm font-bold shadow-glow transition duration-200">
                 Gửi liên kết khôi phục
             </button>
         </div>
@@ -41,4 +48,62 @@
             </a>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('forgot-password-form');
+            const input = document.getElementById('email');
+            const button = document.getElementById('submit-btn');
+            const originalText = button.innerHTML;
+
+            // Xử lý loading khi bấm submit
+            if(form) {
+                form.addEventListener('submit', function (e) {
+                    if(form.dataset.submitted) {
+                        e.preventDefault();
+                        return;
+                    }
+                    form.dataset.submitted = 'true';
+                    button.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Đang xử lý...';
+                    button.classList.add('opacity-70', 'cursor-not-allowed');
+                });
+            }
+
+            // Xử lý đếm ngược
+            const timerEnd = localStorage.getItem('forgot_password_timer');
+            if (timerEnd) {
+                const remaining = Math.ceil((timerEnd - Date.now()) / 1000);
+                if (remaining > 0) {
+                    startCountdown(remaining);
+                } else {
+                    localStorage.removeItem('forgot_password_timer');
+                }
+            }
+
+            function startCountdown(seconds) {
+                input.disabled = true;
+                button.disabled = true;
+                input.classList.add('opacity-50', 'cursor-not-allowed');
+                button.classList.add('opacity-50', 'cursor-not-allowed');
+
+                let current = seconds;
+                button.innerHTML = `Vui lòng thử lại sau ${current}s`;
+
+                const interval = setInterval(() => {
+                    current--;
+                    if (current <= 0) {
+                        clearInterval(interval);
+                        localStorage.removeItem('forgot_password_timer');
+                        input.disabled = false;
+                        button.disabled = false;
+                        input.classList.remove('opacity-50', 'cursor-not-allowed');
+                        button.classList.remove('opacity-50', 'cursor-not-allowed');
+                        button.innerHTML = originalText;
+                    } else {
+                        button.innerHTML = `Vui lòng thử lại sau ${current}s`;
+                    }
+                }, 1000);
+            }
+        });
+    </script>
 </x-guest-layout>

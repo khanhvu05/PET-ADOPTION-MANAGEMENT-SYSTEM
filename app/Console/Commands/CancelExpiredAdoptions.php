@@ -26,7 +26,7 @@ class CancelExpiredAdoptions extends Command
         /** @var \App\Models\AdoptionApplication $app */
         foreach ($expiredApplications as $app) {
             $app->update([
-                'Trang_thai' => 'cancelled',
+                'Trang_thai' => 'rejected',
                 'Ghi_chu_admin' => 'Hệ thống tự động hủy do quá hạn 24h không xác nhận lịch phỏng vấn.',
                 'han_xac_nhan_phong_van' => null,
             ]);

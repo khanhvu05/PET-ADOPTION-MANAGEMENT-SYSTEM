@@ -71,11 +71,10 @@ class AdoptionController extends Controller
 
         $stats = [
             'total'        => $calcMetric(AdoptionApplication::query()),
-            'pending'      => $calcMetric(AdoptionApplication::whereIn('Trang_thai', ['pending', 'pre_approved'])),
-            'approved'     => $calcMetric(AdoptionApplication::where('Trang_thai', 'approved')),
+            'pending'      => $calcMetric(AdoptionApplication::where('Trang_thai', 'pending')),
+            'approved'     => $calcMetric(AdoptionApplication::whereIn('Trang_thai', ['approved', 'cho_phong_van'])),
             'completed'    => $calcMetric(AdoptionApplication::where('Trang_thai', 'completed')),
             'rejected'     => $calcMetric(AdoptionApplication::where('Trang_thai', 'rejected')),
-            'cancelled'    => $calcMetric(AdoptionApplication::where('Trang_thai', 'cancelled')),
         ];
 
         return view('admin.adoptions.index', compact('applications', 'stats'));
@@ -87,7 +86,88 @@ class AdoptionController extends Controller
     public function create()
     {
         $pets = Pet::where('Trang_thai', 'san_sang')->orderBy('Ten')->get();
-        return view('admin.adoptions.create', compact('pets'));
+        $users = \App\Models\User::orderBy('Ho_ten')->get();
+        return view('admin.adoptions.create', compact('pets', 'users'));
+    }
+
+    /**
+     * Xử lý lưu đơn nhận nuôi mới từ Admin
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'Ma_thu_cung'       => 'required|exists:pets,Ma_thu_cung',
+            'user_mode'         => 'required|in:existing,new',
+            'Ma_nguoi_dung'     => 'required_if:user_mode,existing|nullable|exists:users,Ma_nguoi_dung',
+            'new_user_email'    => 'required_if:user_mode,new|nullable|email|unique:users,Email',
+            'new_user_password' => 'required_if:user_mode,new|nullable|min:6',
+            'Ho_ten'            => 'required|string|max:100',
+            'So_dien_thoai'     => ['required', 'string'],
+            'Dia_chi'           => 'required|string|max:500',
+            'Nghe_nghiep'       => 'nullable|string|max:100',
+            'Loai_nha_o'        => 'nullable|string|max:100',
+            'Kinh_nghiem'       => 'nullable|string|max:1000',
+            'Ly_do_nhan_nuoi'   => 'required|string|max:2000',
+            'Ghi_chu_admin'     => 'nullable|string',
+        ]);
+
+        try {
+            DB::transaction(function () use ($validated) {
+                // Kiểm tra pet còn sẵn sàng không
+                $pet = Pet::where('Ma_thu_cung', $validated['Ma_thu_cung'])->lockForUpdate()->first();
+                if (!$pet || $pet->Trang_thai !== 'san_sang') {
+                    throw new \Exception('Thú cưng này không còn sẵn sàng nhận nuôi.');
+                }
+
+                // Xử lý người dùng
+                $userId = null;
+                if ($validated['user_mode'] === 'new') {
+                    $user = \App\Models\User::create([
+                        'Ho_ten' => $validated['Ho_ten'],
+                        'Email' => $validated['new_user_email'],
+                        'Mat_khau_hash' => \Illuminate\Support\Facades\Hash::make($validated['new_user_password']),
+                        'So_dien_thoai' => $validated['So_dien_thoai'],
+                        'Loai_tai_khoan' => 'user',
+                        'Trang_thai' => 'active',
+                    ]);
+                    $userId = $user->Ma_nguoi_dung;
+                } else {
+                    $userId = $validated['Ma_nguoi_dung'];
+                }
+
+                // Tạo đơn
+                $application = AdoptionApplication::create([
+                    'Ma_nguoi_dung'   => $userId,
+                    'Ma_thu_cung'     => $validated['Ma_thu_cung'],
+                    'Ho_ten'          => $validated['Ho_ten'],
+                    'So_dien_thoai'   => $validated['So_dien_thoai'],
+                    'Dia_chi'         => $validated['Dia_chi'],
+                    'Nghe_nghiep'     => $validated['Nghe_nghiep'] ?? null,
+                    'Loai_nha_o'      => $validated['Loai_nha_o'] ?? null,
+                    'Kinh_nghiem'     => $validated['Kinh_nghiem'] ?? null,
+                    'Ly_do_nhan_nuoi' => $validated['Ly_do_nhan_nuoi'],
+                    'Cam_ket'         => true,
+                    'Trang_thai'      => 'completed',
+                    'Ghi_chu_admin'   => $validated['Ghi_chu_admin'] ?? null,
+                ]);
+
+                // Nếu hoàn tất luôn (mặc định cho admin tạo mới)
+                $pet->update(['Trang_thai' => 'da_nhan_nuoi']);
+                
+                // Từ chối các đơn khác (nếu có)
+                    AdoptionApplication::where('Ma_thu_cung', $pet->Ma_thu_cung)
+                        ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
+                        ->where('Ma_don', '!=', $application->Ma_don)
+                        ->update([
+                            'Trang_thai'    => 'rejected',
+                            'Ghi_chu_admin' => 'Hệ thống tự động từ chối: Bé đã được nhận nuôi.',
+                        ]);
+            });
+
+            return redirect()->route('admin.adoptions.index')->with('success', 'Đã tạo đơn nhận nuôi thành công!');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -105,6 +185,14 @@ class AdoptionController extends Controller
     }
 
     /**
+     * Chỉnh sửa đơn nhận nuôi (chuyển hướng sang trang chi tiết để xử lý)
+     */
+    public function edit($id)
+    {
+        return redirect()->route('admin.adoptions.show', $id);
+    }
+
+    /**
      * Cập nhật trạng thái đơn (duyệt, từ chối, duyệt sơ bộ)
      */
     public function update(Request $request, $id)
@@ -116,13 +204,11 @@ class AdoptionController extends Controller
 
         // Validate state machine transitions
         $allowedTransitions = [
-            'pending'      => ['approved', 'rejected'], // Bỏ qua pre_approved, cho phép duyệt thẳng
-            'pre_approved' => ['approved', 'rejected'],
-            'approved'     => ['completed', 'cancelled'], // Đã duyệt có thể hoàn tất hoặc bị hủy (bởi user/hệ thống)
-            'cho_phong_van'=> ['completed', 'cancelled', 'rejected'], // Chờ phỏng vấn có thể hoàn tất, hủy, hoặc rớt phỏng vấn (từ chối)
-            'completed'    => [], // Hoàn tất rồi thì đóng
-            'rejected'     => [], // Đã từ chối không cho đổi
-            'cancelled'    => [], // Đã hủy không cho đổi
+            'pending'       => ['approved', 'rejected'],
+            'approved'      => ['cho_phong_van', 'rejected'],
+            'cho_phong_van' => ['completed', 'rejected'],
+            'completed'     => [],
+            'rejected'      => [],
         ];
 
         $currentStatus = $application->Trang_thai;
@@ -153,10 +239,10 @@ class AdoptionController extends Controller
             return $this->completeApplication($application, $ghiChu);
         }
 
-        // Nếu hủy hoặc từ chối một đơn đã approved hoặc cho_phong_van, đưa pet quay lại trạng thái sẵn sàng
-        if (in_array($newStatus, ['cancelled', 'rejected']) && in_array($application->Trang_thai, ['approved', 'cho_phong_van'])) {
+        // Nếu từ chối một đơn đã approved hoặc cho_phong_van, đưa pet quay lại trạng thái sẵn sàng
+        if ($newStatus === 'rejected' && in_array($application->Trang_thai, ['approved', 'cho_phong_van'])) {
             $petToRevert = Pet::find($application->Ma_thu_cung);
-            if ($petToRevert && $petToRevert->Trang_thai === 'cho_phong_van') {
+            if ($petToRevert) {
                 $petToRevert->update(['Trang_thai' => 'san_sang']);
             }
         }
@@ -168,13 +254,12 @@ class AdoptionController extends Controller
         ]);
 
         $label = match ($newStatus) {
-            'pre_approved' => 'Đã duyệt sơ bộ',
             'rejected'     => 'Đã từ chối',
             default        => 'Đã cập nhật',
         };
 
         // Gửi email thông báo hủy/từ chối
-        if (in_array($newStatus, ['rejected', 'cancelled'])) {
+        if ($newStatus === 'rejected') {
             $application->load(['nguoiDung', 'thuCung']);
             $ghiChuEmail = $ghiChu; // Capture for closure
             $newStatusEmail = $newStatus;
@@ -306,7 +391,7 @@ class AdoptionController extends Controller
             // Lấy danh sách các đơn sẽ bị từ chối
             $rejectedApps = AdoptionApplication::with(['nguoiDung', 'thuCung'])
                 ->where('Ma_thu_cung', $application->Ma_thu_cung)
-                ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+                ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
                 ->where('Ma_don', '!=', $application->Ma_don)
                 ->get();
 
@@ -398,10 +483,10 @@ class AdoptionController extends Controller
     {
         $application = AdoptionApplication::findOrFail($id);
 
-        if (!in_array($application->Trang_thai, ['cancelled', 'rejected'])) {
+        if (!in_array($application->Trang_thai, ['rejected'])) {
             return redirect()
                 ->route('admin.adoptions.index')
-                ->with('error', 'Chỉ có thể xóa đơn đã hủy hoặc đã từ chối.');
+                ->with('error', 'Chỉ có thể xóa đơn đã từ chối.');
         }
 
         $application->delete();

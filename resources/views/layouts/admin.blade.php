@@ -489,6 +489,49 @@
                 // Initial fetch
                 fetchNotifications();
             }
+
+            // Global SweetAlert Config
+            window.swalConfig = {
+                customClass: {
+                    popup: 'rounded-[16px] border border-slate-100 shadow-2xl bg-white font-sans',
+                    title: 'text-[18px] font-bold text-slate-800 pt-4',
+                    htmlContainer: 'text-[14px] text-slate-500 font-medium leading-relaxed mt-2',
+                    confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
+                    cancelButton: 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm ml-3',
+                    actions: 'mt-6 mb-2',
+                    icon: 'border-0 scale-110 mb-0'
+                },
+                buttonsStyling: false,
+                backdrop: 'rgba(15, 23, 42, 0.5)'
+            };
+
+            // SweetAlert confirm delete
+            document.addEventListener('DOMContentLoaded', () => {
+                document.addEventListener('click', (e) => {
+                    const form = e.target.closest('form.confirm-delete');
+                    if (form) {
+                        e.preventDefault();
+                        
+                        // Lấy data attributes từ form nếu có, nếu không dùng mặc định
+                        const title = form.dataset.title || 'Xóa dữ liệu?';
+                        const text = form.dataset.text || 'Bạn có chắc chắn muốn xóa dữ liệu này vĩnh viễn? Hành động này không thể hoàn tác!';
+                        
+                        Swal.fire({
+                            ...window.swalConfig,
+                            title: title,
+                            text: text,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Có, xóa ngay',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                });
+            });
         </script>
 
         @stack('scripts')

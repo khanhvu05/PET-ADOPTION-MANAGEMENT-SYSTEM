@@ -209,12 +209,12 @@
                         </div>
                     @endif
                     
-                    <div class="flex gap-3">
-                        <button class="flex-1 bg-white hover:bg-slate-50 text-[#1D2B53] border border-gray-200 font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 text-[12px]">
-                            <i data-lucide="share-2" class="w-3.5 h-3.5 text-emerald-500"></i> Chia sẻ
-                        </button>
-                        <button class="flex-1 bg-white hover:bg-slate-50 text-[#1D2B53] border border-gray-200 font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 text-[12px]">
-                            <i data-lucide="bookmark" class="w-3.5 h-3.5 text-emerald-500"></i> Lưu
+                    <div x-data="{ copied: false }" class="flex gap-3">
+                        <button @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)" 
+                                class="w-full bg-white hover:bg-slate-50 text-[#1D2B53] border border-gray-200 font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 text-[12px]">
+                            <i data-lucide="share-2" x-show="!copied" class="w-3.5 h-3.5 text-emerald-500"></i>
+                            <i data-lucide="check" x-show="copied" style="display: none;" class="w-3.5 h-3.5 text-emerald-500"></i>
+                            <span x-text="copied ? 'Đã sao chép liên kết!' : 'Chia sẻ (Sao chép liên kết)'"></span>
                         </button>
                     </div>
                 </div>

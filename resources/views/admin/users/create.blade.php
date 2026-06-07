@@ -81,29 +81,22 @@
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Vai trò <span class="text-red-500">*</span></label>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <!-- User -->
-                            <label class="relative flex items-start p-4 cursor-pointer rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-                                <div class="flex items-center h-5">
-                                    <input name="role" type="radio" value="user" checked class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500">
-                                </div>
-                                <div class="ml-3 flex flex-col">
-                                    <span class="text-sm font-bold text-slate-900">User</span>
-                                    <span class="text-xs text-slate-500 mt-1">Người dùng hệ thống bình thường.</span>
-                                </div>
-                            </label>
-                            
                             @foreach($roles as $role)
                             <label class="relative flex items-start p-4 cursor-pointer rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
                                 <div class="flex items-center h-5">
-                                    <input name="role" type="radio" value="{{ $role->name }}" class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500">
+                                    <input name="role" type="radio" value="{{ $role->name }}" {{ $loop->first ? 'checked' : '' }} class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500">
                                 </div>
                                 <div class="ml-3 flex flex-col">
                                     <span class="text-sm font-bold text-slate-900 capitalize">{{ $role->name }}</span>
                                     <span class="text-xs text-slate-500 mt-1">
                                         @if($role->name === 'admin')
                                             Có toàn quyền quản trị hệ thống.
+                                        @elseif($role->name === 'staff')
+                                            Có quyền truy cập khu vực quản trị, không có quyền quản lý hệ thống.
+                                        @elseif($role->name === 'customer')
+                                            Người dùng bình thường.
                                         @else
-                                            Có quyền truy cập khu vực quản trị.
+                                            {{ $role->name }}
                                         @endif
                                     </span>
                                 </div>

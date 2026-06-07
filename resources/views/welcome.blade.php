@@ -137,7 +137,7 @@
                         <div class="absolute top-3 left-3 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-medium px-3 py-1 rounded-lg shadow-sm">
                             {{ $pet->LoaiLabel }}
                         </div>
-                        <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-500 border border-red-100 hover:bg-red-50 shadow-sm transition group">
+                        <button class="hidden absolute top-3 right-3 w-8 h-8 bg-white rounded-lg flex items-center justify-center text-red-500 border border-red-100 hover:bg-red-50 shadow-sm transition group">
                             <i data-lucide="heart" class="w-4 h-4"></i>
                         </button>
                     </div>

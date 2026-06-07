@@ -14,12 +14,10 @@
         @php
             $badgeColor = match($application->Trang_thai) {
                 'pending' => 'bg-slate-100 text-slate-600 border-slate-200',
-                'pre_approved' => 'bg-orange-50 text-orange-600 border-orange-100',
                 'approved' => 'bg-green-50 text-green-600 border-green-200',
                 'cho_phong_van' => 'bg-blue-50 text-blue-600 border-blue-200',
                 'completed' => 'bg-purple-50 text-purple-600 border-purple-200',
                 'rejected' => 'bg-red-50 text-red-600 border-red-200',
-                'cancelled' => 'bg-gray-100 text-gray-600 border-gray-200',
                 default => 'bg-slate-100 text-slate-600 border-slate-200',
             };
         @endphp
@@ -35,14 +33,18 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Quay lại
                 </a>
-                <button class="px-5 py-2 bg-orange-500 text-white font-medium text-sm rounded-[10px] hover:bg-orange-600 transition-colors flex items-center gap-2">
+                <a href="{{ route('admin.adoptions.edit', $application->Ma_don) }}" class="px-5 py-2 bg-sidebar-blue text-white font-medium text-sm rounded-[10px] hover:opacity-90 transition-colors flex items-center gap-2 shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Chỉnh sửa
-                </button>
-                <button class="px-4 py-2 border border-red-200 text-red-600 font-medium text-sm rounded-[10px] hover:bg-red-50 transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    Xóa
-                </button>
+                </a>
+                <form action="{{ route('admin.adoptions.destroy', $application->Ma_don) }}" method="POST" class="inline confirm-delete">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-[#e75e5b] text-white font-medium text-sm rounded-[10px] hover:bg-red-500 transition-colors flex items-center gap-2 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Xóa
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -124,25 +126,25 @@
                                     Thú cưng được nhận nuôi
                                 </h3>
                                 
-                                <div class="flex gap-6">
-                                    <img src="{{ $application->thuCung->anh_url }}" alt="{{ $application->thuCung->Ten }}" class="w-32 h-32 object-cover rounded-[12px] border border-slate-200 shrink-0">
-                                    <div class="flex-1 min-w-0 py-1">
-                                        <div class="flex items-start justify-between gap-2 mb-1">
-                                            <h4 class="text-lg font-semibold text-slate-800 truncate">{{ $application->thuCung->Ten }}</h4>
-                                            <span class="bg-{{ $application->thuCung->trang_thai_color }}-50 text-{{ $application->thuCung->trang_thai_color }}-600 text-[11px] font-semibold px-2 py-0.5 rounded-[6px] border border-{{ $application->thuCung->trang_thai_color }}-100 shrink-0">{{ $application->thuCung->trang_thai_label }}</span>
+                                <div class="flex flex-col items-center text-center gap-4">
+                                    <img src="{{ $application->thuCung->anh_url }}" alt="{{ $application->thuCung->Ten }}" class="w-40 h-40 object-cover rounded-full border-4 border-slate-50 shadow-md shrink-0">
+                                    <div class="w-full">
+                                        <div class="flex flex-col items-center gap-2 mb-2">
+                                            <h4 class="text-xl font-bold text-slate-800">{{ $application->thuCung->Ten }}</h4>
+                                            <span class="bg-{{ $application->thuCung->trang_thai_color }}-50 text-{{ $application->thuCung->trang_thai_color }}-600 text-[11px] font-semibold px-2.5 py-1 rounded-[6px] border border-{{ $application->thuCung->trang_thai_color }}-100 shrink-0">{{ $application->thuCung->trang_thai_label }}</span>
                                         </div>
-                                        <p class="text-[13px] text-slate-600 mb-3 truncate">#{{ substr($application->thuCung->Ma_thu_cung, 0, 8) }} &bull; {{ $application->thuCung->Giong }} &bull; {{ $application->thuCung->nhom_tuoi_label }}</p>
+                                        <p class="text-[14px] text-slate-500 mb-4 px-2">#{{ substr($application->thuCung->Ma_thu_cung, 0, 8) }} &bull; {{ $application->thuCung->Giong }} &bull; {{ $application->thuCung->nhom_tuoi_label }}</p>
                                         
-                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-600">
-                                            <div class="flex items-center gap-1.5">
+                                        <div class="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[14px] text-slate-600 bg-slate-50 rounded-[10px] p-4 border border-slate-100">
+                                            <div class="flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="10" cy="14" r="5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 3l-7.5 7.5M21 3v6M21 3h-6"/></svg>
                                                 {{ $application->thuCung->gioi_tinh_label }}
                                             </div>
-                                            <div class="flex items-center gap-1.5">
+                                            <div class="flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                                                 {{ $application->thuCung->Can_nang }} kg
                                             </div>
-                                            <div class="flex items-center gap-1.5">
+                                            <div class="flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
                                                 Tiêm phòng: {{ $application->thuCung->Da_tiem_phong ? 'Có' : 'Không' }}
                                             </div>
@@ -251,16 +253,27 @@
                                 <h3 class="text-base font-semibold text-slate-800">
                                     Kết quả khảo sát đánh giá
                                 </h3>
-                                <span class="bg-green-50 text-green-600 font-medium px-3 py-1 text-[12px] rounded-[6px] border border-green-100">Điểm: Khá Tốt</span>
                             </div>
 
                             <div class="space-y-4">
                                 @if($application->answers && $application->answers->count() > 0)
                                     @foreach($application->answers as $index => $answer)
                                         <div class="p-4 border border-slate-100 rounded-[10px]">
-                                            <p class="text-sm font-semibold text-slate-800 mb-2">{{ $index + 1 }}. {{ $answer->question->Cau_hoi ?? 'Câu hỏi' }}</p>
+                                            <p class="text-sm font-semibold text-slate-800 mb-2">{{ $index + 1 }}. {{ $answer->question->Noi_dung ?? 'Câu hỏi' }}</p>
                                             <div class="bg-slate-50 p-3 rounded-[8px] border border-slate-100">
-                                                <p class="text-sm text-slate-700">{{ $answer->Cau_tra_loi }}</p>
+                                                <p class="text-sm text-slate-700">
+                                                    @if($answer->Lua_chon_da_chon)
+                                                        @if(is_array($answer->Lua_chon_da_chon))
+                                                            {{ implode(', ', $answer->Lua_chon_da_chon) }}
+                                                        @else
+                                                            {{ $answer->Lua_chon_da_chon }}
+                                                        @endif
+                                                    @elseif($answer->Noi_dung_tra_loi)
+                                                        {{ $answer->Noi_dung_tra_loi }}
+                                                    @else
+                                                        <span class="italic text-slate-400">Không có câu trả lời</span>
+                                                    @endif
+                                                </p>
                                             </div>
                                         </div>
                                     @endforeach
@@ -282,18 +295,20 @@
                                     </div>
                                     <div>
                                         <p class="text-sm font-medium text-slate-800">Đơn được tạo</p>
-                                        <p class="text-[12px] text-slate-500">14/06/2024 15:45 - Bởi Trần Quang Huy</p>
+                                        <p class="text-[12px] text-slate-500">{{ $application->Ngay_tao->format('d/m/Y H:i') }} - Bởi {{ $application->Ho_ten }}</p>
                                     </div>
                                 </div>
+                                @if($application->Ngay_cap_nhat != $application->Ngay_tao)
                                 <div class="flex gap-4">
                                     <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100 text-blue-500">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-medium text-slate-800">Đang xử lý</p>
-                                        <p class="text-[12px] text-slate-500">15/06/2024 09:20 - Admin đang xem xét đơn.</p>
+                                        <p class="text-sm font-medium text-slate-800">Cập nhật lần cuối ({{ $application->trang_thai_label }})</p>
+                                        <p class="text-[12px] text-slate-500">{{ $application->Ngay_cap_nhat->format('d/m/Y H:i') }}</p>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -301,20 +316,23 @@
                     <!-- TAB 4: Ghi chú -->
                     <div x-show="activeTab === 'notes'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="grid grid-cols-1 gap-6">
                         <div class="bg-white border border-slate-200 rounded-[10px] p-6 space-y-4">
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs font-semibold">AD</div>
-                                <div class="flex-1 bg-slate-50 p-4 rounded-[10px] border border-slate-100">
-                                    <div class="flex justify-between mb-2">
-                                        <p class="text-[13px] font-semibold text-slate-700">Admin</p>
-                                        <p class="text-[11px] text-slate-400">15/06/2024 09:20</p>
+                            @if($application->Ghi_chu_admin)
+                                <div class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs font-semibold">AD</div>
+                                    <div class="flex-1 bg-slate-50 p-4 rounded-[10px] border border-slate-100">
+                                        <div class="flex justify-between mb-2">
+                                            <p class="text-[13px] font-semibold text-slate-700">Admin</p>
+                                            <p class="text-[11px] text-slate-400">{{ $application->Ngay_cap_nhat->format('d/m/Y H:i') }}</p>
+                                        </div>
+                                        <p class="text-sm text-slate-600">{{ $application->Ghi_chu_admin }}</p>
                                     </div>
-                                    <p class="text-sm text-slate-600">Ứng viên có kinh nghiệm nuôi chó, thông tin rõ ràng. Tiến hành xác minh địa chỉ và điều kiện nuôi.</p>
                                 </div>
-                            </div>
+                            @else
+                                <p class="text-sm text-slate-500 italic">Chưa có ghi chú nào cho đơn này.</p>
+                            @endif
                             
                             <div class="mt-4 pt-4 border-t border-slate-100">
-                                <textarea rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-[8px] px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-teal-500 transition-colors" placeholder="Thêm ghi chú..."></textarea>
-                                <button class="mt-3 bg-teal-600 text-white font-medium text-sm rounded-[8px] px-4 py-2 hover:bg-teal-700 transition-colors">Lưu ghi chú</button>
+                                <p class="text-xs text-slate-500 italic">Để thêm hoặc cập nhật ghi chú, vui lòng sử dụng khung "Ghi chú từ Admin" ở cột bên phải.</p>
                             </div>
                         </div>
                     </div>
@@ -323,15 +341,7 @@
                     <div x-show="activeTab === 'docs'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                         <div class="bg-white border border-slate-200 rounded-[10px] p-6">
                             <h3 class="text-base font-semibold text-slate-800 mb-6 border-b border-slate-100 pb-3">Danh sách tài liệu</h3>
-                            <div class="border border-slate-200 rounded-[10px] p-3 flex items-center gap-3 w-max pr-6">
-                                <div class="w-10 h-10 rounded-[8px] bg-slate-50 flex items-center justify-center border border-slate-100 text-slate-400">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-medium text-slate-700">cccd_front.jpg</p>
-                                    <p class="text-[11px] text-slate-400">1.2 MB</p>
-                                </div>
-                            </div>
+                            <p class="text-sm text-slate-500 italic">Đơn nhận nuôi này không có tài liệu đính kèm.</p>
                         </div>
                     </div>
 
@@ -350,14 +360,14 @@
                         <span class="{{ $badgeColor }} text-xs font-semibold px-2.5 py-1 rounded-[6px] border">{{ $application->trang_thai_label }}</span>
                     </div>
                     
-                    @if(in_array($application->Trang_thai, ['pending', 'pre_approved', 'approved']))
+                    @if(in_array($application->Trang_thai, ['pending', 'approved']))
                     <form id="action-form" action="{{ route('admin.adoptions.update', $application->Ma_don) }}" method="POST" class="space-y-3">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="Trang_thai" id="trang_thai_input" value="">
                         
 
-                        @if(in_array($application->Trang_thai, ['pending', 'pre_approved']))
+                        @if($application->Trang_thai === 'pending')
                             <button type="button" onclick="confirmAction('approved', 'Hệ thống sẽ gửi email mời phỏng vấn đến ứng viên. Bạn có chắc chắn?')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
                                 Phê duyệt & Hẹn phỏng vấn
                             </button>
@@ -391,7 +401,7 @@
                                     </button>
                                 </div>
                             @else
-                                <button type="button" onclick="confirmAction('cancelled', 'Xác nhận hủy đơn này? (VD: Ứng viên đổi ý định...)')" class="w-full mt-2 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 font-medium text-sm py-2.5 rounded-[8px] transition-colors">
+
                                     Hủy đơn
                                 </button>
                             @endif
@@ -417,25 +427,11 @@
 
     @push('scripts')
     <script>
-        const swalConfig = {
-            customClass: {
-                popup: 'rounded-[16px] border border-slate-100 shadow-2xl bg-white font-sans',
-                title: 'text-[18px] font-bold text-slate-800 pt-4',
-                htmlContainer: 'text-[14px] text-slate-500 font-medium leading-relaxed mt-2',
-                confirmButton: 'bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
-                cancelButton: 'bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm ml-3',
-                actions: 'mt-6 mb-2',
-                icon: 'border-0 scale-110 mb-0' // Adjust icon styling slightly
-            },
-            buttonsStyling: false,
-            backdrop: 'rgba(15, 23, 42, 0.5)' // slate-900 with 50% opacity
-        };
-
         function confirmAction(status, textMessage) {
             let iconType = 'warning';
             let confirmBtnColorClass = 'bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm';
             
-            if(status === 'rejected' || status === 'cancelled') {
+            if(status === 'rejected') {
                 iconType = 'error';
                 confirmBtnColorClass = 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm';
             } else if(status === 'completed') {
@@ -444,7 +440,7 @@
             }
 
             Swal.fire({
-                ...swalConfig,
+                ...window.swalConfig,
                 title: 'Xác nhận xử lý',
                 text: textMessage,
                 icon: iconType,
@@ -452,7 +448,7 @@
                 confirmButtonText: 'Đồng ý',
                 cancelButtonText: 'Hủy',
                 customClass: {
-                    ...swalConfig.customClass,
+                    ...window.swalConfig.customClass,
                     confirmButton: confirmBtnColorClass
                 }
             }).then((result) => {
@@ -475,14 +471,14 @@
             let note = document.getElementById('ghi_chu_reject').value.trim();
             if(!note) {
                 Swal.fire({
-                    ...swalConfig,
+                    ...window.swalConfig,
                     icon: 'warning',
                     title: 'Thiếu thông tin',
                     text: 'Vui lòng nhập lý do từ chối để ứng viên được biết!',
                     confirmButtonText: 'Đã hiểu',
                     showCancelButton: false,
                     customClass: {
-                        ...swalConfig.customClass,
+                        ...window.swalConfig.customClass,
                         confirmButton: 'bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
                     }
                 });

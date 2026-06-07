@@ -72,7 +72,6 @@
                                     $statusColors = [
                                         'san_sang' => 'green',
                                         'chua_san_sang' => 'orange',
-                                        'dang_cuu_ho' => 'red',
                                         'da_nhan_nuoi' => 'blue',
                                         'da_mat' => 'slate'
                                     ];
@@ -479,10 +478,8 @@
                             @php
                                 $statusIcons = [
                                     'pending' => 'bg-orange-50 text-orange-600',
-                                    'pre_approved' => 'bg-blue-50 text-blue-600',
                                     'approved' => 'bg-green-50 text-green-600',
                                     'rejected' => 'bg-rose-50 text-rose-600',
-                                    'cancelled' => 'bg-slate-50 text-slate-600',
                                 ];
                                 $iconClass = $statusIcons[$application->Trang_thai] ?? 'bg-slate-50 text-slate-600';
                             @endphp

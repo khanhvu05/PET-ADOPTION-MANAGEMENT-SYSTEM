@@ -82,7 +82,7 @@ class PetController extends Controller
         if (auth()->check()) {
             $existingApplication = $pet->donNhanNuoi()
                 ->where('Ma_nguoi_dung', auth()->id())
-                ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+                ->whereIn('Trang_thai', ['pending', 'approved'])
                 ->first();
         }
 

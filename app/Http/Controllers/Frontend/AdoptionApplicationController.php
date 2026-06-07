@@ -31,7 +31,7 @@ class AdoptionApplicationController extends Controller
         // Kiểm tra user đã có đơn chờ duyệt chưa
         $existingApplication = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
             ->where('Ma_thu_cung', $petId)
-            ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+            ->whereIn('Trang_thai', ['pending', 'approved'])
             ->first();
 
         if ($existingApplication) {
@@ -42,7 +42,7 @@ class AdoptionApplicationController extends Controller
 
         // Kiểm tra giới hạn số lượng đơn nhận nuôi của user (tối đa 3 đơn đang xử lý hoặc đã duyệt)
         $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
-            ->whereIn('Trang_thai', ['pending', 'pre_approved', 'approved'])
+            ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
             ->count();
             
         if ($activeApplicationsCount >= 3) {
@@ -112,7 +112,7 @@ class AdoptionApplicationController extends Controller
                 // Kiểm tra trùng đơn (race condition)
                 $duplicate = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
                     ->where('Ma_thu_cung', $petId)
-                    ->whereIn('Trang_thai', ['pending', 'pre_approved'])
+                    ->whereIn('Trang_thai', ['pending', 'approved'])
                     ->lockForUpdate()
                     ->first();
 
@@ -122,7 +122,7 @@ class AdoptionApplicationController extends Controller
 
                 // Kiểm tra giới hạn (tối đa 3 đơn)
                 $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
-                    ->whereIn('Trang_thai', ['pending', 'pre_approved', 'approved'])
+                    ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
                     ->lockForUpdate()
                     ->count();
 
@@ -211,7 +211,7 @@ class AdoptionApplicationController extends Controller
             return back()->with('error', 'Chỉ có thể hủy đơn đang ở trạng thái "Chờ duyệt".');
         }
 
-        $application->update(['Trang_thai' => 'cancelled']);
+        $application->update(['Trang_thai' => 'rejected']);
 
         return redirect()
             ->route('frontend.user.adoptions.index')
