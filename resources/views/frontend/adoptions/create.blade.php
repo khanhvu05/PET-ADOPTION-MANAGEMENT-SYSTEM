@@ -301,7 +301,7 @@
                             <!-- Lý do nhận nuôi (Required by DB Application table) -->
                             <div class="survey-question">
                                 <label class="block text-[13px] font-bold text-[#1D2B53] mb-3 leading-relaxed">
-                                    Lý do bạn muốn nhận nuôi bé {{ $pet->Ten }}? <span class="text-red-500">*</span>
+                                    {{ $questions->count() + 1 }}. Lý do bạn muốn nhận nuôi bé {{ $pet->Ten }}? <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
                                     <textarea rows="4" x-model="form.reason" placeholder="Chia sẻ lý do bạn muốn nhận nuôi bé..." 
