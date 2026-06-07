@@ -10,7 +10,7 @@
         <span class="text-slate-700 font-bold">Chiến dịch Gây quỹ</span>
     </x-slot>
 
-    <div class="space-y-6" x-data="{ campaignToClose: null, campaignToDelete: null }">
+    <div class="space-y-6" x-data="{ campaignToClose: null }">
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex flex-col">
@@ -303,26 +303,15 @@
                                 <!-- Cột Thao tác -->
                                 <td class="py-3 px-4">
                                     <div class="flex items-center justify-center gap-2">
-                                        <a href="{{ route('admin.donation_campaigns.show', $campaign->Ma_chien_dich) }}" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-blue-500 hover:bg-blue-50 transition-colors shadow-sm" title="Xem chi tiết">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                        </a>
                                         <a href="{{ route('admin.donation_campaigns.edit', $campaign->Ma_chien_dich) }}" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-orange-500 hover:bg-orange-50 transition-colors shadow-sm" title="Chỉnh sửa">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
-                                        
-                                        <!-- Actions Dropdown -->
-                                        <div class="relative" x-data="{ menuOpen: false }">
-                                            <button @click="menuOpen = !menuOpen" @click.away="menuOpen = false" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors shadow-sm">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                                            </button>
-                                            
-                                            <div x-show="menuOpen" x-transition class="absolute right-0 mt-1 w-36 bg-white border border-slate-200 rounded-xl shadow-lg py-1 z-30 text-left flex flex-col">
-                                                @if($isActive)
-                                                    <button @click="campaignToClose = '{{ $campaign->Ma_chien_dich }}'; $dispatch('open-modal', 'close-campaign-modal'); menuOpen = false" class="block w-full text-left px-4 py-2 text-[13px] font-medium text-slate-700 hover:bg-slate-50 transition-colors">Đóng chiến dịch</button>
-                                                @endif
-                                                <button @click="campaignToDelete = { id: '{{ $campaign->Ma_chien_dich }}', raised: {{ $campaign->So_tien_hien_tai }} }; $dispatch('open-modal', 'delete-campaign-modal'); menuOpen = false" class="block w-full text-left px-4 py-2 text-[13px] font-bold text-red-600 hover:bg-red-50 transition-colors">Xóa chiến dịch</button>
-                                            </div>
-                                        </div>
+
+                                        @if($isActive)
+                                        <button @click="campaignToClose = '{{ $campaign->Ma_chien_dich }}'; $dispatch('open-modal', 'close-campaign-modal')" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-red-500 hover:bg-red-50 transition-colors shadow-sm" title="Đóng chiến dịch">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                        </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -360,26 +349,6 @@
                 <div class="flex justify-center gap-3">
                     <button type="button" x-on:click="$dispatch('close')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-sm">Hủy</button>
                     <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-slate-700 hover:bg-slate-800 rounded-xl transition-all shadow-sm">Xác nhận Đóng</button>
-                </div>
-            </form>
-        </x-modal>
-
-        <!-- Delete Campaign Modal -->
-        <x-modal name="delete-campaign-modal" focusable maxWidth="sm">
-            <form method="POST" :action="`/admin/donation_campaigns/${campaignToDelete?.id}`" class="p-6 text-center">
-                @csrf
-                @method('DELETE')
-                <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
-                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </div>
-                <h2 class="text-xl font-bold text-slate-800 tracking-tight mb-2">Xác nhận Xóa?</h2>
-                <div x-show="campaignToDelete?.raised > 0" class="mb-4 text-left bg-red-50 text-red-700 p-3 rounded-xl border border-red-100 text-sm">
-                    <strong>⚠️ Cảnh báo:</strong> Chiến dịch này đã nhận được <span class="font-bold font-mono" x-text="new Intl.NumberFormat('vi-VN').format(campaignToDelete?.raised || 0)"></span> VNĐ. Nên Đóng thay vì Xóa.
-                </div>
-                <p x-show="!campaignToDelete?.raised || campaignToDelete?.raised === 0" class="text-sm font-medium text-slate-500 mb-6">Bạn có chắc chắn muốn xóa chiến dịch này không? Hành động này không thể hoàn tác.</p>
-                <div class="flex justify-center gap-3">
-                    <button type="button" x-on:click="$dispatch('close')" class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all shadow-sm">Hủy</button>
-                    <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded-xl transition-all shadow-sm">Xóa Vĩnh Viễn</button>
                 </div>
             </form>
         </x-modal>

@@ -60,7 +60,7 @@ class DonationController extends Controller
 
         // Xử lý Xuất Excel (CSV thuần)
         if ($request->has('export') && $request->export === 'excel') {
-            return $this->exportCsv($query);
+            return $this->exportExcel($query);
         }
 
         // Sorting
@@ -96,45 +96,31 @@ class DonationController extends Controller
     /**
      * Xuất dữ liệu ra file CSV
      */
-    private function exportCsv($query)
+    private function exportExcel($query)
     {
         $donations = $query->get();
-        $filename = "DS_QuyenGop_" . now()->format('Ymd_His') . ".csv";
+        $filename = "DS_QuyenGop_" . now()->format('Ymd_His') . ".xlsx";
 
-        $headers = array(
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        );
+        $writer = \Spatie\SimpleExcel\SimpleExcelWriter::streamDownload($filename);
 
-        $callback = function() use($donations) {
-            $file = fopen('php://output', 'w');
-            // Ghi BOM để Excel đọc đúng UTF-8
-            fputs($file, "\xEF\xBB\xBF");
-            fputcsv($file, ['Mã GD', 'Mã Hệ Thống', 'Người Ủng Hộ', 'Email', 'Số Tiền', 'Phương Thức', 'Mục Đích', 'Thời Gian', 'Trạng Thái']);
+        foreach ($donations as $donation) {
+            $name = $donation->An_danh ? 'Ẩn danh' : ($donation->Ten_nguoi_ung_ho ?? ($donation->nguoiDung->Ho_ten ?? ''));
+            $email = !$donation->An_danh ? ($donation->nguoiDung->Email ?? '') : '';
+            
+            $writer->addRow([
+                'Mã GD' => $donation->Ma_ung_ho,
+                'Mã Hệ Thống' => $donation->Ma_giao_dich_he_thong ?? '',
+                'Người Ủng Hộ' => $name,
+                'Email' => $email,
+                'Số Tiền' => $donation->So_tien,
+                'Phương Thức' => $donation->Ma_ngan_hang ?? 'VNPay',
+                'Mục Đích' => $donation->Loi_nhan ?? 'Không',
+                'Thời Gian' => $donation->Ngay_tao->format('d/m/Y H:i:s'),
+                'Trạng Thái' => $donation->Trang_thai
+            ]);
+        }
 
-            foreach ($donations as $donation) {
-                $name = $donation->An_danh ? 'Ẩn danh' : ($donation->Ten_nguoi_ung_ho ?? ($donation->nguoiDung->Ho_ten ?? ''));
-                $email = !$donation->An_danh ? ($donation->nguoiDung->Email ?? '') : '';
-                
-                fputcsv($file, [
-                    $donation->Ma_ung_ho,
-                    $donation->Ma_giao_dich_he_thong ?? '',
-                    $name,
-                    $email,
-                    $donation->So_tien,
-                    $donation->Ma_ngan_hang ?? 'VNPay',
-                    $donation->Loi_nhan ?? 'Không',
-                    $donation->Ngay_tao->format('d/m/Y H:i:s'),
-                    $donation->Trang_thai
-                ]);
-            }
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return $writer->toBrowser();
     }
     /**
      * Trang thống kê quyên góp (UC06)

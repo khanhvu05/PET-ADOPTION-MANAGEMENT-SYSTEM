@@ -366,85 +366,26 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Pet 1 -->
-            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+            @foreach($goodPets as $pet)
+            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group flex flex-col">
                 <div class="aspect-square relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <img src="{{ $pet->Anh_dai_dien ?? 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}" alt="{{ $pet->Ten }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute top-3 left-3 bg-teal-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Đang tìm nhà</div>
                 </div>
-                <div class="p-5">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2">Mio</h3>
-                    <div class="flex items-center gap-3 text-[12px] font-bold text-gray-500 mb-3">
-                        <span>Chó</span>
+                <div class="p-5 flex flex-col flex-1">
+                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2">{{ $pet->Ten }}</h3>
+                    <div class="flex flex-wrap items-center gap-2 text-[12px] font-bold text-gray-500 mb-3">
+                        <span>{{ ucfirst($pet->Loai) }}</span>
                         <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>4 tháng</span>
+                        <span>{{ $pet->Giong ?? 'Chưa rõ' }}</span>
                         <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>3kg</span>
+                        <span>{{ $pet->Can_nang }}kg</span>
                     </div>
-                    <p class="text-[13px] text-gray-500 mb-4 line-clamp-2">Cún rất hiếu động, ngoan ngoãn và thân thiện. Đã tiêm vắc xin đầy đủ.</p>
-                    <a href="#" class="text-teal-600 font-bold text-[13px] hover:text-teal-700 flex items-center gap-1">Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                    <p class="text-[13px] text-gray-500 mb-4 line-clamp-2">{{ $pet->Mo_ta ?? 'Một bé thú cưng rất đáng yêu đang cần mái ấm mới.' }}</p>
+                    <a href="{{ route('frontend.adoptions.show', $pet->Ma_thu_cung) }}" class="mt-auto text-teal-600 font-bold text-[13px] hover:text-teal-700 flex items-center gap-1">Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
                 </div>
             </div>
-
-            <!-- Pet 2 -->
-            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="aspect-[4/3] sm:aspect-square relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-3 left-3 bg-teal-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Đang tìm nhà</div>
-                </div>
-                <div class="p-5">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2">Cam</h3>
-                    <div class="flex items-center gap-3 text-[12px] font-bold text-gray-500 mb-3">
-                        <span>Mèo</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>3 tháng</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>2kg</span>
-                    </div>
-                    <p class="text-[13px] text-gray-500 mb-4 line-clamp-2">Lông vàng cam rực rỡ, thích được vuốt ve và rất quấn người.</p>
-                    <a href="#" class="text-teal-600 font-bold text-[13px] hover:text-teal-700 flex items-center gap-1">Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                </div>
-            </div>
-
-            <!-- Pet 3 -->
-            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="aspect-[4/3] sm:aspect-square relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bin" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-3 left-3 bg-teal-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Đang tìm nhà</div>
-                </div>
-                <div class="p-5">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2">Bin</h3>
-                    <div class="flex items-center gap-3 text-[12px] font-bold text-gray-500 mb-3">
-                        <span>Chó</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>2 tháng</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>10kg</span>
-                    </div>
-                    <p class="text-[13px] text-gray-500 mb-4 line-clamp-2">Siêu khỏe mạnh, thông minh và cực kỳ trung thành.</p>
-                    <a href="#" class="text-teal-600 font-bold text-[13px] hover:text-teal-700 flex items-center gap-1">Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                </div>
-            </div>
-
-            <!-- Pet 4 -->
-            <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="aspect-[4/3] sm:aspect-square relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mướp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute top-3 left-3 bg-teal-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Đang tìm nhà</div>
-                </div>
-                <div class="p-5">
-                    <h3 class="text-[18px] font-black text-[#1D2B53] mb-2">Mướp</h3>
-                    <div class="flex items-center gap-3 text-[12px] font-bold text-gray-500 mb-3">
-                        <span>Mèo</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>6 tháng</span>
-                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                        <span>3kg</span>
-                    </div>
-                    <p class="text-[13px] text-gray-500 mb-4 line-clamp-2">Khá trầm tính, lanh lợi, đã sổ giun và tiêm phòng đầy đủ.</p>
-                    <a href="#" class="text-teal-600 font-bold text-[13px] hover:text-teal-700 flex items-center gap-1">Xem chi tiết <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <div class="mt-12 text-center">

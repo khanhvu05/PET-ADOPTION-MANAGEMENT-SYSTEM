@@ -60,9 +60,8 @@ class DonationCampaignController extends Controller
             }
         }
 
-        // Xuất file nếu có request export
         if ($request->input('export') === 'excel') {
-            return $this->exportCsv($campaignsQuery);
+            return $this->exportExcel($campaignsQuery);
         }
 
         $perPage = $request->input('per_page', 10);
@@ -81,41 +80,27 @@ class DonationCampaignController extends Controller
     /**
      * Xuất dữ liệu ra file CSV
      */
-    private function exportCsv($query)
+    private function exportExcel($query)
     {
         $campaigns = $query->get();
-        $filename = "DS_ChienDich_" . now()->format('Ymd_His') . ".csv";
+        $filename = "DS_ChienDich_" . now()->format('Ymd_His') . ".xlsx";
 
-        $headers = array(
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=$filename",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        );
+        $writer = \Spatie\SimpleExcel\SimpleExcelWriter::streamDownload($filename);
 
-        $callback = function() use($campaigns) {
-            $file = fopen('php://output', 'w');
-            // Ghi BOM để Excel đọc đúng UTF-8
-            fputs($file, "\xEF\xBB\xBF");
-            fputcsv($file, ['Mã Chiến Dịch', 'Tiêu Đề', 'Số Tiền Mục Tiêu', 'Số Tiền Hiện Tại', 'Ngày Bắt Đầu', 'Ngày Kết Thúc', 'Trạng Thái', 'Ngày Tạo']);
+        foreach ($campaigns as $campaign) {
+            $writer->addRow([
+                'Mã Chiến Dịch' => $campaign->Ma_chien_dich,
+                'Tiêu Đề' => $campaign->Tieu_de,
+                'Số Tiền Mục Tiêu' => $campaign->So_tien_muc_tieu,
+                'Số Tiền Hiện Tại' => $campaign->So_tien_hien_tai,
+                'Ngày Bắt Đầu' => $campaign->Ngay_bat_dau ? $campaign->Ngay_bat_dau->format('d/m/Y') : '',
+                'Ngày Kết Thúc' => $campaign->Ngay_ket_thuc ? $campaign->Ngay_ket_thuc->format('d/m/Y') : '',
+                'Trạng Thái' => $campaign->Trang_thai,
+                'Ngày Tạo' => $campaign->Ngay_tao ? $campaign->Ngay_tao->format('d/m/Y H:i:s') : ''
+            ]);
+        }
 
-            foreach ($campaigns as $campaign) {
-                fputcsv($file, [
-                    $campaign->Ma_chien_dich,
-                    $campaign->Tieu_de,
-                    $campaign->So_tien_muc_tieu,
-                    $campaign->So_tien_hien_tai,
-                    $campaign->Ngay_bat_dau ? $campaign->Ngay_bat_dau->format('d/m/Y') : '',
-                    $campaign->Ngay_ket_thuc ? $campaign->Ngay_ket_thuc->format('d/m/Y') : '',
-                    $campaign->Trang_thai,
-                    $campaign->Ngay_tao ? $campaign->Ngay_tao->format('d/m/Y H:i:s') : ''
-                ]);
-            }
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return $writer->toBrowser();
     }
 
     public function create()
@@ -228,24 +213,7 @@ class DonationCampaignController extends Controller
 
     public function destroy($id)
     {
-        $campaign = DonationCampaign::findOrFail($id);
-        
-        // Cảnh báo nếu chiến dịch đã quyên góp được tiền
-        if ($campaign->So_tien_hien_tai > 0) {
-            return redirect()->route('admin.donation_campaigns.index')
-                ->with('error', 'Không thể xóa chiến dịch đã phát sinh giao dịch quyên góp!');
-        }
-        
-        // Xóa ảnh Cloudinary
-        if ($campaign->Anh_dai_dien) {
-            $publicId = $this->cloudinary->extractPublicId($campaign->Anh_dai_dien);
-            if ($publicId) $this->cloudinary->deleteImage($publicId);
-        }
-
-        $campaign->delete();
-
-        return redirect()->route('admin.donation_campaigns.index')
-            ->with('success', 'Đã xóa chiến dịch thành công!');
+        abort(403, 'Không được phép xóa chiến dịch theo nghiệp vụ.');
     }
 
     public function close($id)

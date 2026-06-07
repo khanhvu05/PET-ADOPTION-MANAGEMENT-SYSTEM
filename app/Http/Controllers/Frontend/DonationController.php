@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
 use App\Models\DonationCampaign;
+use App\Models\Pet;
 use App\Services\MailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,14 @@ class DonationController extends Controller
             ->take(10)
             ->get();
 
-        return view('frontend.donations.index', compact('campaigns', 'totalAmount', 'recentDonations'));
+        // Lấy danh sách tối đa 4 bé thú cưng đang tìm nhà
+        $goodPets = Pet::where('Trang_thai', 'san_sang')
+            ->orderByDesc('Noi_bat')
+            ->orderByDesc('Ngay_tao')
+            ->take(4)
+            ->get();
+
+        return view('frontend.donations.index', compact('campaigns', 'totalAmount', 'recentDonations', 'goodPets'));
     }
 
     /**

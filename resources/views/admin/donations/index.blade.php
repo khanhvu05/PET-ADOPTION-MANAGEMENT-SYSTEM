@@ -86,7 +86,7 @@
             }" action="{{ route('admin.donations.index') }}" method="GET" class="p-6 pb-4 border-b border-slate-100">
                 <div class="flex flex-wrap gap-4 items-end">
                     <!-- Search -->
-                    <div class="w-64">
+                    <div class="w-full sm:w-64">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -96,7 +96,7 @@
                     </div>
 
                     <!-- Date Range Filter -->
-                    <div class="w-64">
+                    <div class="w-full sm:w-64">
                         <div class="relative">
                             <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -116,7 +116,7 @@
                     </div>
 
                     <!-- Dropdowns -->
-                    <div class="w-40 relative" x-data="{ 
+                    <div class="w-full sm:w-64 relative" x-data="{ 
                         open: false, 
                         value: '{{ request('method', 'all') }}', 
                         options: {'all': 'Tất cả phương thức', 'VNPAYQR': 'Quét mã QR (VNPAYQR)', 'VNBANK': 'Thẻ ATM / VNBANK', 'INTCARD': 'Thẻ Quốc Tế'} 
@@ -175,7 +175,6 @@
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Phương Thức</th>
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Mục Đích</th>
                             <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">Thời Gian</th>
-                            <th class="py-4 px-6 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 text-center">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -203,24 +202,10 @@
                                     <span class="text-xs text-slate-400 mt-0.5">{{ $donation->Ngay_tao->format('H:i') }}</span>
                                 </div>
                             </td>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center justify-center relative" x-data="{ open: false }" @click.away="open = false">
-                                    <button @click="open = !open" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-colors border border-slate-200 shadow-sm">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                                    </button>
-                                    <div x-show="open" x-transition class="absolute right-8 top-0 w-40 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden text-left" style="display: none;">
-                                        <a href="{{ route('admin.donations.show', $donation->Ma_ung_ho) }}" class="flex items-center gap-2 px-4 py-2.5 text-[13px] font-bold text-slate-700 hover:bg-[#41859c]/10 hover:text-[#41859c] transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                            Xem chi tiết
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="py-8 text-center text-slate-500">
+                            <td colspan="6" class="py-8 text-center text-slate-500">
                                 Không tìm thấy dữ liệu quyên góp nào phù hợp.
                             </td>
                         </tr>
