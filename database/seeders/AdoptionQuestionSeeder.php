@@ -64,13 +64,7 @@ class AdoptionQuestionSeeder extends Seeder
                 'Cac_lua_chon' => null,
                 'Bat_buoc' => true,
             ],
-            [
-                'Ma_hien_thi' => 8,
-                'Noi_dung' => 'Lý do bạn muốn nhận nuôi bé này là gì?',
-                'Loai_cau_tra_loi' => 'text',
-                'Cac_lua_chon' => null,
-                'Bat_buoc' => true,
-            ],
+
             [
                 'Ma_hien_thi' => 9,
                 'Noi_dung' => 'Bạn có đồng ý để tổ chức liên hệ theo dõi tình trạng thú cưng sau khi nhận nuôi không?',
