@@ -34,8 +34,8 @@
                 <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 Nhận nuôi ngay
             </a>
-            <a href="#" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
-                Xem thú cưng
+            <a href="{{ route('frontend.donations.process') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
+                Ủng hộ ngay
             </a>
         </div>
 
@@ -195,7 +195,7 @@
 </section>
 
 <!-- Adoption Process -->
-<section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto relative mt-6 lg:mt-10">
+<section id="adoption-process" class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto relative mt-6 lg:mt-10">
     <div class="flex justify-center md:justify-between items-center mb-12 lg:mb-24 text-center md:text-left w-full">
         <h2 class="text-3xl font-extrabold text-[#1D2B53] flex items-center gap-2 tracking-tight">
             Quy trình nhận nuôi

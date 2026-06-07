@@ -263,9 +263,9 @@
                     </div>
                 </div>
 
-                <button class="w-full mt-6 bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 rounded-lg transition text-[12px] shadow-sm">
-                    Xem chi tiết quy trình
-                </button>
+                    <a href="{{ route('home') }}#adoption-process" class="w-full inline-block text-center mt-6 bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 rounded-lg transition text-[12px] shadow-sm">
+                        Xem chi tiết quy trình
+                    </a>
             </div>
 
             <!-- Support Box -->

@@ -194,9 +194,13 @@ class InterviewScheduleController extends Controller
         if ($application) {
             if ($request->result === 'dat') {
                 $application->update(['Trang_thai' => 'da_duyet']);
-                if ($application->nguoiDung && $application->nguoiDung->email) {
-                    \Illuminate\Support\Facades\Mail::to($application->nguoiDung->email)
-                        ->send(new \App\Mail\InterviewPassedEmail($application));
+                try {
+                    if ($application->nguoiDung && $application->nguoiDung->Email) {
+                        \Illuminate\Support\Facades\Mail::to($application->nguoiDung->Email)
+                            ->send(new \App\Mail\InterviewPassedEmail($application));
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning('Không gửi được email interview passed: ' . $e->getMessage());
                 }
             } else {
                 // tu_choi hoặc vang_mat
@@ -205,14 +209,18 @@ class InterviewScheduleController extends Controller
                     'Trang_thai' => 'tu_choi',
                     'Ghi_chu_admin' => $ghiChu
                 ]);
-                if ($application->nguoiDung && $application->nguoiDung->email) {
-                    \Illuminate\Support\Facades\Mail::to($application->nguoiDung->email)
-                        ->send(new \App\Mail\ApplicationRejectedEmail($application, $ghiChu));
+                try {
+                    if ($application->nguoiDung && $application->nguoiDung->Email) {
+                        \Illuminate\Support\Facades\Mail::to($application->nguoiDung->Email)
+                            ->send(new \App\Mail\ApplicationRejectedEmail($application, $ghiChu));
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning('Không gửi được email application rejected: ' . $e->getMessage());
                 }
             }
         }
 
-        return response()->json(['success' => true, 'message' => 'Cập nhật kết quả thành công và đã gửi email.']);
+        return response()->json(['success' => true, 'message' => 'Cập nhật kết quả thành công.']);
     }
 
     public function addApplication(Request $request, $id)

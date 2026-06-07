@@ -35,10 +35,10 @@
                 <div class="flex flex-col md:flex-row gap-8">
                     
                     <!-- Left: Images -->
-                    <div class="w-full md:w-1/2">
+                    <div class="w-full md:w-1/2" x-data="{ mainImage: '{{ $pet->AnhUrl }}', isZoomed: false }">
                         <!-- Main Image -->
-                        <div class="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden mb-3 border border-gray-100">
-                            <img src="{{ $pet->AnhUrl }}" alt="{{ $pet->Ten }}" class="w-full h-full object-cover">
+                        <div class="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden mb-3 border border-gray-100 cursor-pointer" @click="isZoomed = true">
+                            <img :src="mainImage" alt="{{ $pet->Ten }}" class="w-full h-full object-cover">
                             <div class="absolute top-4 left-4 {{ $pet->Loai == 'cho' ? 'bg-[#40C057]' : ($pet->Loai == 'meo' ? 'bg-[#FCC419]' : 'bg-[#0AA5C0]') }} text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm">
                                 {{ $pet->LoaiLabel }}
                             </div>
@@ -59,16 +59,32 @@
                                 </div>
                                 @endif
                             </div>
-                            <button class="absolute bottom-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-500 shadow-lg hover:scale-110 transition duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                            </button>
                         </div>
                         <!-- Thumbnails -->
                         <div class="flex gap-2">
-                            <img src="{{ $pet->AnhUrl }}" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover border-2 border-[#F58A3C] cursor-pointer shadow-sm">
-                            <img src="{{ $pet->AnhUrl }}" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover border border-gray-200 cursor-pointer hover:border-[#F58A3C] transition">
-                            <img src="{{ $pet->AnhUrl }}" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover border border-gray-200 cursor-pointer hover:border-[#F58A3C] transition">
-                            <img src="{{ $pet->AnhUrl }}" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover border border-gray-200 cursor-pointer hover:border-[#F58A3C] transition">
+                            <img src="{{ $pet->AnhUrl }}" @click="mainImage = '{{ $pet->AnhUrl }}'" :class="mainImage === '{{ $pet->AnhUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
+                            @php
+                                $thumbs = is_array($pet->Thu_vien_anh) ? $pet->Thu_vien_anh : [];
+                                $slicedThumbs = array_slice($thumbs, 0, 3);
+                                $padCount = 3 - count($slicedThumbs);
+                            @endphp
+                            @foreach($slicedThumbs as $thumb)
+                                @php
+                                    $thumbUrl = Str::startsWith($thumb, ['http', '/']) ? $thumb : Storage::url($thumb);
+                                @endphp
+                                <img src="{{ $thumbUrl }}" @click="mainImage = '{{ $thumbUrl }}'" :class="mainImage === '{{ $thumbUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
+                            @endforeach
+                            @for($i = 0; $i < $padCount; $i++)
+                                <img src="{{ $pet->AnhUrl }}" @click="mainImage = '{{ $pet->AnhUrl }}'" :class="mainImage === '{{ $pet->AnhUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
+                            @endfor
+                        </div>
+
+                        <!-- Zoom Modal -->
+                        <div x-show="isZoomed" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" @keydown.escape.window="isZoomed = false">
+                            <button @click="isZoomed = false" class="absolute top-6 right-6 text-white hover:text-gray-300">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                            <img :src="mainImage" class="max-w-[90vw] max-h-[90vh] object-contain rounded-xl" @click.away="isZoomed = false">
                         </div>
                     </div>
 
@@ -259,9 +275,9 @@
                         </div>
                     </div>
 
-                    <button class="w-full bg-white hover:bg-slate-50 text-[#1D2B53] border border-gray-200 font-black py-3 rounded-xl transition text-[12px]">
+                    <a href="{{ route('home') }}#adoption-process" class="w-full inline-block text-center bg-white hover:bg-slate-50 text-[#1D2B53] border border-gray-200 font-black py-3 rounded-xl transition text-[12px]">
                         Xem chi tiết quy trình
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Support Card -->
