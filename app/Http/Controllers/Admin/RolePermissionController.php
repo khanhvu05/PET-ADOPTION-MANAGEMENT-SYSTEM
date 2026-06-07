@@ -14,6 +14,15 @@ class RolePermissionController extends Controller
     public function updatePermissions(Request $request, Role $role)
     {
         $permissions = $request->input('permissions', []);
+        
+        // Đảm bảo các permission này tồn tại trong DB với guard 'web' để tránh lỗi Spatie cache hoặc thiếu DB
+        foreach ($permissions as $permName) {
+            Permission::firstOrCreate(['name' => $permName, 'guard_name' => 'web']);
+        }
+
+        // Xóa cache của Spatie để tránh lỗi PermissionDoesNotExist do cache cũ
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
         $role->syncPermissions($permissions);
 
         return back()->with('success', 'Đã cập nhật quyền thành công!');
