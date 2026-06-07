@@ -199,7 +199,7 @@ class InterviewScheduleController extends Controller
                         \Illuminate\Support\Facades\Mail::to($application->nguoiDung->Email)
                             ->send(new \App\Mail\InterviewPassedEmail($application));
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     \Illuminate\Support\Facades\Log::warning('Không gửi được email interview passed: ' . $e->getMessage());
                 }
             } else {
@@ -214,7 +214,7 @@ class InterviewScheduleController extends Controller
                         \Illuminate\Support\Facades\Mail::to($application->nguoiDung->Email)
                             ->send(new \App\Mail\ApplicationRejectedEmail($application, $ghiChu));
                     }
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     \Illuminate\Support\Facades\Log::warning('Không gửi được email application rejected: ' . $e->getMessage());
                 }
             }

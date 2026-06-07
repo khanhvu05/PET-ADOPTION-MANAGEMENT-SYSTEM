@@ -14,6 +14,10 @@ class UserAdoptionController extends Controller
 {
     public function index()
     {
+        if (Auth::check() && Auth::user()->hasAnyRole(['admin', 'staff'])) {
+            return redirect()->route('home')->with('error', 'Tài khoản quản trị không sử dụng chức năng này.');
+        }
+
         $applications = AdoptionApplication::with(['thuCung', 'interviewSlot'])
             ->where('Ma_nguoi_dung', Auth::id())
             ->orderByDesc('Ngay_tao')
@@ -32,10 +36,14 @@ class UserAdoptionController extends Controller
 
     public function scheduleInterview(Request $request, $id)
     {
+        if (Auth::check() && Auth::user()->hasAnyRole(['admin', 'staff'])) {
+            return redirect()->route('home')->with('error', 'Tài khoản quản trị không sử dụng chức năng này.');
+        }
+
         $application = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
             ->findOrFail($id);
 
-        if ($application->Trang_thai !== 'approved' || $application->interview_slot_id !== null) {
+        if ($application->Trang_thai !== 'cho_xac_nhan_don' || $application->interview_slot_id !== null) {
             return back()->with('error', 'Đơn của bạn không trong trạng thái chờ xếp lịch.');
         }
 
@@ -69,10 +77,15 @@ class UserAdoptionController extends Controller
                     'Trang_thai' => 'cho_phong_van', // MỚI: Chuyển đơn sang chờ phỏng vấn
                 ]);
 
-                // MỚI: Đổi trạng thái thú cưng sang chờ phỏng vấn
-                if ($application->thuCung) {
-                    $application->thuCung->update(['Trang_thai' => 'cho_phong_van']);
-                }
+                // MỚI: Tạo lịch phỏng vấn chính thức để Admin quản lý
+                \App\Models\InterviewSchedule::firstOrCreate(
+                    ['Ma_don' => $application->Ma_don],
+                    [
+                        'Ma_slot' => $slot->Ma_slot,
+                        'Ket_qua_phong_van' => null,
+                        'Ghi_chu' => 'Người dùng tự đăng ký lịch'
+                    ]
+                );
                 
                 // Load lại slot để gửi email
                 $application->load(['interviewSlot', 'thuCung']);

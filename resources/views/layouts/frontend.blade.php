@@ -11,6 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -161,9 +162,11 @@
                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 hover:bg-orange-50 hover:text-primary transition-colors">
                         <i data-lucide="user" class="w-4 h-4"></i> Hồ sơ cá nhân
                     </a>
+                    @if(!auth()->user()->hasAnyRole(['admin', 'staff']))
                     <a href="{{ route('frontend.user.adoptions.index') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 hover:bg-orange-50 hover:text-primary transition-colors">
                         <i data-lucide="history" class="w-4 h-4"></i> Lịch sử nhận nuôi
                     </a>
+                    @endif
                     @if(auth()->user()->isStaff())
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Quản trị viên

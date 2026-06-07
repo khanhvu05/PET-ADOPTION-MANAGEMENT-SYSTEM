@@ -60,21 +60,44 @@ class LoginRequest extends FormRequest
 
         // Kiểm tra tài khoản bị khóa
         if ($user && $user->Trang_thai === 'bi_khoa') {
-            RateLimiter::hit($this->throttleKey());
+            RateLimiter::hit($this->throttleKey(), 300);
 
             throw ValidationException::withMessages([
-                'email' => 'Tài khoản của bạn đã bị khóa bởi quản trị viên vì vi phạm chính sách hoặc lý do bảo mật.',
+                'email' => 'Tài khoản của bạn đã bị khóa bởi quản trị viên.',
             ]);
         }
 
         if (! Auth::attempt(['Email' => $this->email, 'password' => $this->password], $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+            RateLimiter::hit($this->throttleKey(), 300); // Khóa 5 phút (300 giây) nếu vượt quá số lần
+
+            if ($user) {
+                $lockFlagKey = 'lockout_flag_' . $user->Ma_nguoi_dung;
+
+                if (\Illuminate\Support\Facades\Cache::has($lockFlagKey)) {
+                    // Khóa tài khoản vĩnh viễn
+                    $user->update(['Trang_thai' => 'bi_khoa']);
+                    \Illuminate\Support\Facades\Cache::forget($lockFlagKey);
+                    RateLimiter::clear($this->throttleKey());
+
+                    throw ValidationException::withMessages([
+                        'email' => 'Tài khoản đã bị khóa do đăng nhập sai nhiều lần sau thời gian chờ.',
+                    ]);
+                }
+
+                // Nếu đạt 5 lần sai, đánh dấu cờ chờ khóa vĩnh viễn nếu sai tiếp
+                if (RateLimiter::attempts($this->throttleKey()) >= 5) {
+                    \Illuminate\Support\Facades\Cache::put($lockFlagKey, true, now()->addHours(24));
+                }
+            }
 
             throw ValidationException::withMessages([
                 'email' => 'Thông tin đăng nhập không chính xác.',
             ]);
         }
 
+        if ($user) {
+            \Illuminate\Support\Facades\Cache::forget('lockout_flag_' . $user->Ma_nguoi_dung);
+        }
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -92,12 +115,10 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $minutes = ceil($seconds / 60);
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => "Tài khoản bị khóa tạm thời do nhập sai 5 lần. Thử lại sau {$minutes} phút.",
         ]);
     }
 

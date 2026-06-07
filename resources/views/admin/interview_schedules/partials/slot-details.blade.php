@@ -49,8 +49,8 @@
                                 <td class="px-4 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0">
-                                            @if($s->donNhanNuoi->thuCung && $s->donNhanNuoi->thuCung->Hinh_anh_thu_cung)
-                                                <img src="{{ Storage::url($s->donNhanNuoi->thuCung->Hinh_anh_thu_cung) }}" class="w-full h-full object-cover">
+                                            @if($s->donNhanNuoi->thuCung && $s->donNhanNuoi->thuCung->anh_url)
+                                                <img src="{{ $s->donNhanNuoi->thuCung->anh_url }}" class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center text-slate-400">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -58,7 +58,7 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <div class="font-bold text-slate-800">{{ $s->donNhanNuoi->thuCung->Ten_thu_cung ?? 'Không rõ' }}</div>
+                                            <div class="font-bold text-slate-800">{{ $s->donNhanNuoi->thuCung->Ten ?? 'Không rõ' }}</div>
                                             <div class="text-xs text-slate-500">{{ $s->donNhanNuoi->thuCung->Giong ?? 'Giống' }} • {{ $s->donNhanNuoi->thuCung->Tuoi ?? 0 }} tuổi</div>
                                             <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[150px]">HS-{{ Carbon\Carbon::parse($s->donNhanNuoi->Ngay_tao)->format('Y') }}-{{ substr($s->donNhanNuoi->Ma_don, 0, 8) }}</div>
                                         </div>
@@ -161,8 +161,8 @@
                                 <td class="px-4 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0">
-                                            @if($p->thuCung && $p->thuCung->Hinh_anh_thu_cung)
-                                                <img src="{{ Storage::url($p->thuCung->Hinh_anh_thu_cung) }}" class="w-full h-full object-cover">
+                                            @if($p->thuCung && $p->thuCung->anh_url)
+                                                <img src="{{ $p->thuCung->anh_url }}" class="w-full h-full object-cover">
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center text-slate-400">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -170,7 +170,7 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <div class="font-bold text-slate-800">{{ $p->thuCung->Ten_thu_cung ?? 'Không rõ' }}</div>
+                                            <div class="font-bold text-slate-800">{{ $p->thuCung->Ten ?? 'Không rõ' }}</div>
                                             <div class="text-xs text-slate-500">{{ $p->thuCung->Giong ?? 'Giống' }} • {{ $p->thuCung->Tuoi ?? 0 }} tuổi</div>
                                             <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[150px]">HS-{{ Carbon\Carbon::parse($p->Ngay_tao)->format('Y') }}-{{ substr($p->Ma_don, 0, 8) }}</div>
                                         </div>
@@ -242,12 +242,12 @@
                                 <td class="px-4 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0">
-                                            @if($h->donNhanNuoi->thuCung && $h->donNhanNuoi->thuCung->Hinh_anh_thu_cung)
-                                                <img src="{{ Storage::url($h->donNhanNuoi->thuCung->Hinh_anh_thu_cung) }}" class="w-full h-full object-cover">
+                                            @if($h->donNhanNuoi->thuCung && $h->donNhanNuoi->thuCung->anh_url)
+                                                <img src="{{ $h->donNhanNuoi->thuCung->anh_url }}" class="w-full h-full object-cover">
                                             @endif
                                         </div>
                                         <div>
-                                            <div class="font-bold text-slate-800">{{ $h->donNhanNuoi->thuCung->Ten_thu_cung ?? 'Không rõ' }}</div>
+                                            <div class="font-bold text-slate-800">{{ $h->donNhanNuoi->thuCung->Ten ?? 'Không rõ' }}</div>
                                             <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[150px]">HS-{{ Carbon\Carbon::parse($h->donNhanNuoi->Ngay_tao)->format('Y') }}-{{ substr($h->donNhanNuoi->Ma_don, 0, 8) }}</div>
                                         </div>
                                     </div>

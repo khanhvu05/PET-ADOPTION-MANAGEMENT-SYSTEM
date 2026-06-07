@@ -62,18 +62,21 @@
                             <div>
                                 @php
                                     $statusClasses = [
-                                        'pending'      => 'bg-amber-50 text-amber-600 border-amber-200',
-                                        'approved'      => 'bg-green-50 text-green-600 border-green-200',
-                                        'cho_phong_van' => 'bg-blue-50 text-blue-600 border-blue-200',
+                                        'cho_duyet'         => 'bg-amber-50 text-amber-600 border-amber-200',
+                                        'cho_xac_nhan_don'  => 'bg-green-50 text-green-600 border-green-200',
+                                        'cho_phong_van'     => 'bg-blue-50 text-blue-600 border-blue-200',
+                                        'da_duyet'          => 'bg-emerald-50 text-emerald-600 border-emerald-200',
+                                        'tu_choi'           => 'bg-red-50 text-red-600 border-red-200',
+                                        'hoan_thanh'        => 'bg-purple-50 text-purple-600 border-purple-200',
                                     ];
                                     $statusClass = $statusClasses[$app->Trang_thai] ?? 'bg-gray-100 text-gray-600 border-gray-200';
                                 @endphp
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border {{ $statusClass }}">
-                                    @if($app->Trang_thai === 'pending')
+                                    @if($app->Trang_thai === 'cho_duyet')
                                         <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
-                                    @elseif($app->Trang_thai === 'approved')
+                                    @elseif(in_array($app->Trang_thai, ['cho_xac_nhan_don', 'da_duyet', 'hoan_thanh']))
                                         <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
-                                    @elseif($app->Trang_thai === 'rejected')
+                                    @elseif($app->Trang_thai === 'tu_choi')
                                         <i data-lucide="x-circle" class="w-3 h-3 mr-1"></i>
                                     @else
                                         <i data-lucide="info" class="w-3 h-3 mr-1"></i>
@@ -82,7 +85,7 @@
                                 </span>
                             </div>
                             
-                            @if($app->Trang_thai === 'approved' && !$app->interview_slot_id)
+                            @if($app->Trang_thai === 'cho_xac_nhan_don' && !$app->interview_slot_id)
                                 @if($app->han_xac_nhan_phong_van && now()->greaterThan($app->han_xac_nhan_phong_van))
                                     <div class="mt-3 p-2 bg-red-50 rounded-lg border border-red-100 text-xs text-red-600 font-medium">
                                         Đã quá hạn xác nhận lịch phỏng vấn.
@@ -116,9 +119,18 @@
                             Ngày gửi: <span class="text-gray-800">{{ $app->Ngay_tao->format('d/m/Y H:i') }}</span>
                         </span>
                         
-                        <a href="{{ route('frontend.adoptions.show', $app->Ma_thu_cung) }}" class="text-primary text-sm font-bold hover:underline">
-                            Xem thú cưng &rarr;
-                        </a>
+                        <div class="flex items-center gap-3">
+                            @if(in_array($app->Trang_thai, ['cho_duyet', 'cho_xac_nhan_don']))
+                                <form id="cancel-form-{{ $app->Ma_don }}" action="{{ route('frontend.adoptions.cancel', $app->Ma_don) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="button" onclick="confirmCancel('{{ $app->Ma_don }}')" class="text-red-500 text-sm font-bold hover:underline">Hủy đơn</button>
+                                </form>
+                            @endif
+                            <a href="{{ route('frontend.adoptions.show', $app->Ma_thu_cung) }}" class="text-primary text-sm font-bold hover:underline">
+                                Xem thú cưng &rarr;
+                            </a>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -130,4 +142,30 @@
         </div>
     @endif
 </div>
+
+@section('scripts')
+<script>
+    function confirmCancel(appId) {
+        Swal.fire({
+            title: 'Hủy đơn đăng ký?',
+            text: "Bạn có chắc chắn muốn hủy đơn đăng ký nhận nuôi này không? Hành động này không thể hoàn tác.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6e7881',
+            confirmButtonText: 'Đồng ý, hủy đơn!',
+            cancelButtonText: 'Đóng',
+            customClass: {
+                popup: 'rounded-[20px]',
+                confirmButton: 'rounded-[10px] px-6 py-2.5 font-bold',
+                cancelButton: 'rounded-[10px] px-6 py-2.5 font-bold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('cancel-form-' + appId).submit();
+            }
+        });
+    }
+</script>
+@endsection
 @endsection

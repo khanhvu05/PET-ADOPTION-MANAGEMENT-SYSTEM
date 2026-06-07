@@ -209,7 +209,11 @@
                     <p class="text-[13px] text-gray-500 font-medium mb-6">Hãy yêu thương và cho bé một mái ấm hạnh phúc!</p>
                     
                     @if($pet->Trang_thai == 'san_sang')
-                        @if($existingApplication)
+                        @if(Auth::check() && Auth::user()->hasAnyRole(['admin', 'staff']))
+                            <div class="w-full bg-red-100 text-red-600 font-bold py-3.5 px-4 rounded-xl text-center shadow-sm text-[13px] mb-4">
+                                Tài khoản quản trị không thể nhận nuôi
+                            </div>
+                        @elseif($existingApplication)
                             <div class="w-full bg-orange-100 text-orange-600 font-bold py-3.5 px-4 rounded-xl text-center shadow-sm text-[13px] mb-4">
                                 Bạn đã gửi đơn nhận nuôi bé này
                             </div>

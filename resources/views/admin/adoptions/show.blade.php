@@ -38,14 +38,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Chỉnh sửa
                 </a>
-                <form action="{{ route('admin.adoptions.destroy', $application->Ma_don) }}" method="POST" class="inline confirm-delete">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="px-4 py-2 bg-[#e75e5b] text-white font-medium text-sm rounded-[10px] hover:bg-red-500 transition-colors flex items-center gap-2 shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        Xóa
-                    </button>
-                </form>
+
             </div>
         </div>
 

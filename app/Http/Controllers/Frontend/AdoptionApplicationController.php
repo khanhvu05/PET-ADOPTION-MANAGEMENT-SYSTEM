@@ -19,6 +19,13 @@ class AdoptionApplicationController extends Controller
      */
     public function create($petId)
     {
+        // Chặn admin và staff đăng ký nhận nuôi
+        if (Auth::check() && Auth::user()->hasAnyRole(['admin', 'staff'])) {
+            return redirect()
+                ->route('frontend.adoptions.show', $petId)
+                ->with('error', "Tài khoản quản trị không thể đăng ký nhận nuôi. Vui lòng sử dụng tài khoản cá nhân.");
+        }
+
         $pet = Pet::findOrFail($petId);
 
         // Kiểm tra pet còn sẵn sàng không
@@ -31,7 +38,7 @@ class AdoptionApplicationController extends Controller
         // Kiểm tra user đã có đơn chờ duyệt chưa
         $existingApplication = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
             ->where('Ma_thu_cung', $petId)
-            ->whereIn('Trang_thai', ['pending', 'approved'])
+            ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'da_duyet'])
             ->first();
 
         if ($existingApplication) {
@@ -42,7 +49,7 @@ class AdoptionApplicationController extends Controller
 
         // Kiểm tra giới hạn số lượng đơn nhận nuôi của user (tối đa 3 đơn đang xử lý hoặc đã duyệt)
         $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
-            ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
+            ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
             ->count();
             
         if ($activeApplicationsCount >= 3) {
@@ -64,6 +71,13 @@ class AdoptionApplicationController extends Controller
      */
     public function store(Request $request, $petId)
     {
+        // Chặn admin và staff đăng ký nhận nuôi
+        if (Auth::check() && Auth::user()->hasAnyRole(['admin', 'staff'])) {
+            return redirect()
+                ->route('frontend.adoptions.show', $petId)
+                ->with('error', "Tài khoản quản trị không thể đăng ký nhận nuôi. Vui lòng sử dụng tài khoản cá nhân.");
+        }
+
         // Validate dữ liệu cơ bản
         $validated = $request->validate([
             'Ho_ten'          => 'required|string|max:100',
@@ -112,7 +126,7 @@ class AdoptionApplicationController extends Controller
                 // Kiểm tra trùng đơn (race condition)
                 $duplicate = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
                     ->where('Ma_thu_cung', $petId)
-                    ->whereIn('Trang_thai', ['pending', 'approved'])
+                    ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'da_duyet'])
                     ->lockForUpdate()
                     ->first();
 
@@ -122,7 +136,7 @@ class AdoptionApplicationController extends Controller
 
                 // Kiểm tra giới hạn (tối đa 3 đơn)
                 $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
-                    ->whereIn('Trang_thai', ['pending', 'approved', 'cho_phong_van'])
+                    ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
                     ->lockForUpdate()
                     ->count();
 
@@ -142,7 +156,7 @@ class AdoptionApplicationController extends Controller
                     'Kinh_nghiem'     => $validated['Kinh_nghiem'] ?? null,
                     'Ly_do_nhan_nuoi' => $validated['Ly_do_nhan_nuoi'],
                     'Cam_ket'         => true,
-                    'Trang_thai'      => 'pending',
+                    'Trang_thai'      => 'cho_duyet',
                 ]);
 
                 // Lưu câu trả lời
@@ -199,7 +213,7 @@ class AdoptionApplicationController extends Controller
     }
 
     /**
-     * User hủy đơn của chính mình (chỉ khi pending)
+     * User hủy đơn của chính mình (chỉ khi cho_duyet)
      */
     public function cancel($id)
     {
@@ -207,14 +221,17 @@ class AdoptionApplicationController extends Controller
             ->where('Ma_nguoi_dung', Auth::id())
             ->firstOrFail();
 
-        if ($application->Trang_thai !== 'pending') {
-            return back()->with('error', 'Chỉ có thể hủy đơn đang ở trạng thái "Chờ duyệt".');
+        if (!in_array($application->Trang_thai, ['cho_duyet', 'cho_xac_nhan_don'])) {
+            return back()->with('error', 'Chỉ có thể hủy đơn trước khi xếp lịch phỏng vấn.');
         }
 
-        $application->update(['Trang_thai' => 'rejected']);
+        $application->update([
+            'Trang_thai' => 'tu_choi',
+            'Ghi_chu_admin' => 'Người dùng tự hủy đơn.'
+        ]);
 
         return redirect()
             ->route('frontend.user.adoptions.index')
-            ->with('success', 'Đã hủy đơn nhận nuôi thành công.');
+            ->with('success', 'Đã hủy đơn đăng ký nhận nuôi thành công.');
     }
 }

@@ -343,11 +343,25 @@ class AdoptionController extends Controller
     private function completeApplication(AdoptionApplication $application, ?string $ghiChu)
     {
         try {
-            $application->update([
-                'Trang_thai'    => 'hoan_thanh',
-                'Ghi_chu_admin' => $ghiChu,
-            ]);
-            // Trạng thái pet đã là da_nhan_nuoi từ bước 5, nên không cần sửa.
+            DB::transaction(function () use ($application, $ghiChu) {
+                $application->update([
+                    'Trang_thai'    => 'hoan_thanh',
+                    'Ghi_chu_admin' => $ghiChu,
+                ]);
+                
+                if ($application->thuCung) {
+                    $application->thuCung->update(['Trang_thai' => 'da_nhan_nuoi']);
+                    
+                    // Reject other active applications
+                    AdoptionApplication::where('Ma_thu_cung', $application->thuCung->Ma_thu_cung)
+                        ->where('Ma_don', '!=', $application->Ma_don)
+                        ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
+                        ->update([
+                            'Trang_thai' => 'tu_choi',
+                            'Ghi_chu_admin' => 'Hệ thống tự động từ chối: Bé thú cưng đã được nhận nuôi thành công bởi người khác.'
+                        ]);
+                }
+            });
             
             return back()->with('success', 'Đã xác nhận bàn giao thành công. Hoàn tất quy trình!');
         } catch (\Exception $e) {
