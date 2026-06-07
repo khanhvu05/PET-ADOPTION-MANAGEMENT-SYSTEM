@@ -1,12 +1,12 @@
 <x-admin-layout>
     <x-slot name="header">
         <a href="{{ route('dashboard') }}" class="hover:text-sidebar-blue transition-colors flex items-center gap-1.5 text-slate-500">
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <i data-lucide="home" class="w-4 h-4"></i>
             Tổng Quan
         </a>
-        <svg class="w-4 h-4 mx-1 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <i data-lucide="chevron-right" class="w-4 h-4 mx-1 text-slate-400"></i>
         <a href="{{ route('admin.pets.index') }}" class="hover:text-sidebar-blue transition-colors text-slate-500">Thú Cưng</a>
-        <svg class="w-4 h-4 mx-1 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <i data-lucide="chevron-right" class="w-4 h-4 mx-1 text-slate-400"></i>
         <span class="text-slate-800 font-semibold">Thêm Thú Cưng</span>
     </x-slot>
 
@@ -19,11 +19,11 @@
             </div>
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.pets.index') }}" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    <i data-lucide="x" class="w-4 h-4"></i>
                     Hủy
                 </a>
                 <button type="submit" form="create-pet-form" class="px-5 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center gap-2">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    <i data-lucide="save" class="w-4 h-4"></i>
                     Lưu Thú Cưng
                 </button>
             </div>
@@ -31,7 +31,7 @@
 
         @if ($errors->any())
             <div class="bg-red-50/80 border border-red-100 rounded-2xl p-4 flex gap-3 items-start">
-                <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                <i data-lucide="alert-circle" class="w-5 h-5 text-red-500 shrink-0 mt-0.5"></i>
                 <ul class="text-sm text-red-700 space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -46,7 +46,7 @@
             <!-- 1. Thông tin cơ bản -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10 border-b border-slate-200/60">
                 <div class="lg:col-span-1">
-                    <h3 class="text-base font-semibold text-slate-800">Thông tin cơ bản</h3>
+                    <h3 class="text-base font-semibold text-slate-800">Thông vị trí nội bộ</h3>
                     <p class="text-[13.5px] text-slate-500 mt-2 leading-relaxed">Tên, giống loài và các đặc điểm nhận dạng chính. Thông tin này sẽ hiển thị nổi bật trên thẻ thú cưng.</p>
                 </div>
                 <div class="lg:col-span-2">
@@ -67,7 +67,7 @@
                                         <option value="meo" {{ old('Loai') === 'meo' ? 'selected' : '' }}>Mèo</option>
                                         <option value="khac" {{ old('Loai') === 'khac' ? 'selected' : '' }}>Khác</option>
                                     </select>
-                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                             <!-- Giống loài -->
@@ -109,7 +109,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <!-- Ngày sinh -->
                             <div>
-                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Ngày sinh / Tuổi <span class="text-red-500">*</span></label>
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Ngày sinh / Tiếp nhận <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <input type="date" name="Ngay_tiep_nhan" value="{{ old('Ngay_tiep_nhan', date('Y-m-d')) }}" max="{{ date('Y-m-d') }}" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 transition-all @error('Ngay_tiep_nhan') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
                                 </div>
@@ -125,7 +125,7 @@
                                         <option value="truong_thanh" {{ old('Nhom_tuoi') === 'truong_thanh' ? 'selected' : '' }}>Trưởng thành (1-7 tuổi)</option>
                                         <option value="gia" {{ old('Nhom_tuoi') === 'gia' ? 'selected' : '' }}>Già (> 7 tuổi)</option>
                                     </select>
-                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6-6-6"/></svg>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                             <!-- Cân nặng -->
@@ -175,10 +175,9 @@
                                 <div class="relative">
                                     <select name="Trang_thai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Trang_thai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
                                         <option value="san_sang" {{ old('Trang_thai', 'san_sang') === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
-
                                         <option value="chua_san_sang" {{ old('Trang_thai') === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
                                     </select>
-                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6-6-6"/></svg>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                         </div>
@@ -201,7 +200,7 @@
                                 <div class="relative w-36 h-36 shrink-0 group">
                                     <input type="file" id="anh_upload" name="anh_upload" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(this)">
                                     <label for="anh_upload" id="upload-zone" class="absolute inset-0 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 hover:border-sidebar-blue/50 transition-all z-10">
-                                        <svg class="w-8 h-8 text-slate-400 mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                                        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400 mb-2"></i>
                                         <span class="text-xs font-medium text-slate-500">Tải ảnh lên</span>
                                     </label>
                                     
@@ -209,10 +208,10 @@
                                         <img id="preview-img" src="" class="w-full h-full object-cover" alt="Preview">
                                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                             <label for="anh_upload" class="p-2 bg-white/20 hover:bg-white text-white hover:text-slate-900 rounded-full cursor-pointer backdrop-blur-sm transition-colors">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                                                <i data-lucide="edit-2" class="w-4 h-4"></i>
                                             </label>
                                             <button type="button" onclick="clearImage()" class="p-2 bg-white/20 hover:bg-red-500 text-white rounded-full cursor-pointer backdrop-blur-sm transition-colors">
-                                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                                <i data-lucide="x" class="w-4 h-4"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -230,7 +229,7 @@
                             <h4 class="text-[13px] font-medium text-slate-700 mb-3">Thư viện ảnh phụ (Hiển thị chi tiết)</h4>
                             <div class="flex flex-col gap-4">
                                 <label for="thu_vien_anh_upload" class="w-full py-6 border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 hover:border-sidebar-blue/50 transition-all flex flex-col items-center justify-center">
-                                    <svg class="w-6 h-6 text-slate-400 mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                    <i data-lucide="images" class="w-6 h-6 text-slate-400 mb-2"></i>
                                     <span class="text-[13px] font-medium text-slate-600">Click để chọn nhiều ảnh phụ</span>
                                     <span class="text-xs text-slate-400 mt-1">Giúp hiển thị đa góc độ của thú cưng</span>
                                     <input type="file" id="thu_vien_anh_upload" name="thu_vien_anh_upload[]" accept="image/jpeg,image/png,image/webp" multiple class="hidden" onchange="previewMultipleImages(this)">
@@ -310,7 +309,7 @@
             <!-- 5. Hành chính & Nội bộ -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-1">
-                    <h3 class="text-base font-semibold text-slate-800">Thông vị trí nội bộ</h3>
+                    <h3 class="text-base font-semibold text-slate-800">Thông tin bổ sung</h3>
                     <p class="text-[13.5px] text-slate-500 mt-2 leading-relaxed">Vị trí lưu trú, phí hỗ trợ nhận nuôi và phân công nhân viên quản lý hồ sơ này.</p>
                 </div>
                 <div class="lg:col-span-2">
@@ -325,7 +324,7 @@
                                         <option value="noi_tru" {{ old('Vi_tri') === 'noi_tru' ? 'selected' : '' }}>Trạm cứu hộ (Nội trú)</option>
                                         <option value="phong_kham" {{ old('Vi_tri') === 'phong_kham' ? 'selected' : '' }}>Phòng khám thú y</option>
                                     </select>
-                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6-6-6"/></svg>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                             <!-- Phí -->
@@ -343,7 +342,7 @@
                                 </div>
                                 <div>
                                     <label for="Noi_bat" class="block text-[13.5px] font-medium text-slate-800 cursor-pointer">Hiển thị nổi bật trên trang chủ</label>
-                                    <p class="text-xs text-slate-500 mt-0.5">Đánh dấu nếu đây là trường hợp cần ưu tiên tìm chủ gấp.</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">Đánh dấu nếu đây là trường hợp cần ưu tiên tìm chủ gấp. <span class="font-bold text-orange-500 ml-1">Lưu ý: Chỉ thực sự hiển thị trên trang chủ khi Trạng thái là "Sẵn sàng nhận nuôi".</span></p>
                                 </div>
                             </div>
                             <!-- Nhân viên -->
@@ -358,7 +357,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6-6-6"/></svg>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                         </div>
@@ -368,7 +367,7 @@
             
             <div class="flex items-center justify-end gap-3 pt-6">
                 <button type="submit" form="create-pet-form" class="px-6 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center gap-2">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    <i data-lucide="save" class="w-4 h-4"></i>
                     Xác nhận Lưu
                 </button>
             </div>
@@ -409,6 +408,7 @@
                 };
                 reader.readAsDataURL(file);
             });
+            container.classList.remove('empty:hidden');
         }
     }
 
