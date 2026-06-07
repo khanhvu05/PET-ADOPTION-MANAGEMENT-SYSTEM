@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
+        // Cấp toàn quyền cho role 'admin' bỏ qua mọi kiểm tra permission
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            return $user->hasRole('admin') ? true : null;
+        });
+
         // Đăng ký custom transport cho Brevo API để lách tường lửa Render
         Mail::extend('brevo', function (array $config) {
             $factory = new BrevoTransportFactory();

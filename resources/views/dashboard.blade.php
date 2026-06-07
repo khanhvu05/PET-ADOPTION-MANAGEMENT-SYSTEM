@@ -117,11 +117,14 @@
                             <td class="py-3 px-5">
                                 @php
                                     $statusColors = [
-                                        'pending' => 'bg-amber-500/10 text-amber-600 border-amber-500/20 dot-amber-500',
-                                        'approved' => 'bg-green-500/10 text-green-600 border-green-500/20 dot-green-500',
-                                        'rejected' => 'bg-red-500/10 text-red-600 border-red-500/20 dot-red-500',
-                                        'cho_phong_van' => 'bg-blue-500/10 text-blue-600 border-blue-500/20 dot-blue-500',
-                                        'completed' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dot-emerald-500',
+                                        'cho_xac_nhan_don' => 'bg-amber-500/10 text-amber-600 border-amber-500/20 dot-amber-500',
+                                        'cho_duyet' => 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500',
+                                        'da_xac_nhan' => 'bg-blue-500/10 text-blue-600 border-blue-500/20 dot-blue-500',
+                                        'cho_phong_van' => 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20 dot-indigo-500',
+                                        'da_doi_lich' => 'bg-purple-500/10 text-purple-600 border-purple-500/20 dot-purple-500',
+                                        'da_duyet' => 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dot-emerald-500',
+                                        'tu_choi' => 'bg-red-500/10 text-red-600 border-red-500/20 dot-red-500',
+                                        'huy' => 'bg-stone-500/10 text-stone-600 border-stone-500/20 dot-stone-500',
                                     ];
                                     $colorClass = $statusColors[$app->Trang_thai] ?? 'bg-slate-500/10 text-slate-600 border-slate-500/20 dot-slate-500';
                                     $parts = explode(' dot-', $colorClass);
@@ -129,11 +132,14 @@
                                     $dotColor = 'bg-' . ($parts[1] ?? 'slate-500');
 
                                     $statusLabels = [
-                                        'pending' => 'Chờ xử lý',
-                                        'approved' => 'Đã duyệt',
-                                        'rejected' => 'Từ chối',
+                                        'cho_xac_nhan_don' => 'Chờ xác nhận đơn',
+                                        'cho_duyet' => 'Chờ duyệt',
+                                        'da_xac_nhan' => 'Đã xác nhận',
                                         'cho_phong_van' => 'Chờ phỏng vấn',
-                                        'completed' => 'Hoàn tất'
+                                        'da_doi_lich' => 'Đã đổi lịch',
+                                        'da_duyet' => 'Đã duyệt',
+                                        'tu_choi' => 'Từ chối',
+                                        'huy' => 'Hủy'
                                     ];
                                     $label = $statusLabels[$app->Trang_thai] ?? $app->Trang_thai;
                                 @endphp
