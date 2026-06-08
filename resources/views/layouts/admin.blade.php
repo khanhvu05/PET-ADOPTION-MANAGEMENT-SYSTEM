@@ -99,12 +99,72 @@
                             </div>
                         </div>
 
-                        <!-- User Avatar -->
-                        <button class="w-10 h-10 rounded-[1rem] bg-slate-100 border-0 ring-2 ring-transparent hover:ring-orange-brand/30 flex items-center justify-center overflow-hidden shrink-0 transition-all shadow-md cursor-pointer relative group">
-                            <!-- Placeholder image or initial -->
-                            <span class="text-sm font-bold text-slate-600 group-hover:text-orange-brand transition-colors">AD</span>
-                            <div class="absolute inset-0 rounded-[1rem] ring-1 ring-inset ring-slate-900/10"></div>
-                        </button>
+                        <!-- User Menu & Avatar -->
+                        <div class="flex items-center gap-3 relative" x-data="{ userMenuOpen: false }">
+                            <div class="hidden md:flex flex-col items-end cursor-pointer" @click="userMenuOpen = !userMenuOpen">
+                                <span class="text-sm font-semibold text-slate-700">{{ Auth::user()->Ho_ten ?? 'Admin' }}</span>
+                                <span class="text-xs text-slate-500">{{ Auth::user()?->isAdmin() ? 'Quản trị viên' : (Auth::user()?->isStaff() ? 'Nhân viên' : 'Người dùng') }}</span>
+                            </div>
+                            <button @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-[1rem] bg-slate-100 border-0 ring-2 ring-transparent hover:ring-orange-brand/30 flex items-center justify-center overflow-hidden shrink-0 transition-all shadow-md cursor-pointer relative group">
+                                @if(Auth::user() && Auth::user()->Anh_dai_dien)
+                                    <img src="{{ asset('storage/' . Auth::user()->Anh_dai_dien) }}" alt="Avatar" class="w-full h-full object-cover">
+                                @else
+                                    @php
+                                        $initials = 'AD';
+                                        if(Auth::user()) {
+                                            if(Auth::user()->Ho_ten) {
+                                                $nameParts = explode(' ', trim(Auth::user()->Ho_ten));
+                                                $lastName = end($nameParts);
+                                                $initials = mb_strtoupper(mb_substr($lastName, 0, 1, 'UTF-8'), 'UTF-8');
+                                                if (count($nameParts) > 1) {
+                                                    $firstName = $nameParts[0];
+                                                    $initials = mb_strtoupper(mb_substr($firstName, 0, 1, 'UTF-8'), 'UTF-8') . mb_strtoupper(mb_substr($lastName, 0, 1, 'UTF-8'), 'UTF-8');
+                                                }
+                                            } else {
+                                                if (Auth::user()->isAdmin()) {
+                                                    $initials = 'AD';
+                                                } else if (Auth::user()->isStaff()) {
+                                                    $initials = 'NV';
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    <span class="text-sm font-bold text-slate-600 group-hover:text-orange-brand transition-colors">{{ $initials }}</span>
+                                @endif
+                                <div class="absolute inset-0 rounded-[1rem] ring-1 ring-inset ring-slate-900/10"></div>
+                            </button>
+
+                            <!-- User Dropdown Menu -->
+                            <div x-show="userMenuOpen" @click.away="userMenuOpen = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 translate-y-1"
+                                 x-transition:enter-end="opacity-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 translate-y-0"
+                                 x-transition:leave-end="opacity-0 translate-y-1"
+                                 class="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50"
+                                 style="display: none;">
+                                 <div class="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+                                     <p class="text-xs text-slate-500">Đăng nhập với tư cách</p>
+                                     <p class="text-sm font-medium text-slate-900 truncate">{{ Auth::user()->Email ?? 'admin@example.com' }}</p>
+                                 </div>
+                                 <div class="py-1">
+                                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-orange-brand transition-colors">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                         Hồ sơ cá nhân
+                                     </a>
+                                 </div>
+                                 <div class="py-1 border-t border-slate-100">
+                                     <form method="POST" action="{{ route('logout') }}">
+                                         @csrf
+                                         <button type="submit" class="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                             Đăng xuất
+                                         </button>
+                                     </form>
+                                 </div>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
