@@ -217,6 +217,10 @@
                             <div class="w-full bg-orange-100 text-orange-600 font-bold py-3.5 px-4 rounded-xl text-center shadow-sm text-[13px] mb-4">
                                 Bạn đã gửi đơn nhận nuôi bé này
                             </div>
+                        @elseif(isset($reachedLimit) && $reachedLimit)
+                            <div class="w-full bg-red-100 text-red-600 font-bold py-3.5 px-4 rounded-xl text-center shadow-sm text-[13px] mb-4">
+                                Bạn đã đạt giới hạn 3 đơn đang xử lý
+                            </div>
                         @else
                             <a href="{{ route('frontend.adoptions.create', $pet->Ma_thu_cung) }}" class="w-full bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.2)] hover:-translate-y-1 mb-4 text-[13px]">
                                 <i data-lucide="heart" class="w-4 h-4"></i>

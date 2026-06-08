@@ -77,15 +77,24 @@ class PetController extends Controller
         $pet = Pet::with(['nguoiPhuTrach', 'lichSuTiemChung'])
             ->findOrFail($id);
 
-        // Kiểm tra xem user đã có đơn chờ duyệt cho bé này chưa
+        // Kiểm tra xem user đã có đơn chờ duyệt cho bé này chưa và có bị giới hạn 3 đơn không
         $existingApplication = null;
+        $reachedLimit = false;
         if (auth()->check()) {
             $existingApplication = $pet->donNhanNuoi()
                 ->where('Ma_nguoi_dung', auth()->id())
-                ->whereIn('Trang_thai', ['pending', 'approved'])
+                ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
                 ->first();
+
+            $activeCount = \App\Models\AdoptionApplication::where('Ma_nguoi_dung', auth()->id())
+                ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
+                ->count();
+                
+            if ($activeCount >= 3) {
+                $reachedLimit = true;
+            }
         }
 
-        return view('frontend.adoptions.show', compact('pet', 'existingApplication'));
+        return view('frontend.adoptions.show', compact('pet', 'existingApplication', 'reachedLimit'));
     }
 }

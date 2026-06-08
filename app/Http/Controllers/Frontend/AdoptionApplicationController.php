@@ -47,7 +47,7 @@ class AdoptionApplicationController extends Controller
                 ->with('warning', "Bạn đã gửi đơn nhận nuôi bé {$pet->Ten} rồi. Vui lòng chờ xét duyệt.");
         }
 
-        // Kiểm tra giới hạn số lượng đơn nhận nuôi của user (tối đa 3 đơn đang xử lý hoặc đã duyệt)
+        // Kiểm tra giới hạn số lượng đơn nhận nuôi của user (tối đa 3 đơn đang xử lý)
         $activeApplicationsCount = AdoptionApplication::where('Ma_nguoi_dung', Auth::id())
             ->whereIn('Trang_thai', ['cho_duyet', 'cho_xac_nhan_don', 'cho_phong_van', 'da_duyet'])
             ->count();
@@ -55,9 +55,8 @@ class AdoptionApplicationController extends Controller
         if ($activeApplicationsCount >= 3) {
             return redirect()
                 ->route('frontend.adoptions.show', $petId)
-                ->with('error', "Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý hoặc đã duyệt). Vui lòng hoàn tất các đơn hiện tại trước khi nhận nuôi thêm.");
+                ->with('error', "Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý). Vui lòng hoàn tất các đơn hiện tại trước khi nhận nuôi thêm.");
         }
-
         // Load câu hỏi từ DB
         $questions = AdoptionQuestion::where('Hoat_dong', true)
             ->orderBy('Thu_tu')
@@ -79,7 +78,7 @@ class AdoptionApplicationController extends Controller
         }
 
         // Validate dữ liệu cơ bản
-        $validated = $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'Ho_ten'          => 'required|string|max:100',
             'So_dien_thoai'   => ['required', 'string', 'regex:/^(0|\+84)[0-9]{8,9}$/'],
             'Dia_chi'         => 'required|string|max:500',
@@ -106,11 +105,15 @@ class AdoptionApplicationController extends Controller
 
         foreach ($questions as $question) {
             if (empty($answers[$question->Ma_cau_hoi])) {
-                return back()
-                    ->withInput()
-                    ->withErrors(["answers.{$question->Ma_cau_hoi}" => "Câu hỏi \"{$question->Noi_dung}\" là bắt buộc."]);
+                $validator->errors()->add("answers.{$question->Ma_cau_hoi}", "Câu hỏi \"{$question->Noi_dung}\" là bắt buộc.");
             }
         }
+
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator);
+        }
+
+        $validated = $validator->validated();
 
         try {
             $application = DB::transaction(function () use ($validated, $petId, $answers) {
@@ -141,7 +144,7 @@ class AdoptionApplicationController extends Controller
                     ->count();
 
                 if ($activeApplicationsCount >= 3) {
-                    throw new \Exception("Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý hoặc đã duyệt).");
+                    throw new \Exception("Bạn đã đạt giới hạn (tối đa 3 đơn nhận nuôi đang xử lý).");
                 }
 
                 // Tạo đơn

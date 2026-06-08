@@ -6,6 +6,10 @@
     <div class="max-w-[1200px] mx-auto px-4 md:px-6" x-data="{ 
         step: {{ $errors->has('Cam_ket') ? 3 : ($errors->hasAny(['Ly_do_nhan_nuoi']) || collect($errors->keys())->contains(fn($k) => str_starts_with($k, 'answers.')) ? 2 : 1) }},
         familyCount: 4,
+        errors: {
+            step1: {},
+            step2: {}
+        },
         form: {
             name: '{{ old('Ho_ten', Auth::user()->Ho_ten ?? '') }}',
             email: '{{ Auth::user()->Email ?? '' }}',
@@ -17,6 +21,50 @@
             otherPets: 'Không',
             kids: 'Không',
             reason: '{{ old('Ly_do_nhan_nuoi', '') }}'
+        },
+        validateStep1() {
+            this.errors.step1 = {};
+            if (!this.form.name.trim()) this.errors.step1.name = 'Vui lòng nhập họ tên.';
+            if (!this.form.phone.trim()) {
+                this.errors.step1.phone = 'Vui lòng nhập số điện thoại.';
+            } else if (!/^(0|\+84)[0-9]{8,9}$/.test(this.form.phone.trim())) {
+                this.errors.step1.phone = 'Số điện thoại không hợp lệ.';
+            }
+            if (!this.form.address.trim()) this.errors.step1.address = 'Vui lòng nhập địa chỉ.';
+            
+            if (Object.keys(this.errors.step1).length === 0) {
+                this.step = 2;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        },
+        validateStep2() {
+            this.errors.step2 = {};
+            if (!this.form.reason.trim() || this.form.reason.trim().length < 30) {
+                this.errors.step2.reason = 'Lý do nhận nuôi cần ít nhất 30 ký tự.';
+            }
+            
+            let questionsValid = true;
+            let questions = document.querySelectorAll('.survey-question-required');
+            questions.forEach(q => {
+                let inputs = q.querySelectorAll('input, textarea');
+                let answered = false;
+                inputs.forEach(i => {
+                    if ((i.type == 'radio' || i.type == 'checkbox') && i.checked) answered = true;
+                    if (i.type == 'textarea' && i.value.trim().length > 0) answered = true;
+                });
+                let errorMsg = q.querySelector('.client-error-msg');
+                if (!answered) {
+                    questionsValid = false;
+                    if (errorMsg) errorMsg.style.display = 'block';
+                } else {
+                    if (errorMsg) errorMsg.style.display = 'none';
+                }
+            });
+
+            if (Object.keys(this.errors.step2).length === 0 && questionsValid) {
+                this.step = 3;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
     }">
         
@@ -107,10 +155,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[11px] font-bold text-gray-600 mb-1.5">Họ và tên <span class="text-red-500">*</span></label>
-                                    <input type="text" name="Ho_ten" x-model="form.name" placeholder="Nhập họ và tên" class="w-full h-11 px-4 bg-white border @error('Ho_ten') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
-                                    @error('Ho_ten')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                                    <input type="text" name="Ho_ten" x-model="form.name" placeholder="Nhập họ và tên" 
+                                           :class="errors.step1.name ? 'border-red-500' : 'border-gray-200'"
+                                           class="w-full h-11 px-4 bg-white border @error('Ho_ten') border-red-500 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
+                                    <template x-if="errors.step1.name"><p class="text-red-500 text-xs mt-1 font-medium" x-text="errors.step1.name"></p></template>
+                                    @error('Ho_ten')<template x-if="!errors.step1.name"><p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p></template>@enderror
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-gray-600 mb-1.5">Email (không đổi) <span class="text-red-500">*</span></label>
@@ -118,10 +167,11 @@
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-gray-600 mb-1.5">Số điện thoại <span class="text-red-500">*</span></label>
-                                    <input type="tel" name="So_dien_thoai" x-model="form.phone" placeholder="Nhập số điện thoại" class="w-full h-11 px-4 bg-white border @error('So_dien_thoai') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
-                                    @error('So_dien_thoai')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                                    <input type="tel" name="So_dien_thoai" x-model="form.phone" placeholder="Nhập số điện thoại" 
+                                           :class="errors.step1.phone ? 'border-red-500' : 'border-gray-200'"
+                                           class="w-full h-11 px-4 bg-white border @error('So_dien_thoai') border-red-500 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
+                                    <template x-if="errors.step1.phone"><p class="text-red-500 text-xs mt-1 font-medium" x-text="errors.step1.phone"></p></template>
+                                    @error('So_dien_thoai')<template x-if="!errors.step1.phone"><p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p></template>@enderror
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-gray-600 mb-1.5">Nghề nghiệp</label>
@@ -135,10 +185,11 @@
                             <h3 class="text-sm font-black text-[#1D2B53] mb-4">2. Thông tin nơi ở</h3>
                             <div class="mb-4">
                                 <label class="block text-[11px] font-bold text-gray-600 mb-1.5">Địa chỉ hiện tại <span class="text-red-500">*</span></label>
-                                <input type="text" name="Dia_chi" x-model="form.address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành..." class="w-full h-11 px-4 bg-white border @error('Dia_chi') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
-                                @error('Dia_chi')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
+                                <input type="text" name="Dia_chi" x-model="form.address" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành..." 
+                                       :class="errors.step1.address ? 'border-red-500' : 'border-gray-200'"
+                                       class="w-full h-11 px-4 bg-white border @error('Dia_chi') border-red-500 @enderror rounded-xl text-sm font-medium focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] text-[#1D2B53]">
+                                <template x-if="errors.step1.address"><p class="text-red-500 text-xs mt-1 font-medium" x-text="errors.step1.address"></p></template>
+                                @error('Dia_chi')<template x-if="!errors.step1.address"><p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p></template>@enderror
                             </div>
 
                             <label class="block text-[11px] font-bold text-gray-600 mb-2">Loại hình nhà ở <span class="text-red-500">*</span></label>
@@ -225,7 +276,7 @@
 
                         <!-- Button -->
                         <div class="flex justify-end">
-                            <button type="button" @click="step = 2" class="bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.2)] hover:-translate-y-0.5 text-[13px] w-full sm:w-auto">
+                            <button type="button" @click="validateStep1()" class="bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.2)] hover:-translate-y-0.5 text-[13px] w-full sm:w-auto">
                                 Tiếp tục <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -252,21 +303,20 @@
                                         <div class="relative">
                                             <textarea rows="4" x-model="form.reason" placeholder="Chia sẻ lý do bạn muốn nhận nuôi bé..." 
                                                       :class="{
-                                                        'border-red-500 focus:border-red-500 focus:ring-red-500': form.reason.length > 0 && form.reason.length < 30, 
-                                                        'border-gray-200 focus:border-[#F58A3C] focus:ring-[#F58A3C]': form.reason.length === 0 || form.reason.length >= 30
+                                                        'border-red-500 focus:border-red-500 focus:ring-red-500': errors.step2.reason || (form.reason.length > 0 && form.reason.length < 30), 
+                                                        'border-gray-200 focus:border-[#F58A3C] focus:ring-[#F58A3C]': !errors.step2.reason && (form.reason.length === 0 || form.reason.length >= 30)
                                                       }"
                                                       class="w-full p-4 bg-slate-50 border @error('Ly_do_nhan_nuoi') border-red-500 @enderror rounded-xl text-sm font-medium focus:outline-none focus:bg-white focus:ring-1 transition text-[#1D2B53]"></textarea>
                                             <div class="absolute bottom-3 right-4 text-[11px] font-bold" 
-                                                 :class="form.reason.length > 0 && form.reason.length < 30 ? 'text-red-500' : 'text-gray-400'">
+                                                 :class="(errors.step2.reason || (form.reason.length > 0 && form.reason.length < 30)) ? 'text-red-500' : 'text-gray-400'">
                                                 <span x-text="form.reason.length"></span> ký tự (tối thiểu 30)
                                             </div>
                                         </div>
-                                        @error('Ly_do_nhan_nuoi')
-                                            <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
-                                        @enderror
+                                        <template x-if="errors.step2.reason"><p class="text-red-500 text-xs mt-1 font-medium" x-text="errors.step2.reason"></p></template>
+                                        @error('Ly_do_nhan_nuoi')<template x-if="!errors.step2.reason"><p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p></template>@enderror
                                     </div>
                                 @endif
-                                <div class="survey-question">
+                                <div class="survey-question @if($q->Bat_buoc) survey-question-required @endif">
                                     <label class="block text-[13px] font-bold text-[#1D2B53] mb-3 leading-relaxed">
                                         {{ $index >= 7 ? $index + 2 : $index + 1 }}. {{ $q->Noi_dung }} @if($q->Bat_buoc)<span class="text-red-500">*</span>@endif
                                     </label>
@@ -318,6 +368,7 @@
                                             <p class="text-red-500 text-xs mt-1 font-medium">{{ $message }}</p>
                                         @enderror
                                     @endif
+                                    <p class="client-error-msg text-red-500 text-xs mt-2 font-medium" style="display:none;">Vui lòng trả lời câu hỏi này.</p>
                                 </div>
                             @endforeach
                             
@@ -329,7 +380,7 @@
                             <button type="button" @click="step = 1" class="bg-white hover:bg-gray-50 text-gray-600 font-bold py-3 px-6 rounded-xl border border-gray-200 transition-all flex items-center justify-center gap-2 text-[13px]">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Quay lại
                             </button>
-                            <button type="button" @click="step = 3" class="bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.2)] hover:-translate-y-0.5 text-[13px]">
+                            <button type="button" @click="validateStep2()" class="bg-[#F58A3C] hover:bg-orange-500 text-white font-black py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-[0_4px_15px_rgba(245,138,60,0.2)] hover:-translate-y-0.5 text-[13px]">
                                 Tiếp tục <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
                         </div>
