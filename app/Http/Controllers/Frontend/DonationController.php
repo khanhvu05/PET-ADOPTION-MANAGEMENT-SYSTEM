@@ -92,6 +92,7 @@ class DonationController extends Controller
         $validated = $request->validate([
             'So_tien'        => 'required|integer|min:10000',
             'Ten_nguoi_ung_ho' => 'required_unless:An_danh,1|nullable|string|max:100',
+            'Email_nguoi_ung_ho' => 'nullable|email|max:150',
             'An_danh'        => 'boolean',
             'Loi_nhan'       => 'nullable|string|max:200',
             'Ma_chien_dich'  => 'nullable|exists:donation_campaigns,Ma_chien_dich',
@@ -100,6 +101,7 @@ class DonationController extends Controller
             'So_tien.min'        => 'Số tiền ủng hộ tối thiểu là 10,000đ.',
             'So_tien.integer'    => 'Số tiền phải là số nguyên.',
             'Ten_nguoi_ung_ho.required_unless' => 'Vui lòng nhập tên của bạn.',
+            'Email_nguoi_ung_ho.email' => 'Email không đúng định dạng.',
         ]);
 
         // Kiểm tra campaign không bị closed khi submit
@@ -112,6 +114,7 @@ class DonationController extends Controller
 
         $anDanh = $request->boolean('An_danh');
         $tenNguoiUngHo = $anDanh ? 'Ẩn danh' : ($validated['Ten_nguoi_ung_ho'] ?? (Auth::user()?->Ho_ten ?? 'Khách'));
+        $emailNguoiUngHo = $validated['Email_nguoi_ung_ho'] ?? Auth::user()?->email;
 
         // Tạo mã giao dịch duy nhất
         $maGiaoDich = 'PJM' . strtoupper(Str::random(10)) . time();
@@ -121,6 +124,7 @@ class DonationController extends Controller
             'Ma_nguoi_dung'          => Auth::id(),
             'Ma_chien_dich'          => $validated['Ma_chien_dich'] ?? null,
             'Ten_nguoi_ung_ho'       => $tenNguoiUngHo,
+            'Email_nguoi_ung_ho'     => $emailNguoiUngHo,
             'An_danh'                => $anDanh,
             'So_tien'                => $validated['So_tien'],
             'Loi_nhan'               => $validated['Loi_nhan'] ?? null,
@@ -174,9 +178,11 @@ class DonationController extends Controller
                         ->increment('So_tien_hien_tai', $donation->So_tien);
                 }
 
-                // Gửi email cảm ơn nếu user có email
+                // Gửi email cảm ơn nếu có email
                 $donation->load('nguoiDung');
-                if ($donation->nguoiDung && $donation->nguoiDung->email) {
+                $userEmail = $donation->Email_nguoi_ung_ho ?? ($donation->nguoiDung ? $donation->nguoiDung->email : null);
+                
+                if ($userEmail) {
                     try {
                         $mailService = app(MailService::class);
                         $subject = 'Cảm ơn bạn đã đóng góp cho PetJam';
@@ -192,7 +198,7 @@ class DonationController extends Controller
                         $body .= "<p>Sự ủng hộ của bạn sẽ giúp chúng tôi mang lại cuộc sống tốt đẹp hơn cho các bé thú cưng.</p>";
                         $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
 
-                        $mailService->send($donation->nguoiDung->email, $subject, $body);
+                        $mailService->send($userEmail, $subject, $body);
                     } catch (\Exception $e) {
                         Log::error("Send mail failed: " . $e->getMessage());
                     }
@@ -275,9 +281,11 @@ class DonationController extends Controller
                     ->increment('So_tien_hien_tai', $donation->So_tien);
             }
 
-            // Gửi email cảm ơn nếu user có email
+            // Gửi email cảm ơn nếu có email
             $donation->load('nguoiDung');
-            if ($donation->nguoiDung && $donation->nguoiDung->email) {
+            $userEmail = $donation->Email_nguoi_ung_ho ?? ($donation->nguoiDung ? $donation->nguoiDung->email : null);
+            
+            if ($userEmail) {
                 try {
                     $mailService = app(MailService::class);
                     $subject = 'Cảm ơn bạn đã đóng góp cho PetJam';
@@ -293,7 +301,7 @@ class DonationController extends Controller
                     $body .= "<p>Sự ủng hộ của bạn sẽ giúp chúng tôi mang lại cuộc sống tốt đẹp hơn cho các bé thú cưng.</p>";
                     $body .= "<br><p>Trân trọng,<br>PetJam Team</p>";
 
-                    $mailService->send($donation->nguoiDung->email, $subject, $body);
+                    $mailService->send($userEmail, $subject, $body);
                 } catch (\Exception $e) {
                     Log::error("IPN: Send mail failed: " . $e->getMessage());
                 }

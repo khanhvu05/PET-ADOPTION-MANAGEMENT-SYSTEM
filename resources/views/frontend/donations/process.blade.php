@@ -58,6 +58,7 @@
     <input type="hidden" name="Ten_nguoi_ung_ho" id="form-name">
     <input type="hidden" name="An_danh" id="form-an-danh">
     <input type="hidden" name="Loi_nhan" id="form-loi-nhan">
+    <input type="hidden" name="Email_nguoi_ung_ho" id="form-email">
     <input type="hidden" name="Ma_chien_dich" id="form-campaign-id" value="{{ $campaign->Ma_chien_dich ?? '' }}">
 </form>
 
@@ -402,6 +403,7 @@
                 document.getElementById('form-name').value = this.isAnonymous ? 'Nhà hảo tâm ẩn danh' : this.name;
                 document.getElementById('form-an-danh').value = this.isAnonymous ? '1' : '0';
                 document.getElementById('form-loi-nhan').value = this.message || '';
+                document.getElementById('form-email').value = this.email || '';
                 document.getElementById('vnpay-donation-form').submit();
             },
             

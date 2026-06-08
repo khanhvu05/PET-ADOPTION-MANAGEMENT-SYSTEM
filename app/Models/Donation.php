@@ -17,7 +17,7 @@ class Donation extends Model
 
     protected $fillable = [
         'Ma_ung_ho', 'Ma_nguoi_dung', 'Ma_chien_dich',
-        'Ten_nguoi_ung_ho', 'An_danh', 'So_tien', 'Loi_nhan',
+        'Ten_nguoi_ung_ho', 'Email_nguoi_ung_ho', 'An_danh', 'So_tien', 'Loi_nhan',
         'Ma_giao_dich_he_thong', 'Ma_giao_dich_vnpay', 'Ma_phan_hoi_vnpay',
         'Ma_ngan_hang', 'Trang_thai', 'Thoi_diem_thanh_toan',
     ];
