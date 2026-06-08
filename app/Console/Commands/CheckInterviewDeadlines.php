@@ -40,6 +40,7 @@ class CheckInterviewDeadlines extends Command
             ->where('da_gui_nhac_nho', false) // Cần thêm trường này vào DB
             ->get();
 
+        /** @var \App\Models\AdoptionApplication $app */
         foreach ($applicationsToRemind as $app) {
             if ($app->nguoiDung && $app->nguoiDung->email) {
                 Mail::to($app->nguoiDung->email)->send(new InterviewReminderEmail($app));
@@ -55,6 +56,7 @@ class CheckInterviewDeadlines extends Command
             ->where('han_xac_nhan_phong_van', '<=', Carbon::now())
             ->get();
 
+        /** @var \App\Models\AdoptionApplication $app */
         foreach ($applicationsToTimeout as $app) {
             $app->update([
                 'Trang_thai' => 'tu_choi',

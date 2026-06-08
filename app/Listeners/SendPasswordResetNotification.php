@@ -21,6 +21,8 @@ class SendPasswordResetNotification
      */
     public function handle(PasswordReset $event): void
     {
-        \Illuminate\Support\Facades\Mail::to($event->user->Email)->send(new \App\Mail\PasswordResetSuccessMail($event->user));
+        /** @var \App\Models\User $user */
+        $user = $event->user;
+        \Illuminate\Support\Facades\Mail::to($user->Email)->send(new \App\Mail\PasswordResetSuccessMail($user));
     }
 }

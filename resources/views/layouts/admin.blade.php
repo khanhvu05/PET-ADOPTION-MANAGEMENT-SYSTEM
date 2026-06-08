@@ -427,7 +427,7 @@
                     }
 
                     searchTimeout = setTimeout(() => {
-                        fetch(`/admin/search?q=${encodeURIComponent(q)}`)
+                        fetch(`/quan-tri/tim-kiem?q=${encodeURIComponent(q)}`)
                             .then(res => res.json())
                             .then(data => {
                                 searchList.innerHTML = '';

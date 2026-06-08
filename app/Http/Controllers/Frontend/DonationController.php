@@ -66,7 +66,7 @@ class DonationController extends Controller
 
             // Kiểm tra campaign còn active và chưa hết hạn không
             if ($campaign->Trang_thai !== 'active' || 
-                ($campaign->Ngay_ket_thuc && $campaign->Ngay_ket_thuc->startOfDay() < now()->startOfDay())) {
+                ($campaign->Ngay_ket_thuc && \Carbon\Carbon::parse($campaign->Ngay_ket_thuc)->startOfDay() < now()->startOfDay())) {
                 return redirect()
                     ->route('frontend.donations.index')
                     ->with('warning', 'Chiến dịch này đã kết thúc. Vui lòng chọn chiến dịch khác.');
