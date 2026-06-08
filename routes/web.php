@@ -82,6 +82,13 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Thú cưng (full CRUD)
     Route::get('quan-tri/thu-cung/xuat-excel', [\App\Http\Controllers\Admin\PetController::class, 'export'])->name('admin.pets.export');
     Route::resource('quan-tri/thu-cung', \App\Http\Controllers\Admin\PetController::class)->names('admin.pets')->parameters(['thu-cung' => 'pet']);
+    
+    // Ghi chú thú cưng
+    Route::post('quan-tri/thu-cung/{pet}/ghi-chu', [\App\Http\Controllers\Admin\PetController::class, 'storeNote'])->name('admin.pets.notes.store');
+    Route::delete('quan-tri/thu-cung/{pet}/ghi-chu/{note}', [\App\Http\Controllers\Admin\PetController::class, 'destroyNote'])->name('admin.pets.notes.destroy');
+    
+    // Ca cứu hộ thú cưng
+    Route::post('quan-tri/thu-cung/{pet}/ca-cuu-ho', [\App\Http\Controllers\Admin\PetController::class, 'storeRescue'])->name('admin.pets.rescue.store');
 
     // Đơn nhận nuôi (full CRUD + update status)
     Route::get('quan-tri/don-nhan-nuoi/xuat-excel', [\App\Http\Controllers\Admin\AdoptionController::class, 'export'])->name('admin.adoptions.export');

@@ -209,7 +209,7 @@ class PetController extends Controller
      */
     public function show($id)
     {
-        $pet = Pet::with(['nguoiPhuTrach', 'lichSuTiemChung', 'caCuuHo', 'donNhanNuoi.nguoiDung'])->findOrFail($id);
+        $pet = Pet::with(['nguoiPhuTrach', 'lichSuTiemChung', 'caCuuHo', 'donNhanNuoi.nguoiDung', 'ghiChu.nguoiDung'])->findOrFail($id);
         return view('admin.pets.show', compact('pet'));
     }
 
@@ -343,5 +343,74 @@ class PetController extends Controller
         return redirect()
             ->route('admin.pets.index')
             ->with('success', "Đã xóa thú cưng «{$petName}» thành công!");
+    }
+
+    /**
+     * Thêm ghi chú cho thú cưng
+     */
+    public function storeNote(Request $request, $id)
+    {
+        $request->validate([
+            'Noi_dung' => 'required|string|max:1000',
+        ]);
+
+        $pet = Pet::findOrFail($id);
+
+        $pet->ghiChu()->create([
+            'Ma_nguoi_dung' => auth()->user()->Ma_nguoi_dung,
+            'Noi_dung' => $request->Noi_dung,
+        ]);
+
+        return redirect()
+            ->route('admin.pets.show', $pet->Ma_thu_cung)
+            ->with('success', 'Đã thêm ghi chú thành công!');
+    }
+
+    /**
+     * Xóa ghi chú
+     */
+    public function destroyNote($petId, $noteId)
+    {
+        $note = \App\Models\PetNote::where('Ma_thu_cung', $petId)
+            ->where('Ma_ghi_chu', $noteId)
+            ->firstOrFail();
+
+        $note->delete();
+
+        return redirect()
+            ->route('admin.pets.show', $petId)
+            ->with('success', 'Đã xóa ghi chú!');
+    }
+
+    /**
+     * Thêm ca cứu hộ cho thú cưng
+     */
+    public function storeRescue(Request $request, $id)
+    {
+        $request->validate([
+            'Ngay_cuu_ho' => 'required|date',
+            'Loai_cuu_ho' => 'required|in:lang_thang,lac_duong,bi_bo_roi,bi_nguoc_dai',
+            'Dia_diem_cuu_ho' => 'nullable|string|max:500',
+            'Nguoi_bao_cao' => 'nullable|string|max:200',
+            'Chi_phi_cuu_ho' => 'nullable|numeric|min:0',
+            'Ghi_chu' => 'nullable|string|max:1000',
+        ]);
+
+        $pet = Pet::findOrFail($id);
+
+        \App\Models\RescueCase::create([
+            'Ma_thu_cung' => $pet->Ma_thu_cung,
+            'Ngay_cuu_ho' => $request->Ngay_cuu_ho,
+            'Loai_cuu_ho' => $request->Loai_cuu_ho,
+            'Dia_diem_cuu_ho' => $request->Dia_diem_cuu_ho,
+            'Nguoi_bao_cao' => $request->Nguoi_bao_cao,
+            'Nguoi_thuc_hien' => auth()->user()->Ma_nguoi_dung,
+            'Chi_phi_cuu_ho' => $request->Chi_phi_cuu_ho ?? 0,
+            'Ghi_chu' => $request->Ghi_chu,
+        ]);
+
+        return redirect()
+            ->route('admin.pets.show', $pet->Ma_thu_cung)
+            ->with('success', 'Đã thêm ca cứu hộ thành công!');
     }
 }

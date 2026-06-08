@@ -438,9 +438,10 @@
                                     data.forEach(item => {
                                         searchList.innerHTML += `
                                             <a href="${item.url}" class="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0">
-                                                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                                                    ${item.icon}
-                                                </div>
+                                                ${item.image
+                                                    ? `<img src="${item.image}" alt="" class="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0">`
+                                                    : `<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">${item.icon}</div>`
+                                                }
                                                 <div class="flex flex-col min-w-0">
                                                     <span class="text-xs text-slate-500">${item.type}</span>
                                                     <span class="text-sm font-medium text-slate-700 truncate">${item.title}</span>

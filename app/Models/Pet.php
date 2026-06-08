@@ -80,6 +80,13 @@ class Pet extends Model
                     ->orderByDesc('Ngay_tao');
     }
 
+    /** Ghi chú của bé */
+    public function ghiChu()
+    {
+        return $this->hasMany(PetNote::class, 'Ma_thu_cung', 'Ma_thu_cung')
+                    ->orderByDesc('Ngay_tao');
+    }
+
     // ── Helpers ─────────────────────────────────────────────────
 
     /** Nhãn hiển thị cho Loại */

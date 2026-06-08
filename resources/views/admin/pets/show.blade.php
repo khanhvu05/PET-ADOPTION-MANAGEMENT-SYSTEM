@@ -539,89 +539,162 @@
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                     <h3 class="text-sm font-bold text-slate-800 mb-6">Ghi chú</h3>
                     
-                    <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                        <input type="text" class="flex-1 rounded-lg border-slate-200 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm px-4 py-2.5 bg-slate-50/50" placeholder="Nhập ghi chú...">
-                        <button class="bg-teal-700 hover:bg-teal-800 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <form action="{{ route('admin.pets.notes.store', $pet->Ma_thu_cung) }}" method="POST" class="flex flex-col sm:flex-row gap-4 mb-8">
+                        @csrf
+                        <input type="text" name="Noi_dung" required maxlength="1000" class="flex-1 rounded-lg border-slate-200 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm px-4 py-2.5 bg-slate-50/50" placeholder="Nhập ghi chú...">
+                        <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             Thêm ghi chú
                         </button>
-                    </div>
+                    </form>
 
                     <div class="space-y-4">
+                        @if($pet->ghiChu->count() > 0)
+                            @foreach($pet->ghiChu as $note)
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl group hover:shadow-sm transition-shadow">
+                                <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 shrink-0 text-xs font-bold">
+                                    {{ mb_substr($note->nguoiDung->Ho_ten ?? 'N/A', 0, 1) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-sm font-bold text-slate-800">{{ $note->nguoiDung->Ho_ten ?? 'Không rõ' }}</span>
+                                        <span class="text-[11px] text-slate-400">{{ $note->Ngay_tao->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-600 font-medium">{{ $note->Noi_dung }}</p>
+                                </div>
+                                <form action="{{ route('admin.pets.notes.destroy', [$pet->Ma_thu_cung, $note->Ma_ghi_chu]) }}" method="POST" class="confirm-delete shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" data-title="Xóa ghi chú?" data-text="Bạn có chắc muốn xóa ghi chú này?">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Xóa ghi chú">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </form>
+                            </div>
+                            @endforeach
+                        @else
                         <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl">
                             <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             <p class="text-sm font-bold text-slate-500">Chưa có ghi chú nào.</p>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
             <!-- 5. Tab: Ca cứu hộ -->
             <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
-                @if($pet->caCuuHo->count() > 0)
-                @php $rescue = $pet->caCuuHo->first(); @endphp
-                <div class="grid grid-cols-1 gap-6">
-                    <!-- Thông tin ca cứu hộ -->
-                    <div class="space-y-6">
-                        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                            <div class="flex items-center justify-between mb-6">
-                                <h3 class="text-base font-bold text-slate-800">Thông tin ca cứu hộ</h3>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div>
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mã ca cứu hộ</p>
-                                    <p class="text-sm font-bold text-slate-800">#{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
-                                    <p class="text-sm font-bold text-slate-800">{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('d/m/Y') : '-' }}</p>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
-                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Dia_diem_cuu_ho ?? '-' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại cứu hộ</p>
-                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->loai_cuu_ho_label }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người báo cáo</p>
-                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Nguoi_bao_cao ?? '-' }}</p>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
-                                    <p class="text-sm font-medium text-slate-800">{{ $rescue->Ghi_chu ?? '-' }}</p>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Form thêm ca cứu hộ mới -->
+                <div x-data="{ showForm: false }" class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">Danh sách ca cứu hộ</h3>
+                        <button @click="showForm = !showForm" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                            Thêm ca cứu hộ
+                        </button>
+                    </div>
 
-                        <!-- Bảng Chi phí cứu hộ -->
-                        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-base font-bold text-slate-800">Chi phí y tế & Cứu hộ</h3>
+                    <div x-show="showForm" x-transition class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
+                        <h4 class="text-[13px] font-bold text-slate-800 mb-4">Nhập thông tin ca cứu hộ</h4>
+                        <form action="{{ route('admin.pets.rescue.store', $pet->Ma_thu_cung) }}" method="POST">
+                            @csrf
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày cứu hộ <span class="text-red-500">*</span></label>
+                                    <input type="date" name="Ngay_cuu_ho" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Loại cứu hộ <span class="text-red-500">*</span></label>
+                                    <select name="Loai_cuu_ho" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                        <option value="">-- Chọn loại --</option>
+                                        <option value="lang_thang">Lang thang</option>
+                                        <option value="lac_duong">Lạc đường</option>
+                                        <option value="bi_bo_roi">Bị bỏ rơi</option>
+                                        <option value="bi_nguoc_dai">Bị ngược đãi</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Địa điểm phát hiện</label>
+                                    <input type="text" name="Dia_diem_cuu_ho" placeholder="VD: Đường Nguyễn Văn Cừ, Q5..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Người báo cáo</label>
+                                    <input type="text" name="Nguoi_bao_cao" placeholder="Tên người báo" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí cứu hộ (VNĐ)</label>
+                                    <input type="number" name="Chi_phi_cuu_ho" placeholder="VD: 500000" min="0" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ghi chú</label>
+                                    <textarea name="Ghi_chu" rows="2" placeholder="Mô tả tình trạng khi phát hiện..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500"></textarea>
+                                </div>
                             </div>
-                            <table class="w-full text-sm text-left">
-                                <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
-                                    <tr>
-                                        <th class="px-4 py-3 rounded-l-lg">Hạng mục</th>
-                                        <th class="px-4 py-3 text-right rounded-r-lg">Số tiền (VNĐ)</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
-                                    <tr>
-                                        <td class="px-4 py-3">Tổng chi phí cứu hộ</td>
-                                        <td class="px-4 py-3 font-bold text-right">{{ $rescue->Chi_phi_cuu_ho ? number_format($rescue->Chi_phi_cuu_ho) : '0' }} đ</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="flex justify-end gap-3">
+                                <button type="button" @click="showForm = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
+                                <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu ca cứu hộ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                @if($pet->caCuuHo->count() > 0)
+                <div class="space-y-6">
+                    @foreach($pet->caCuuHo as $rescue)
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-base font-bold text-slate-800">Ca cứu hộ #{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</h3>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full
+                                @if($rescue->Trang_thai_ca === 'da_dong') bg-slate-100 text-slate-600
+                                @elseif($rescue->Trang_thai_ca === 'on_dinh') bg-green-50 text-green-600
+                                @elseif($rescue->Trang_thai_ca === 'dang_dieu_tri') bg-orange-50 text-orange-600
+                                @else bg-blue-50 text-blue-600
+                                @endif
+                            ">
+                                {{ match($rescue->Trang_thai_ca) {
+                                    'dang_xu_ly' => 'Đang xử lý',
+                                    'dang_dieu_tri' => 'Đang điều trị',
+                                    'on_dinh' => 'Ổn định',
+                                    'da_dong' => 'Đã đóng',
+                                    default => 'Không rõ'
+                                } }}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('d/m/Y') : '-' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại cứu hộ</p>
+                                <p class="text-sm font-medium text-slate-800">{{ $rescue->loai_cuu_ho_label }}</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
+                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Dia_diem_cuu_ho ?? '-' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người báo cáo</p>
+                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Nguoi_bao_cao ?? '-' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Chi phí</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $rescue->Chi_phi_cuu_ho ? number_format($rescue->Chi_phi_cuu_ho) . ' đ' : '0 đ' }}</p>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
+                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Ghi_chu ?? '-' }}</p>
+                            </div>
                         </div>
                     </div>
+                    @endforeach
                 </div>
                 @else
                 <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                     <div class="py-8 text-center">
+                        <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         <p class="text-sm font-medium text-slate-500">Thú cưng này không có ca cứu hộ liên kết.</p>
+                        <p class="text-xs text-slate-400 mt-1">Nhấn "Thêm ca cứu hộ" phía trên để tạo mới.</p>
                     </div>
                 </div>
                 @endif
