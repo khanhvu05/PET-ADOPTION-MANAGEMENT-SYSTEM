@@ -236,31 +236,31 @@
                 <!-- Table Container -->
             <!-- Changed background to plain Tailwind class to ensure it compiles -->
             <!-- Using standard border-b instead of divide-y to prevent thick black lines -->
-            <div class="p-4 overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[1100px] whitespace-nowrap">
+            <div class="overflow-x-auto w-full">
+                <table class="w-full min-w-full text-left border-collapse whitespace-nowrap">
                     <thead>
                         <tr class="bg-teal-50">
-                            <th class="py-3 px-4 w-12 text-center hidden">
+                            <th class="py-3 px-6 w-12 text-center hidden">
                                 <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600 bg-white shadow-sm cursor-pointer">
                             </th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 rounded-l-xl">Thú Cưng</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Loại & Giống</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Tuổi</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Cân Nặng</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Giới Tính</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Vị Trí</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center">Trạng Thái</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800">Ngày Tạo</th>
-                            <th class="py-3 px-4 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center rounded-r-xl w-[140px]">Thao Tác</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Thú Cưng</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Loại & Giống</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Tuổi</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Cân Nặng</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Giới Tính</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Vị Trí</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center">Trạng Thái</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800">Ngày Tạo</th>
+                            <th class="py-3 px-6 text-[11px] font-bold uppercase tracking-wider text-teal-800 text-center">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody class="text-sm">
                         @forelse($pets as $pet)
                         <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
-                            <td class="py-3 px-4 text-center hidden">
+                            <td class="py-3 px-6 text-center hidden">
                                 <input type="checkbox" class="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-600 bg-white shadow-sm cursor-pointer">
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-6">
                                 <div class="flex items-center gap-3">
                                     <img src="{{ $pet->anh_url }}" class="w-10 h-10 rounded-lg object-cover border border-slate-200" alt="{{ $pet->Ten }}">
                                     <div class="flex flex-col">
@@ -269,15 +269,15 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-6">
                                 <div class="flex flex-col">
                                     <span class="font-bold text-slate-800">{{ $pet->loai_label }}</span>
                                     <span class="text-[12px] text-slate-500">{{ $pet->Giong }}</span>
                                 </div>
                             </td>
-                            <td class="py-3 px-4 text-slate-600">{{ $pet->nhom_tuoi_label }}</td>
-                            <td class="py-3 px-4 text-slate-600">{{ $pet->Can_nang }} kg</td>
-                            <td class="py-3 px-4 font-bold {{ $pet->Gioi_tinh == 'duc' ? 'text-blue-500' : ($pet->Gioi_tinh == 'cai' ? 'text-pink-500' : 'text-slate-500') }}">
+                            <td class="py-3 px-6 text-slate-600">{{ $pet->nhom_tuoi_label }}</td>
+                            <td class="py-3 px-6 text-slate-600">{{ $pet->Can_nang }} kg</td>
+                            <td class="py-3 px-6 font-bold {{ $pet->Gioi_tinh == 'duc' ? 'text-blue-500' : ($pet->Gioi_tinh == 'cai' ? 'text-pink-500' : 'text-slate-500') }}">
                                 <div class="flex items-center gap-1.5">
                                     @if($pet->Gioi_tinh == 'duc')
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="10" cy="14" r="5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 3l-7.5 7.5M21 3v6M21 3h-6"/></svg> 
@@ -287,24 +287,24 @@
                                     {{ $pet->gioi_tinh_label }}
                                 </div>
                             </td>
-                            <td class="py-3 px-4 text-slate-500 text-[12px]">
+                            <td class="py-3 px-6 text-slate-500 text-[12px]">
                                 <div class="flex items-center gap-1.5">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                     {{ $pet->vi_tri_label }}
                                 </div>
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-6">
                                 <span class="inline-flex items-center px-3 py-1 rounded-[10px] text-[11px] font-bold text-{{ $pet->trang_thai_color }}-700 bg-{{ $pet->trang_thai_color }}-50 border border-{{ $pet->trang_thai_color }}-200">
                                     {{ $pet->trang_thai_label }}
                                 </span>
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-6">
                                 <div class="flex flex-col text-[12px]">
                                     <span class="text-slate-700">{{ $pet->Ngay_tao->format('d/m/Y') }}</span>
                                     <span class="text-slate-400">{{ $pet->Ngay_tao->format('H:i') }}</span>
                                 </div>
                             </td>
-                            <td class="py-3 px-4">
+                            <td class="py-3 px-6">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('admin.pets.show', $pet->Ma_thu_cung) }}" class="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200" title="Xem chi tiết">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
