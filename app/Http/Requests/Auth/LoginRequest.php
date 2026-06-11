@@ -58,6 +58,15 @@ class LoginRequest extends FormRequest
 
         $user = \App\Models\User::where('Email', $this->email)->first();
 
+        // Kiểm tra tài khoản chưa xác thực (coi như không tồn tại)
+        if ($user && $user->Trang_thai === 'cho_xac_thuc') {
+            RateLimiter::hit($this->throttleKey(), 300);
+
+            throw ValidationException::withMessages([
+                'email' => 'Thông tin đăng nhập không chính xác.',
+            ]);
+        }
+
         // Kiểm tra tài khoản bị khóa
         if ($user && $user->Trang_thai === 'bi_khoa') {
             RateLimiter::hit($this->throttleKey(), 300);
@@ -92,13 +101,6 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => 'Thông tin đăng nhập không chính xác.',
-            ]);
-        }
-
-        if (Auth::user() && Auth::user()->Trang_thai === 'cho_xac_thuc') {
-            Auth::logout();
-            throw ValidationException::withMessages([
-                'email' => 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email.',
             ]);
         }
 
