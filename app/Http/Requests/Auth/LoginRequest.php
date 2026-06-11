@@ -95,6 +95,13 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (Auth::user() && Auth::user()->Trang_thai === 'cho_xac_thuc') {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email.',
+            ]);
+        }
+
         if ($user) {
             \Illuminate\Support\Facades\Cache::forget('lockout_flag_' . $user->Ma_nguoi_dung);
         }

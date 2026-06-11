@@ -50,7 +50,7 @@ class RegisteredUserController extends Controller
             'Email' => $request->email,
             'Mat_khau_hash' => Hash::make($request->password),
             'Loai_tai_khoan' => 'ca_nhan',
-            'Trang_thai' => 'hoat_dong',
+            'Trang_thai' => 'cho_xac_thuc',
         ]);
 
         // Assign 'customer' role
@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        session()->put('registered_user_id', $user->Ma_nguoi_dung);
 
         return redirect(route('verification.notice', absolute: false));
     }

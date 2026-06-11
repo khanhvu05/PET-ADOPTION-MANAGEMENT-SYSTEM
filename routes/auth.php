@@ -35,17 +35,18 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
+Route::get('xac-thuc-email', EmailVerificationPromptController::class)
+    ->name('verification.notice');
+
+Route::post('email/xac-thuc-thong-bao', [EmailVerificationNotificationController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('verification.send');
+
+Route::get('xac-thuc-email/{id}/{hash}', VerifyEmailController::class)
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
 Route::middleware('auth')->group(function () {
-    Route::get('xac-thuc-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
-
-    Route::get('xac-thuc-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    Route::post('email/xac-thuc-thong-bao', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
 
     Route::get('xac-nhan-mat-khau', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');

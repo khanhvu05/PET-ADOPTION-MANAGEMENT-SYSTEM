@@ -21,11 +21,17 @@
             </button>
         </form>
 
+        @auth
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="text-xs text-text-muted hover:text-white font-bold transition">
                 Đăng xuất
             </button>
         </form>
+        @else
+        <a href="{{ route('login') }}" class="text-xs text-text-muted hover:text-white font-bold transition">
+            Quay lại trang Đăng nhập
+        </a>
+        @endauth
     </div>
 </x-guest-layout>

@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::with('roles')->where('Trang_thai', '!=', 'cho_xac_thuc');
 
         // Tìm kiếm theo tên, email, sđt
         if ($request->filled('search')) {
@@ -140,7 +140,7 @@ class UserController extends Controller
 
     public function export(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::with('roles')->where('Trang_thai', '!=', 'cho_xac_thuc');
 
         // Áp dụng lại các bộ lọc y hệt hàm index
         if ($request->filled('search')) {
