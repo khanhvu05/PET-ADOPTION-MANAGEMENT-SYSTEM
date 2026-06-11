@@ -129,7 +129,7 @@
     <!-- Desktop Nav -->
     <nav class="hidden lg:flex items-center gap-10 justify-center">
         <a href="/" class="nav-link {{ $isHome ? 'active' : '' }}">Trang Chủ</a>
-        <a href="#" class="nav-link">Giới Thiệu</a>
+        <a href="{{ route('frontend.about.index') }}" class="nav-link {{ request()->routeIs('frontend.about.index') ? 'active' : '' }}">Giới Thiệu</a>
         <a href="{{ route('frontend.adoptions.index') }}" class="nav-link {{ request()->routeIs('frontend.adoptions.*') ? 'active' : '' }}">Nhận Nuôi</a>
         <a href="{{ route('frontend.donations.index') }}" class="nav-link {{ request()->routeIs('frontend.donations.*') ? 'active' : '' }}">Ủng Hộ</a>
         <a href="#" class="nav-link">Tin Tức</a>
@@ -217,7 +217,7 @@
         <div class="lg:col-span-1">
             <h4 class="font-black mb-6 text-xs tracking-widest uppercase text-white">Về chúng tôi</h4>
             <ul class="space-y-3 text-xs font-bold text-white/90">
-                <li><a href="#" class="hover:text-white transition-colors">Giới thiệu</a></li>
+                <li><a href="{{ route('frontend.about.index') }}" class="hover:text-white transition-colors">Giới thiệu</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">Sứ mệnh</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">Đội ngũ</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">Đối tác</a></li>

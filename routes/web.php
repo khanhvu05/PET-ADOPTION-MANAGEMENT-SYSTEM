@@ -18,6 +18,9 @@ Route::get('/', function () {
 
 // ── Giao diện người dùng (Frontend) ─────────────────────────────────────────
 
+// Giới thiệu
+Route::view('/gioi-thieu', 'frontend.about.index')->name('frontend.about.index');
+
 // Nhận nuôi (không cần auth để xem)
 Route::get('/nhan-nuoi', [FrontendPetController::class, 'index'])->name('frontend.adoptions.index');
 Route::get('/nhan-nuoi/{id}', [FrontendPetController::class, 'show'])->name('frontend.adoptions.show');
