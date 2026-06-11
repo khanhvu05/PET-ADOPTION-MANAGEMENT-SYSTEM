@@ -2,8 +2,8 @@
 <h1 class="main-title font-bold text-orange">Chúc mừng!<br><span style="color: #0f172a; font-size: 20px;">Bạn đã được duyệt nhận nuôi {{ $application->thuCung->Ten ?? 'thú cưng' }}</span></h1>
 
 <div class="pet-card-large">
-    @if($application->thuCung && $application->thuCung->Anh_dai_dien)
-        <img src="{{ url($application->thuCung->Anh_dai_dien) }}" alt="{{ $application->thuCung->Ten }}" class="pet-photo">
+    @if($application->thuCung)
+        <img src="{{ $application->thuCung->anh_url }}" alt="{{ $application->thuCung->Ten }}" class="pet-photo">
     @else
         <div class="pet-photo" style="background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 48px;">🐾</div>
     @endif
@@ -18,7 +18,7 @@
         <div class="info-icon">🐾</div>
         <div class="info-text">
             <strong>Thú cưng:</strong>
-            {{ $application->thuCung->Ten ?? 'Thú cưng' }} • {{ $application->thuCung->giongLoai->Ten_giong ?? 'Chưa cập nhật' }}
+            {{ $application->thuCung->Ten ?? 'Thú cưng' }} • {{ $application->thuCung->Giong ?? 'Chưa cập nhật' }}
         </div>
     </div>
     <div class="info-item">

@@ -5,14 +5,14 @@
 <p>Đơn nhận nuôi của bạn cho bé <strong>{{ $application->thuCung->Ten ?? 'thú cưng' }}</strong> đã vượt qua vòng xét duyệt hồ sơ. Vui lòng xác nhận lịch phỏng vấn bên dưới.</p>
 
 <div class="pet-card">
-    @if($application->thuCung && $application->thuCung->Anh_dai_dien)
-        <img src="{{ url($application->thuCung->Anh_dai_dien) }}" alt="{{ $application->thuCung->Ten }}" class="pet-avatar">
+    @if($application->thuCung)
+        <img src="{{ $application->thuCung->anh_url }}" alt="{{ $application->thuCung->Ten }}" class="pet-avatar">
     @else
         <div class="pet-avatar" style="background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 24px;">🐾</div>
     @endif
     <div class="pet-info">
         <h3>{{ $application->thuCung->Ten ?? 'Thú cưng' }}</h3>
-        <p>{{ $application->thuCung->giongLoai->Ten_giong ?? 'Chưa cập nhật' }} • {{ $application->thuCung->Tuoi ?? '?' }} tháng tuổi</p>
+        <p>{{ $application->thuCung->Giong ?? 'Chưa cập nhật' }} • {{ $application->thuCung->nhom_tuoi_label ?? '?' }}</p>
     </div>
 </div>
 
