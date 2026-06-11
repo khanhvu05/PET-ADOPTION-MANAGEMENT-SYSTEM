@@ -19,7 +19,7 @@ class CheckMaintenanceMode
 
         if ($maintenanceMode === '1') {
             // Cho phép các route nội bộ của admin (backend)
-            if ($request->is('quan-tri*') || $request->is('login') || $request->is('logout')) {
+            if ($request->is('quan-tri*') || $request->is('dang-nhap') || $request->is('dang-xuat') || $request->routeIs('login') || $request->routeIs('logout')) {
                 return $next($request);
             }
             

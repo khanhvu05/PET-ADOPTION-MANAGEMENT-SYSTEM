@@ -119,3 +119,11 @@ sequenceDiagram
 - Khách hàng không thể can thiệp sửa ID thú cưng ẩn trong Form nhờ cơ chế ràng buộc **Foreign Key (Khóa ngoại)** trên CSDL và logic kiểm tra `Pet::findOrFail()` trước khi lưu.
 - Request Form Nhận nuôi yêu cầu số điện thoại, địa chỉ cụ thể được Validate nghiêm ngặt bằng **Form Request** của Laravel (Yêu cầu Regex số điện thoại hợp lệ).
 - Cơ chế Check Duplicate ở Backend đảm bảo không có việc 1 khách hàng click đúp nút Submit tạo ra 2 đơn nhận nuôi giống hệt nhau cùng lúc.
+
+### 3.4 Sử dụng UUID thay cho ID Tự tăng (Route Model Binding)
+- **Vấn đề:** Nếu sử dụng số ID thông thường (`1, 2, 3...`) trên URL (ví dụ: `/nhan-nuoi/5`), hệ thống rất dễ bị lộ quy mô dữ liệu và tạo cơ hội cho kẻ xấu cào dữ liệu (scraping) bằng cách quét tăng dần số ID.
+- **Kỹ thuật áp dụng:** Hệ thống sử dụng **UUID** (chuỗi ký tự ngẫu nhiên 36 ký tự như `4dc0db08-4fb4-4b56-aa8d-9a5befe3b9fd`) làm Khóa chính (`Primary Key`) cho model Thú cưng.
+- **Lợi ích:**
+  - Ngăn chặn việc đoán được URL của các thú cưng khác trong hệ thống.
+  - Bảo mật dữ liệu cao hơn, chống lại các công cụ quét tự động.
+  - Kết hợp với Laravel **Route Model Binding**, Controller dễ dàng phân tích và lấy đúng dữ liệu thú cưng từ URL mà không làm lộ định danh nội bộ.
