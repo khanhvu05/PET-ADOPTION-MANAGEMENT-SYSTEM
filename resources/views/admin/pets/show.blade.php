@@ -570,11 +570,53 @@
             <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                 @if($pet->caCuuHo->count() > 0)
                 @php $rescue = $pet->caCuuHo->first(); @endphp
-                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-bold text-slate-800">Cập nhật thông tin ca cứu hộ #{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</h3>
+                <div x-data="{ isEditing: false }" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-sm font-bold text-slate-800">Thông tin ca cứu hộ #{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</h3>
+                        <button x-show="!isEditing" @click="isEditing = true" type="button" class="px-4 py-2 text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            Cập nhật
+                        </button>
                     </div>
-                    <form action="{{ route('admin.pets.rescue.update', [$pet->Ma_thu_cung, $rescue->Ma_ca_cuu_ho]) }}" method="POST">
+
+                    <!-- Mode Xem -->
+                    <div x-show="!isEditing" class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
+                            <p class="text-sm font-medium text-slate-800">{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('d/m/Y') : '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại cứu hộ</p>
+                            <p class="text-sm font-medium text-slate-800">
+                                @switch($rescue->Loai_cuu_ho)
+                                    @case('lang_thang') Lang thang @break
+                                    @case('lac_duong') Lạc đường @break
+                                    @case('bi_bo_roi') Bị bỏ rơi @break
+                                    @case('bi_nguoc_dai') Bị ngược đãi @break
+                                    @default {{ $rescue->Loai_cuu_ho }}
+                                @endswitch
+                            </p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
+                            <p class="text-sm font-medium text-slate-800">{{ $rescue->Dia_diem_cuu_ho ?: '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người báo cáo</p>
+                            <p class="text-sm font-medium text-slate-800">{{ $rescue->Nguoi_bao_cao ?: '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Chi phí cứu hộ</p>
+                            <p class="text-sm font-medium text-slate-800">{{ $rescue->Chi_phi_cuu_ho ? number_format($rescue->Chi_phi_cuu_ho) . ' đ' : '-' }}</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
+                            <p class="text-sm font-medium text-slate-800 whitespace-pre-line">{{ $rescue->Ghi_chu ?: '-' }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Mode Sửa -->
+                    <form x-show="isEditing" x-cloak action="{{ route('admin.pets.rescue.update', [$pet->Ma_thu_cung, $rescue->Ma_ca_cuu_ho]) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -610,6 +652,7 @@
                             </div>
                         </div>
                         <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+                            <button type="button" @click="isEditing = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
                             <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Lưu thay đổi
