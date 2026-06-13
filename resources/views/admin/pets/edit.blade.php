@@ -364,8 +364,8 @@
                             <!-- Nhân viên -->
                             <div class="sm:col-span-2 pt-2 border-t border-slate-100">
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Người phụ trách hồ sơ</label>
-                                <div class="relative max-w-sm">
-                                    <select name="Nguoi_phu_trach" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all">
+                                <div class="relative w-full md:max-w-sm">
+                                    <select id="Nguoi_phu_trach_select" name="Nguoi_phu_trach" class="w-full text-sm" placeholder="Tìm kiếm người phụ trách...">
                                         <option value="">-- Không giao cụ thể --</option>
                                         @foreach($staffUsers as $user)
                                             <option value="{{ $user->Ma_nguoi_dung }}" {{ old('Nguoi_phu_trach', $pet->Nguoi_phu_trach) == $user->Ma_nguoi_dung ? 'selected' : '' }}>
@@ -373,7 +373,6 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
                                 </div>
                             </div>
                         </div>
@@ -472,5 +471,19 @@
     function updateCharCount(textarea, countId, max) {
         document.getElementById(countId).textContent = textarea.value.length + '/' + max;
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if(document.getElementById('Nguoi_phu_trach_select')) {
+            new TomSelect('#Nguoi_phu_trach_select', {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: 'Tìm người phụ trách...',
+                maxOptions: null
+            });
+        }
+    });
     </script>
 </x-admin-layout>

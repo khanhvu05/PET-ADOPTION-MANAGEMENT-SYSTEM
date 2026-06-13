@@ -26,6 +26,44 @@
         <!-- TomSelect -->
         <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+        <style>
+            /* Custom TomSelect overrides for a modern Tailwind-like look */
+            .ts-control {
+                border-radius: 0.75rem !important; /* rounded-xl */
+                border: 1px solid rgb(226 232 240 / 0.8) !important; /* border-slate-200/80 */
+                background-color: rgb(248 250 252 / 0.5) !important; /* bg-slate-50/50 */
+                padding: 0.625rem 1rem !important; /* py-2.5 px-4 */
+                box-shadow: none !important;
+                font-size: 0.875rem !important; /* text-sm */
+                color: rgb(30 41 59) !important; /* text-slate-800 */
+                transition: all 0.2s ease !important;
+            }
+            .ts-control.focus {
+                background-color: #ffffff !important;
+                border-color: #0ea5e9 !important; /* border-sky-500 */
+                box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2) !important; /* ring-sky-500/20 */
+            }
+            .ts-control > input {
+                font-size: 0.875rem !important;
+            }
+            .ts-dropdown {
+                border-radius: 0.75rem !important;
+                border: 1px solid rgb(226 232 240) !important;
+                box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important; /* shadow-lg */
+                margin-top: 4px !important;
+                overflow: hidden !important;
+                padding: 0 !important;
+            }
+            .ts-dropdown .option {
+                padding: 0.625rem 1rem !important;
+                font-size: 0.875rem !important;
+                cursor: pointer;
+            }
+            .ts-dropdown .option.active, .ts-dropdown .option:hover {
+                background-color: rgb(248 250 252) !important; /* bg-slate-50 */
+                color: #0ea5e9 !important;
+            }
+        </style>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
