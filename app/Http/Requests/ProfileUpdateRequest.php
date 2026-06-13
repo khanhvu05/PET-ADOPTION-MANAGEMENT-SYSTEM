@@ -26,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class, 'Email')->ignore($this->user()->Ma_nguoi_dung, 'Ma_nguoi_dung'),
             ],
+            'Loai_tai_khoan' => ['required', 'string', 'in:ca_nhan,to_chuc'],
         ];
     }
 }

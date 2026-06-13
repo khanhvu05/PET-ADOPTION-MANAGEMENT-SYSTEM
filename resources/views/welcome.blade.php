@@ -34,9 +34,11 @@
                 <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 Nhận nuôi ngay
             </a>
+            <!-- 
             <a href="{{ route('frontend.donations.process') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
                 Ủng hộ ngay
             </a>
+            -->
         </div>
 
         <!-- KPIs row -->
@@ -454,11 +456,9 @@
     </div>
 </section>
 
-<!-- Donation Section (Full Width Beige Background) -->
+<!-- Donation Section (Full Width Beige Background) (Hidden)
 <section class="donation-section py-12 lg:py-20 px-6 lg:px-16 w-full mt-10 lg:mt-20 relative overflow-hidden">
-    <!-- Top & bottom wave borders could be achieved via pseudo elements or SVG masks. Keeping it solid for simplicity, matching the image. -->
     <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
-        <!-- Left -->
         <div class="flex flex-col items-center text-center lg:items-start lg:text-left justify-center">
             <div class="flex justify-center lg:justify-start items-center mb-4 text-center lg:text-left w-full">
                 <h2 class="text-3xl font-extrabold text-[#1D2B53] flex items-center gap-2 tracking-tight">
@@ -476,7 +476,6 @@
             </a>
         </div>
         
-        <!-- Right -->
         <div class="bg-white/80 backdrop-blur-sm p-8 rounded-[30px] border border-white shadow-soft relative">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
                 <button class="py-3 bg-white border border-gray-200 text-dark font-black rounded-xl text-sm shadow-sm">50.000đ</button>
@@ -497,11 +496,11 @@
                 Đã quyên góp: <span class="font-black">37.500.000đ / 50.000.000đ</span>
             </p>
             
-            <!-- Floating pets on the right side of the donation box -->
             <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=400&auto=format&fit=crop" class="absolute -right-10 -bottom-10 w-48 h-auto object-cover rounded-[30px] border-4 border-white shadow-lg rotate-3" alt="Pets overlay">
         </div>
     </div>
 </section>
+-->
 
 <!-- News Section -->
 <section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto bg-cute-pattern">

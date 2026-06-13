@@ -28,14 +28,13 @@
     <!-- Navigation Links -->
     <nav class="flex-1 overflow-y-auto px-2 pb-2 custom-scrollbar">
         
-        <!-- SECTION: TỔNG QUAN -->
+        <!-- SECTION: TỔNG QUAN (Ẩn theo yêu cầu) 
         <div class="mt-2 mb-1">
             <h3 x-show="expanded" class="px-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">Tổng Quan</h3>
             <div x-show="!expanded" class="h-3 border-b border-white/10 mx-2 mb-2"></div>
         </div>
         
         <div class="space-y-0.5">
-            <!-- Dashboard -->
             <a href="{{ route('dashboard') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
                :class="!expanded && 'justify-center px-0'"
@@ -47,6 +46,7 @@
             </a>
 
         </div>
+        -->
 
         <!-- SECTION: QUẢN LÝ -->
         <div class="mt-3 mb-1">
@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <!-- Ủng Hộ Dropdown -->
+            <!-- Ủng Hộ Dropdown (Ẩn đi theo yêu cầu) 
             <div x-data="{ open: {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'true' : 'false' }} }" class="space-y-0.5">
                 <button @click="open = !open; if(!expanded) expanded = true" 
                    class="w-full flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -112,10 +112,11 @@
                      <a href="{{ route('admin.donation_campaigns.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Chiến dịch Gây quỹ</a>
                 </div>
             </div>
+            -->
 
 
+            <!-- Quản Lý Người Dùng (Ẩn theo yêu cầu) 
             @can('access_users')
-            <!-- Quản Lý Người Dùng -->
             <a href="{{ route('admin.users.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.users.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
                :class="!expanded ? 'justify-center px-0' : ''">
@@ -125,6 +126,7 @@
                 <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Người Dùng</span>
             </a>
             @endcan
+            -->
         </div>
 
         @can('access_settings')

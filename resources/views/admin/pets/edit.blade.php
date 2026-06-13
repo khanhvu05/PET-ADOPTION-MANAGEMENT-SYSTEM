@@ -2,7 +2,7 @@
     <x-slot name="header">
         <a href="{{ route('dashboard') }}" class="hover:text-sidebar-blue transition-colors flex items-center gap-1.5 text-slate-500">
             <i data-lucide="home" class="w-4 h-4"></i>
-            Tổng Quan
+            Quản Lý
         </a>
         <i data-lucide="chevron-right" class="w-4 h-4 mx-1 text-slate-400"></i>
         <a href="{{ route('admin.pets.index') }}" class="hover:text-sidebar-blue transition-colors text-slate-500">Thú Cưng</a>

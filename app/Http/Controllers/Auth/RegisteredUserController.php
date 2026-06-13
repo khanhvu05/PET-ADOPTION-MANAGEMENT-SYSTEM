@@ -34,6 +34,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class.',Email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'Loai_tai_khoan' => ['required', 'string', 'in:ca_nhan,to_chuc'],
         ], [
             'name.required' => 'Vui lòng nhập họ tên.',
             'name.max' => 'Họ tên không được vượt quá 255 ký tự.',
@@ -42,14 +43,16 @@ class RegisteredUserController extends Controller
             'email.unique' => 'Địa chỉ email này đã được sử dụng.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.'
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'Loai_tai_khoan.required' => 'Vui lòng chọn loại tài khoản.',
+            'Loai_tai_khoan.in' => 'Loại tài khoản không hợp lệ.'
         ]);
 
         $user = User::create([
             'Ho_ten' => $request->name,
             'Email' => $request->email,
             'Mat_khau_hash' => Hash::make($request->password),
-            'Loai_tai_khoan' => 'ca_nhan',
+            'Loai_tai_khoan' => $request->Loai_tai_khoan,
             'Trang_thai' => 'cho_xac_thuc',
         ]);
 

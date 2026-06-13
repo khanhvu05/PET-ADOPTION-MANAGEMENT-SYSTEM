@@ -34,11 +34,31 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 2. Tạo Roles và Gán Permissions
         // Admin
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'admin'],
+            [
+                'mo_ta' => 'Quản trị viên hệ thống, có toàn quyền cấu hình và quản lý dữ liệu.',
+                'la_vai_tro_he_thong' => true
+            ]
+        );
+        $adminRole->update([
+            'mo_ta' => 'Quản trị viên hệ thống, có toàn quyền cấu hình và quản lý dữ liệu.',
+            'la_vai_tro_he_thong' => true
+        ]);
         $adminRole->syncPermissions(Permission::all());
 
         // Staff (Nhân viên / Tình nguyện viên)
-        $staffRole = Role::firstOrCreate(['name' => 'staff']);
+        $staffRole = Role::firstOrCreate(
+            ['name' => 'staff'],
+            [
+                'mo_ta' => 'Nhân viên/Tình nguyện viên, thực hiện cứu hộ, chăm sóc và quản lý hồ sơ thú cưng, duyệt đơn.',
+                'la_vai_tro_he_thong' => true
+            ]
+        );
+        $staffRole->update([
+            'mo_ta' => 'Nhân viên/Tình nguyện viên, thực hiện cứu hộ, chăm sóc và quản lý hồ sơ thú cưng, duyệt đơn.',
+            'la_vai_tro_he_thong' => true
+        ]);
         $staffRole->syncPermissions([
             'access_pets',
             'access_adoptions',
@@ -47,11 +67,21 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Customer (Người dùng phổ thông - không cần quyền đặc biệt để thao tác basic)
-        $customerRole = Role::firstOrCreate(['name' => 'customer']);
+        $customerRole = Role::firstOrCreate(
+            ['name' => 'customer'],
+            [
+                'mo_ta' => 'Người dùng phổ thông, có thể đăng ký tài khoản, gửi đơn nhận nuôi và thực hiện quyên góp.',
+                'la_vai_tro_he_thong' => true
+            ]
+        );
+        $customerRole->update([
+            'mo_ta' => 'Người dùng phổ thông, có thể đăng ký tài khoản, gửi đơn nhận nuôi và thực hiện quyên góp.',
+            'la_vai_tro_he_thong' => true
+        ]);
         
         // 3. Gán Role cho một số tài khoản mặc định (nếu có)
         // Lấy admin user hiện tại để gán quyền
-        $adminUser = \App\Models\User::where('Loai_tai_khoan', 'admin')->first();
+        $adminUser = \App\Models\User::where('Email', 'admin@petjam.vn')->first();
         if ($adminUser) {
             $adminUser->assignRole('admin');
         }

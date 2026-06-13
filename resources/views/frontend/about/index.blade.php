@@ -26,9 +26,9 @@
                 <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 Nhận nuôi ngay
             </a>
-            <a href="{{ route('frontend.donations.index') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
+            <!-- <a href="{{ route('frontend.donations.index') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
                 Ủng hộ chúng tôi
-            </a>
+            </a> -->
         </div>
 
         <!-- KPIs row -->
@@ -310,7 +310,7 @@
             </p>
             <div class="flex items-center justify-center md:justify-start gap-3">
                 <a href="{{ route('frontend.adoptions.index') }}" class="btn-outline-teal text-sm bg-white hover:bg-secondary hover:text-white px-6 py-3 border-gray-200 text-dark shadow-sm transition-colors rounded-xl">Tìm hiểu thêm</a>
-                <a href="{{ route('frontend.donations.index') }}" class="btn-primary text-sm px-6 py-3 rounded-xl">Tham gia ngay</a>
+                <!-- <a href="{{ route('frontend.donations.index') }}" class="btn-primary text-sm px-6 py-3 rounded-xl">Tham gia ngay</a> -->
             </div>
         </div>
 

@@ -185,8 +185,8 @@ class AdoptionController extends Controller
                         'Email' => $validated['new_user_email'],
                         'Mat_khau_hash' => \Illuminate\Support\Facades\Hash::make($validated['new_user_password']),
                         'So_dien_thoai' => $validated['So_dien_thoai'],
-                        'Loai_tai_khoan' => 'user',
-                        'Trang_thai' => 'active',
+                        'Loai_tai_khoan' => 'ca_nhan',
+                        'Trang_thai' => 'hoat_dong',
                     ]);
                     $userId = $user->Ma_nguoi_dung;
                 } else {

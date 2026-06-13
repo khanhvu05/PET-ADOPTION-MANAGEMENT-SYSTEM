@@ -2,7 +2,7 @@
     <x-slot name="header">
         <a href="{{ route('dashboard') }}" class="hover:text-teal-600 transition-colors flex items-center gap-1.5 text-slate-500">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-            Tổng Quan
+            Quản Lý
         </a>
         <svg class="w-4 h-4 mx-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         <a href="{{ route('admin.users.index') }}" class="hover:text-teal-600 transition-colors text-slate-500">Người Dùng</a>
@@ -59,6 +59,16 @@
                         <input type="text" name="So_dien_thoai" value="{{ old('So_dien_thoai') }}"
                             class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-colors"
                             placeholder="Nhập số điện thoại...">
+                    </div>
+
+                    <!-- Loại tài khoản -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Loại tài khoản <span class="text-red-500">*</span></label>
+                        <select name="Loai_tai_khoan" required
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-colors text-sm text-slate-900">
+                            <option value="ca_nhan" {{ old('Loai_tai_khoan') == 'ca_nhan' ? 'selected' : '' }}>Cá nhân</option>
+                            <option value="to_chuc" {{ old('Loai_tai_khoan') == 'to_chuc' ? 'selected' : '' }}>Tổ chức</option>
+                        </select>
                     </div>
 
                     <!-- Mật khẩu -->

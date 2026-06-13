@@ -75,7 +75,8 @@ class UserController extends Controller
             'Email' => 'required|string|email|max:255|unique:users',
             'Mat_khau_hash' => 'required|string|min:8|confirmed',
             'So_dien_thoai' => 'nullable|string|max:20',
-            'role' => 'required|string'
+            'role' => 'required|string',
+            'Loai_tai_khoan' => 'required|string|in:ca_nhan,to_chuc'
         ]);
 
         $user = User::create([
@@ -83,6 +84,7 @@ class UserController extends Controller
             'Email' => $validated['Email'],
             'Mat_khau_hash' => Hash::make($validated['Mat_khau_hash']),
             'So_dien_thoai' => $validated['So_dien_thoai'],
+            'Loai_tai_khoan' => $validated['Loai_tai_khoan'],
             'Trang_thai' => 'hoat_dong',
             'email_verified_at' => now(), // Đánh dấu đã xác thực luôn cho admin tạo
             'Email_da_xac_thuc' => true,
@@ -188,7 +190,7 @@ class UserController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('Họ tên', 'Email', 'Số điện thoại', 'Ngày tạo', 'Trạng thái', 'Vai trò');
+        $columns = array('Họ tên', 'Email', 'Số điện thoại', 'Loại tài khoản', 'Ngày tạo', 'Trạng thái', 'Vai trò');
 
         $callback = function() use($users, $columns) {
             $file = fopen('php://output', 'w');
@@ -202,6 +204,7 @@ class UserController extends Controller
                     $user->Ho_ten,
                     $user->Email,
                     $user->So_dien_thoai ?? '---',
+                    $user->Loai_tai_khoan === 'to_chuc' ? 'Tổ chức' : 'Cá nhân',
                     $user->Ngay_tao ? $user->Ngay_tao->format('d/m/Y H:i') : '---',
                     $user->Trang_thai === 'hoat_dong' ? 'Hoạt động' : 'Bị khóa',
                     ucfirst($roleName)

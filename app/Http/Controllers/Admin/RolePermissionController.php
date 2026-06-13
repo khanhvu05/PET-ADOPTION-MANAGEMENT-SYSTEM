@@ -41,8 +41,8 @@ class RolePermissionController extends Controller
 
     public function destroyRole(Role $role)
     {
-        if ($role->name === 'admin' || $role->name === 'staff') {
-            return back()->with('error', 'Không thể xóa vai trò hệ thống (admin/staff).');
+        if ($role->la_vai_tro_he_thong) {
+            return back()->with('error', 'Không thể xóa vai trò hệ thống.');
         }
 
         // Kiểm tra xem có user nào đang giữ role này không, nếu có thì không cho xoá (tuỳ logic)

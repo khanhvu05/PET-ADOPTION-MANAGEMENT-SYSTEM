@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if ($request->user()->isStaff()) {
-            return redirect()->route('dashboard');
+            return redirect()->route('admin.pets.index');
         }
 
         return redirect()->intended(route('frontend.adoptions.index', absolute: false));
