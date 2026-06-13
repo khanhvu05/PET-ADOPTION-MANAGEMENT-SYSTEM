@@ -220,13 +220,9 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Thông tin chi tiết
                 </button>
-                <button @click="activeTab = 'images'" :class="activeTab === 'images' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    Hình ảnh
-                </button>
                 <button @click="activeTab = 'health'" :class="activeTab === 'health' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Lịch sử sức khỏe
+                    Lịch sử tiêm phòng
                 </button>
                 <button @click="activeTab = 'adoptions'" :class="activeTab === 'adoptions' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
@@ -234,7 +230,7 @@
                 </button>
                 <button @click="activeTab = 'notes'" :class="activeTab === 'notes' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    Ghi chú
+                    Lịch sử cập nhật
                 </button>
                 <button @click="activeTab = 'rescue'" :class="activeTab === 'rescue' ? 'pb-3 text-sm font-bold text-teal-700 border-b-2 border-teal-700 flex items-center gap-2' : 'pb-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors flex items-center gap-2'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
@@ -311,41 +307,12 @@
         <!-- Bottom Timeline and Stats Block removed as data is not tracked in DB -->
             </div>
 
-            <!-- 2. Tab: Hình ảnh -->
-            <div x-show="activeTab === 'images'" x-cloak>
-                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                    <h3 class="text-sm font-bold text-slate-800 mb-6">Ảnh đại diện & Thư viện ảnh</h3>
-                    
-                    <div class="space-y-6">
-                        <div class="aspect-[3/4] sm:aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden bg-slate-100 max-w-3xl mx-auto">
-                            <img src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-contain bg-slate-900/5" alt="{{ $pet->Ten }}">
-                        </div>
-
-                        @if(is_array($pet->Thu_vien_anh) && count($pet->Thu_vien_anh) > 0)
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            @foreach($pet->Thu_vien_anh as $url)
-                                <div class="aspect-square rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm">
-                                    <img src="{{ $url }}" class="w-full h-full object-cover" alt="Gallery Image">
-                                </div>
-                            @endforeach
-                        </div>
-                        <p class="text-sm font-medium text-slate-500 mt-6">Tổng cộng {{ count($pet->Thu_vien_anh) + 1 }} ảnh (Bao gồm ảnh đại diện)</p>
-                        @else
-                        <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl mt-4">
-                            <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <p class="text-sm font-bold text-slate-500">Bé này hiện chưa có ảnh phụ nào.</p>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Tab: Lịch sử sức khỏe -->
+            <!-- 3. Tab: Lịch sử tiêm phòng -->
             <div x-show="activeTab === 'health'" x-cloak>
                 <div class="space-y-6">
                     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                            <h3 class="text-sm font-bold text-slate-800">Lịch sử sức khỏe & Tiêm phòng</h3>
+                            <h3 class="text-sm font-bold text-slate-800">Lịch sử tiêm phòng</h3>
                             <button x-data @click="$dispatch('open-modal', 'add-health-record')" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                                 Thêm bản ghi mới
@@ -356,41 +323,31 @@
                         <div x-data="{ open: false }" @open-modal.window="if ($event.detail === 'add-health-record') open = true" class="mb-6">
                             <div x-show="open" x-transition class="bg-slate-50 border border-slate-200 rounded-xl p-5">
                                 <h4 class="text-[13px] font-bold text-slate-800 mb-4">Nhập thông tin khám/tiêm phòng</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Loại</label>
-                                        <select class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                            <option>Tiêm phòng</option>
-                                            <option>Khám sức khỏe</option>
-                                            <option>Tẩy giun</option>
-                                            <option>Điều trị bệnh</option>
-                                        </select>
+                                <form action="{{ route('admin.pets.health.store', $pet->Ma_thu_cung) }}" method="POST">
+                                    @csrf
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày thực hiện <span class="text-red-500">*</span></label>
+                                            <input type="date" name="Ngay_tiem" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nội dung / Tên Vaccine <span class="text-red-500">*</span></label>
+                                            <input type="text" name="Ten_vac_xin" required placeholder="VD: Vaccine Care 5 bệnh..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Bác sĩ / Phòng khám</label>
+                                            <input type="text" name="Ten_noi_tiem" placeholder="Tên phòng khám" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí (VNĐ)</label>
+                                            <input type="number" name="Chi_phi" min="0" placeholder="VD: 150000" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày thực hiện</label>
-                                        <input type="date" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    <div class="flex justify-end gap-3">
+                                        <button type="button" @click="open = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
+                                        <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu bản ghi</button>
                                     </div>
-                                    <div class="md:col-span-2">
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nội dung / Tên Vaccine</label>
-                                        <input type="text" placeholder="VD: Vaccine Care 5 bệnh..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Bác sĩ / Phòng khám</label>
-                                        <input type="text" placeholder="Tên phòng khám" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí (VNĐ)</label>
-                                        <input type="number" placeholder="VD: 150000" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                    </div>
-                                    <div class="md:col-span-2">
-                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ghi chú thêm</label>
-                                        <textarea rows="2" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500"></textarea>
-                                    </div>
-                                </div>
-                                <div class="flex justify-end gap-3">
-                                    <button @click="open = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
-                                    <button class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu bản ghi</button>
-                                </div>
+                                </form>
                             </div>
                         </div>
 
@@ -399,64 +356,112 @@
                                 <thead class="text-[11px] text-slate-500 font-bold uppercase tracking-wider bg-slate-50/50 rounded-lg">
                                     <tr>
                                         <th class="px-4 py-3 rounded-l-lg">Ngày</th>
-                                        <th class="px-4 py-3">Loại</th>
-                                        <th class="px-4 py-3">Nội dung</th>
+                                        <th class="px-4 py-3">Nội dung / Tên Vaccine</th>
                                         <th class="px-4 py-3">Bác sĩ / Phòng khám</th>
-                                        <th class="px-4 py-3 rounded-r-lg">Ghi chú</th>
+                                        <th class="px-4 py-3">Chi phí</th>
+                                        <th class="px-4 py-3 rounded-r-lg text-right">Thao tác</th>
                                     </tr>
-                                <tbody class="text-slate-700 font-medium divide-y divide-slate-100">
+                                </thead>
                                     @if($pet->lichSuTiemChung->count() > 0)
                                         @foreach($pet->lichSuTiemChung as $health)
-                                        <tr>
-                                            <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">{{ $health->Ngay_tiem ? $health->Ngay_tiem->format('d/m/Y') : '-' }}</td>
-                                            <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">Tiêm phòng/Khám</td>
-                                            <td class="px-4 py-4">{{ $health->Ten_vac_xin }}</td>
-                                            <td class="px-4 py-4 text-slate-600 whitespace-nowrap">{{ $health->Ten_noi_tiem ?? '-' }}</td>
-                                            <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap">{{ $health->Chi_phi ? number_format($health->Chi_phi) . ' đ' : '-' }}</td>
-                                        </tr>
+                                        <tbody x-data="{ 
+                                            openEdit: false,
+                                            isUpdating: false,
+                                            tenVacXin: '{{ addslashes($health->Ten_vac_xin) }}',
+                                            tenNoiTiem: '{{ addslashes($health->Ten_noi_tiem ?? '') }}',
+                                            chiPhi: '{{ $health->Chi_phi ? round($health->Chi_phi) : '' }}',
+                                            ngayTiemNhac: '{{ $health->Ngay_tiem_nhac_tiep ? $health->Ngay_tiem_nhac_tiep->format('Y-m-d') : '' }}',
+                                            
+                                            async submitUpdate(e) {
+                                                this.isUpdating = true;
+                                                const formData = new FormData(e.target);
+                                                try {
+                                                    const res = await fetch(e.target.action, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'X-Requested-With': 'XMLHttpRequest',
+                                                            'Accept': 'application/json'
+                                                        },
+                                                        body: formData
+                                                    });
+                                                    const result = await res.json();
+                                                    if (res.ok && result.success) {
+                                                        this.tenVacXin = result.data.Ten_vac_xin;
+                                                        this.tenNoiTiem = result.data.Ten_noi_tiem || '';
+                                                        this.chiPhi = result.data.Chi_phi || '';
+                                                        this.ngayTiemNhac = result.data.Ngay_tiem_nhac_tiep ? result.data.Ngay_tiem_nhac_tiep.substring(0, 10) : '';
+                                                        this.openEdit = false;
+                                                    } else {
+                                                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+                                                    }
+                                                } catch(error) {
+                                                    alert('Lỗi kết nối mạng.');
+                                                } finally {
+                                                    this.isUpdating = false;
+                                                }
+                                            }
+                                        }" class="text-slate-700 font-medium border-b border-slate-100 last:border-b-0">
+                                            <tr class="group hover:bg-slate-50/50 transition-colors">
+                                                <td class="px-4 py-4 text-slate-500 font-bold whitespace-nowrap">{{ $health->Ngay_tiem ? $health->Ngay_tiem->format('d/m/Y') : '-' }}</td>
+                                                <td class="px-4 py-4" x-text="tenVacXin"></td>
+                                                <td class="px-4 py-4 text-slate-600 whitespace-nowrap" x-text="tenNoiTiem ? tenNoiTiem : '-'"></td>
+                                                <td class="px-4 py-4 font-bold text-slate-800 whitespace-nowrap" x-text="chiPhi ? new Intl.NumberFormat('vi-VN').format(chiPhi) + ' đ' : '-'"></td>
+                                                <td class="px-4 py-4 text-right">
+                                                    <button type="button" @click="openEdit = !openEdit" class="text-teal-600 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 p-1.5 rounded-lg transition-colors">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Edit Row -->
+                                            <tr x-show="openEdit" x-cloak class="bg-slate-50">
+                                                <td colspan="5" class="p-0">
+                                                    <div class="p-4 border-b border-slate-100 shadow-inner">
+                                                        <form action="{{ route('admin.pets.health.update', [$pet->Ma_thu_cung, $health->Ma_lan_tiem]) }}" @submit.prevent="submitUpdate" method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                                                                <div>
+                                                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày thực hiện (Cố định)</label>
+                                                                    <input type="date" name="Ngay_tiem" value="{{ $health->Ngay_tiem ? $health->Ngay_tiem->format('Y-m-d') : '' }}" readonly class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500 bg-slate-100 text-slate-500 cursor-not-allowed pointer-events-none">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tên Vaccine <span class="text-red-500">*</span></label>
+                                                                    <input type="text" name="Ten_vac_xin" x-model="tenVacXin" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500 bg-white">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phòng khám</label>
+                                                                    <input type="text" name="Ten_noi_tiem" x-model="tenNoiTiem" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500 bg-white">
+                                                                </div>
+                                                                <div>
+                                                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí (VNĐ)</label>
+                                                                    <input type="number" name="Chi_phi" min="0" x-model="chiPhi" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500 bg-white">
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex justify-end gap-3">
+                                                                <button type="button" @click="openEdit = false" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg" :disabled="isUpdating">Hủy</button>
+                                                                <button type="submit" class="px-3 py-1.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg disabled:opacity-50" :disabled="isUpdating">
+                                                                    <span x-show="!isUpdating">Cập nhật</span>
+                                                                    <span x-show="isUpdating">Đang lưu...</span>
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                         @endforeach
                                     @else
-                                        <tr>
-                                            <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-medium">Chưa có dữ liệu lịch sử sức khỏe.</td>
-                                        </tr>
+                                        <tbody class="text-slate-700 font-medium">
+                                            <tr>
+                                                <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-medium">Chưa có dữ liệu lịch sử sức khỏe.</td>
+                                            </tr>
+                                        </tbody>
                                     @endif
-                                </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                        <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch nhắc nhở tiêm phòng</h3>
-                        
-                        @php
-                            $reminders = $pet->lichSuTiemChung->filter(fn($item) => $item->Ngay_tiem_nhac_tiep && $item->Ngay_tiem_nhac_tiep->isFuture())->sortBy('Ngay_tiem_nhac_tiep');
-                        @endphp
 
-                        @if($reminders->count() > 0)
-                        <div class="space-y-4">
-                            @foreach($reminders as $reminder)
-                            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800">Nhắc lại: {{ $reminder->Ten_vac_xin }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <span class="text-sm font-bold text-slate-500 hidden sm:block">{{ $reminder->Ngay_tiem_nhac_tiep->format('d/m/Y') }}</span>
-                                    <span class="bg-green-50 text-green-600 border border-green-100 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">Còn {{ $reminder->so_ngay_con_lai }} ngày</span>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                        @else
-                        <div class="space-y-4 text-center py-4 text-slate-500 font-medium">
-                            Chưa có lịch nhắc nhở nào.
-                        </div>
-                        @endif
-                    </div>
                 </div>
             </div>
 
@@ -465,10 +470,6 @@
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <h3 class="text-sm font-bold text-slate-800">Lịch sử đơn nhận nuôi</h3>
-                        <a href="{{ route('admin.adoptions.create', ['from' => 'pet', 'pet_id' => $pet->Ma_thu_cung]) }}" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                            Thêm đơn mới
-                        </a>
                     </div>
                     
                     @if($pet->donNhanNuoi->count() > 0)
@@ -537,44 +538,28 @@
             <!-- 5. Tab: Ghi chú -->
             <div x-show="activeTab === 'notes'" x-cloak>
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
-                    <h3 class="text-sm font-bold text-slate-800 mb-6">Ghi chú</h3>
-                    
-                    <form action="{{ route('admin.pets.notes.store', $pet->Ma_thu_cung) }}" method="POST" class="flex flex-col sm:flex-row gap-4 mb-8">
-                        @csrf
-                        <input type="text" name="Noi_dung" required maxlength="1000" class="flex-1 rounded-lg border-slate-200 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm px-4 py-2.5 bg-slate-50/50" placeholder="Nhập ghi chú...">
-                        <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors flex items-center justify-center gap-2 shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                            Thêm ghi chú
-                        </button>
-                    </form>
+                    <h3 class="text-sm font-bold text-slate-800 mb-6">Lịch sử cập nhật hồ sơ</h3>
 
                     <div class="space-y-4">
                         @if($pet->ghiChu->count() > 0)
                             @foreach($pet->ghiChu as $note)
-                            <div class="flex items-start gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl group hover:shadow-sm transition-shadow">
+                            <div class="flex items-start gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl">
                                 <div class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 shrink-0 text-xs font-bold">
-                                    {{ mb_substr($note->nguoiDung->Ho_ten ?? 'N/A', 0, 1) }}
+                                    {{ mb_substr($note->nguoiDung->Ho_ten ?? 'Hệ thống', 0, 1) }}
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-sm font-bold text-slate-800">{{ $note->nguoiDung->Ho_ten ?? 'Không rõ' }}</span>
+                                        <span class="text-sm font-bold text-slate-800">{{ $note->nguoiDung->Ho_ten ?? 'Hệ thống' }}</span>
                                         <span class="text-[11px] text-slate-400">{{ $note->Ngay_tao->format('d/m/Y H:i') }}</span>
                                     </div>
-                                    <p class="text-sm text-slate-600 font-medium">{{ $note->Noi_dung }}</p>
+                                    <p class="text-sm text-slate-600 font-medium whitespace-pre-line">{{ $note->Noi_dung }}</p>
                                 </div>
-                                <form action="{{ route('admin.pets.notes.destroy', [$pet->Ma_thu_cung, $note->Ma_ghi_chu]) }}" method="POST" class="confirm-delete shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" data-title="Xóa ghi chú?" data-text="Bạn có chắc muốn xóa ghi chú này?">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Xóa ghi chú">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                    </button>
-                                </form>
                             </div>
                             @endforeach
                         @else
                         <div class="p-8 text-center bg-slate-50 border border-slate-200 rounded-2xl">
                             <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            <p class="text-sm font-bold text-slate-500">Chưa có ghi chú nào.</p>
+                            <p class="text-sm font-bold text-slate-500">Chưa có lịch sử cập nhật nào.</p>
                         </div>
                         @endif
                     </div>
@@ -583,118 +568,61 @@
         </div>
             <!-- 5. Tab: Ca cứu hộ -->
             <div x-show="activeTab === 'rescue'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
-                <!-- Form thêm ca cứu hộ mới -->
-                <div x-data="{ showForm: false }" class="mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-bold text-slate-800">Danh sách ca cứu hộ</h3>
-                        <button @click="showForm = !showForm" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                            Thêm ca cứu hộ
-                        </button>
-                    </div>
-
-                    <div x-show="showForm" x-transition class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
-                        <h4 class="text-[13px] font-bold text-slate-800 mb-4">Nhập thông tin ca cứu hộ</h4>
-                        <form action="{{ route('admin.pets.rescue.store', $pet->Ma_thu_cung) }}" method="POST">
-                            @csrf
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày cứu hộ <span class="text-red-500">*</span></label>
-                                    <input type="date" name="Ngay_cuu_ho" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Loại cứu hộ <span class="text-red-500">*</span></label>
-                                    <select name="Loai_cuu_ho" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                        <option value="">-- Chọn loại --</option>
-                                        <option value="lang_thang">Lang thang</option>
-                                        <option value="lac_duong">Lạc đường</option>
-                                        <option value="bi_bo_roi">Bị bỏ rơi</option>
-                                        <option value="bi_nguoc_dai">Bị ngược đãi</option>
-                                    </select>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Địa điểm phát hiện</label>
-                                    <input type="text" name="Dia_diem_cuu_ho" placeholder="VD: Đường Nguyễn Văn Cừ, Q5..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Người báo cáo</label>
-                                    <input type="text" name="Nguoi_bao_cao" placeholder="Tên người báo" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí cứu hộ (VNĐ)</label>
-                                    <input type="number" name="Chi_phi_cuu_ho" placeholder="VD: 500000" min="0" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ghi chú</label>
-                                    <textarea name="Ghi_chu" rows="2" placeholder="Mô tả tình trạng khi phát hiện..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500"></textarea>
-                                </div>
-                            </div>
-                            <div class="flex justify-end gap-3">
-                                <button type="button" @click="showForm = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
-                                <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu ca cứu hộ</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
                 @if($pet->caCuuHo->count() > 0)
-                <div class="space-y-6">
-                    @foreach($pet->caCuuHo as $rescue)
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-base font-bold text-slate-800">Ca cứu hộ #{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</h3>
-                            <span class="text-xs font-bold px-2.5 py-1 rounded-full
-                                @if($rescue->Trang_thai_ca === 'da_dong') bg-slate-100 text-slate-600
-                                @elseif($rescue->Trang_thai_ca === 'on_dinh') bg-green-50 text-green-600
-                                @elseif($rescue->Trang_thai_ca === 'dang_dieu_tri') bg-orange-50 text-orange-600
-                                @else bg-blue-50 text-blue-600
-                                @endif
-                            ">
-                                {{ match($rescue->Trang_thai_ca) {
-                                    'dang_xu_ly' => 'Đang xử lý',
-                                    'dang_dieu_tri' => 'Đang điều trị',
-                                    'on_dinh' => 'Ổn định',
-                                    'da_dong' => 'Đã đóng',
-                                    default => 'Không rõ'
-                                } }}
-                            </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ngày cứu hộ</p>
-                                <p class="text-sm font-bold text-slate-800">{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('d/m/Y') : '-' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loại cứu hộ</p>
-                                <p class="text-sm font-medium text-slate-800">{{ $rescue->loai_cuu_ho_label }}</p>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Địa điểm phát hiện</p>
-                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Dia_diem_cuu_ho ?? '-' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Người báo cáo</p>
-                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Nguoi_bao_cao ?? '-' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Chi phí</p>
-                                <p class="text-sm font-bold text-slate-800">{{ $rescue->Chi_phi_cuu_ho ? number_format($rescue->Chi_phi_cuu_ho) . ' đ' : '0 đ' }}</p>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ghi chú</p>
-                                <p class="text-sm font-medium text-slate-800">{{ $rescue->Ghi_chu ?? '-' }}</p>
-                            </div>
-                        </div>
+                @php $rescue = $pet->caCuuHo->first(); @endphp
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800">Cập nhật thông tin ca cứu hộ #{{ substr($rescue->Ma_ca_cuu_ho, 0, 8) }}</h3>
                     </div>
-                    @endforeach
+                    <form action="{{ route('admin.pets.rescue.update', [$pet->Ma_thu_cung, $rescue->Ma_ca_cuu_ho]) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ngày cứu hộ <span class="text-red-500">*</span></label>
+                                <input type="date" name="Ngay_cuu_ho" value="{{ $rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('Y-m-d') : '' }}" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Loại cứu hộ <span class="text-red-500">*</span></label>
+                                <select name="Loai_cuu_ho" required class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                                    <option value="">-- Chọn loại --</option>
+                                    <option value="lang_thang" {{ $rescue->Loai_cuu_ho == 'lang_thang' ? 'selected' : '' }}>Lang thang</option>
+                                    <option value="lac_duong" {{ $rescue->Loai_cuu_ho == 'lac_duong' ? 'selected' : '' }}>Lạc đường</option>
+                                    <option value="bi_bo_roi" {{ $rescue->Loai_cuu_ho == 'bi_bo_roi' ? 'selected' : '' }}>Bị bỏ rơi</option>
+                                    <option value="bi_nguoc_dai" {{ $rescue->Loai_cuu_ho == 'bi_nguoc_dai' ? 'selected' : '' }}>Bị ngược đãi</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Địa điểm phát hiện</label>
+                                <input type="text" name="Dia_diem_cuu_ho" value="{{ $rescue->Dia_diem_cuu_ho }}" placeholder="VD: Đường Nguyễn Văn Cừ, Q5..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Người báo cáo</label>
+                                <input type="text" name="Nguoi_bao_cao" value="{{ $rescue->Nguoi_bao_cao }}" placeholder="Tên người báo" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Chi phí cứu hộ (VNĐ)</label>
+                                <input type="number" name="Chi_phi_cuu_ho" value="{{ $rescue->Chi_phi_cuu_ho }}" placeholder="VD: 500000" min="0" class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ghi chú</label>
+                                <textarea name="Ghi_chu" rows="2" placeholder="Mô tả tình trạng khi phát hiện..." class="w-full rounded-lg border-slate-200 text-sm focus:ring-teal-500 focus:border-teal-500">{{ $rescue->Ghi_chu }}</textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+                            <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
                 </div>
                 @else
                 <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                     <div class="py-8 text-center">
                         <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        <p class="text-sm font-medium text-slate-500">Thú cưng này không có ca cứu hộ liên kết.</p>
-                        <p class="text-xs text-slate-400 mt-1">Nhấn "Thêm ca cứu hộ" phía trên để tạo mới.</p>
+                        <p class="text-sm font-medium text-slate-500">Thú cưng này không có thông tin ca cứu hộ liên kết.</p>
+                        <p class="text-xs text-slate-400 mt-1">Vui lòng cập nhật trong phần chỉnh sửa thú cưng nếu cần.</p>
                     </div>
                 </div>
                 @endif

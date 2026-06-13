@@ -199,6 +199,22 @@ class PetController extends Controller
 
         $pet = Pet::create($data);
 
+        // Lưu thông tin ca cứu hộ nếu có nhập
+        if ($request->filled('Ngay_cuu_ho') && $request->filled('Loai_cuu_ho')) {
+            \App\Models\RescueCase::create([
+                'Ma_thu_cung' => $pet->Ma_thu_cung,
+                'Ngay_cuu_ho' => $request->Ngay_cuu_ho,
+                'Loai_cuu_ho' => $request->Loai_cuu_ho,
+                'Dia_diem_cuu_ho' => $request->Dia_diem_cuu_ho,
+                'Nguoi_bao_cao' => $request->Nguoi_bao_cao,
+                'Nguoi_thuc_hien' => auth()->user()->Ma_nguoi_dung,
+                'Chi_phi_cuu_ho' => $request->Chi_phi_cuu_ho ?? 0,
+                'Ghi_chu' => $request->Ghi_chu_cuu_ho,
+            ]);
+        }
+
+
+
         return redirect()
             ->route('admin.pets.show', $pet->Ma_thu_cung)
             ->with('success', "Đã thêm thú cưng «{$pet->Ten}» thành công!");
@@ -290,6 +306,34 @@ class PetController extends Controller
         unset($data['thu_vien_anh_upload']);
 
         $pet->update($data);
+
+        // Cập nhật hoặc tạo mới ca cứu hộ
+        if ($request->filled('Ngay_cuu_ho') && $request->filled('Loai_cuu_ho')) {
+            $rescue = $pet->caCuuHo->first();
+            if ($rescue) {
+                $rescue->update([
+                    'Ngay_cuu_ho' => $request->Ngay_cuu_ho,
+                    'Loai_cuu_ho' => $request->Loai_cuu_ho,
+                    'Dia_diem_cuu_ho' => $request->Dia_diem_cuu_ho,
+                    'Nguoi_bao_cao' => $request->Nguoi_bao_cao,
+                    'Chi_phi_cuu_ho' => $request->Chi_phi_cuu_ho ?? 0,
+                    'Ghi_chu' => $request->Ghi_chu_cuu_ho,
+                ]);
+            } else {
+                \App\Models\RescueCase::create([
+                    'Ma_thu_cung' => $pet->Ma_thu_cung,
+                    'Ngay_cuu_ho' => $request->Ngay_cuu_ho,
+                    'Loai_cuu_ho' => $request->Loai_cuu_ho,
+                    'Dia_diem_cuu_ho' => $request->Dia_diem_cuu_ho,
+                    'Nguoi_bao_cao' => $request->Nguoi_bao_cao,
+                    'Nguoi_thuc_hien' => auth()->user()->Ma_nguoi_dung,
+                    'Chi_phi_cuu_ho' => $request->Chi_phi_cuu_ho ?? 0,
+                    'Ghi_chu' => $request->Ghi_chu_cuu_ho,
+                ]);
+            }
+        }
+
+
 
         return redirect()
             ->route('admin.pets.show', $pet->Ma_thu_cung)
@@ -412,5 +456,95 @@ class PetController extends Controller
         return redirect()
             ->route('admin.pets.show', $pet->Ma_thu_cung)
             ->with('success', 'Đã thêm ca cứu hộ thành công!');
+    }
+
+    /**
+     * Cập nhật ca cứu hộ cho thú cưng từ trang show
+     */
+    public function updateRescue(Request $request, $petId, $rescueId)
+    {
+        $request->validate([
+            'Ngay_cuu_ho' => 'required|date',
+            'Loai_cuu_ho' => 'required|in:lang_thang,lac_duong,bi_bo_roi,bi_nguoc_dai',
+            'Dia_diem_cuu_ho' => 'nullable|string|max:500',
+            'Nguoi_bao_cao' => 'nullable|string|max:200',
+            'Chi_phi_cuu_ho' => 'nullable|numeric|min:0',
+            'Ghi_chu' => 'nullable|string|max:1000',
+        ]);
+
+        $rescue = \App\Models\RescueCase::where('Ma_thu_cung', $petId)->findOrFail($rescueId);
+
+        $rescue->update([
+            'Ngay_cuu_ho' => $request->Ngay_cuu_ho,
+            'Loai_cuu_ho' => $request->Loai_cuu_ho,
+            'Dia_diem_cuu_ho' => $request->Dia_diem_cuu_ho,
+            'Nguoi_bao_cao' => $request->Nguoi_bao_cao,
+            'Chi_phi_cuu_ho' => $request->Chi_phi_cuu_ho ?? 0,
+            'Ghi_chu' => $request->Ghi_chu,
+        ]);
+
+        return redirect()
+            ->route('admin.pets.show', $petId)
+            ->with('success', 'Đã cập nhật ca cứu hộ thành công!');
+    }
+    /**
+     * Thêm bản ghi lịch sử sức khỏe/tiêm phòng
+     */
+    public function storeHealth(Request $request, $petId)
+    {
+        $request->validate([
+            'Ngay_tiem' => 'required|date',
+            'Ten_vac_xin' => 'required|string|max:255',
+            'Ten_noi_tiem' => 'nullable|string|max:255',
+            'Chi_phi' => 'nullable|numeric|min:0',
+            'Ghi_chu' => 'nullable|string|max:1000',
+        ]);
+
+        $pet = Pet::findOrFail($petId);
+        
+        $pet->lichSuTiemChung()->create([
+            'Ngay_tiem' => $request->Ngay_tiem,
+            'Ten_vac_xin' => $request->Ten_vac_xin,
+            'Ten_noi_tiem' => $request->Ten_noi_tiem,
+            'Chi_phi' => $request->Chi_phi ?? 0,
+            'Nguoi_cap_nhat' => auth()->id() ?? User::whereHas('roles', fn($q) => $q->where('name', 'admin'))->first()->Ma_nguoi_dung,
+            // 'Ghi_chu' => $request->Ghi_chu // Nếu sau này DB cần thêm cột Ghi_chu cho bảng lịch sử sức khỏe, hiện tại Migration chưa có
+        ]);
+
+        return redirect()
+            ->route('admin.pets.show', $petId)
+            ->with('success', 'Đã thêm lịch sử sức khỏe thành công!');
+    }
+
+    /**
+     * Cập nhật bản ghi lịch sử sức khỏe/tiêm phòng
+     */
+    public function updateHealth(Request $request, $petId, $healthId)
+    {
+        $request->validate([
+            'Ten_vac_xin' => 'required|string|max:255',
+            'Ten_noi_tiem' => 'nullable|string|max:255',
+            'Chi_phi' => 'nullable|numeric|min:0',
+            'Ghi_chu' => 'nullable|string|max:1000',
+        ]);
+
+        $health = \App\Models\VaccinationHistory::where('Ma_thu_cung', $petId)->findOrFail($healthId);
+
+        $health->update([
+            'Ten_vac_xin' => $request->Ten_vac_xin,
+            'Ten_noi_tiem' => $request->Ten_noi_tiem,
+            'Chi_phi' => $request->Chi_phi ?? 0,
+        ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'data' => $health
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.pets.show', $petId)
+            ->with('success', 'Đã cập nhật lịch sử sức khỏe thành công!');
     }
 }

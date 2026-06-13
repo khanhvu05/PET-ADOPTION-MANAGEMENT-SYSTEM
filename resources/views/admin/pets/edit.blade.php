@@ -381,6 +381,53 @@
                 </div>
             </div>
             
+            <!-- 6. Thông tin ca cứu hộ -->
+            @php $rescue = $pet->caCuuHo->first(); @endphp
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    <h3 class="text-base font-semibold text-slate-800">Thông tin ca cứu hộ</h3>
+                    <p class="text-[13.5px] text-slate-500 mt-2 leading-relaxed">Thông tin về ca cứu hộ của thú cưng (mỗi bé chỉ có 1 ca cứu hộ).</p>
+                </div>
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)] border border-slate-100 p-6 sm:p-8 space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Ngày cứu hộ</label>
+                                <input type="date" name="Ngay_cuu_ho" value="{{ old('Ngay_cuu_ho', $rescue ? ($rescue->Ngay_cuu_ho ? $rescue->Ngay_cuu_ho->format('Y-m-d') : '') : '') }}" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Loại cứu hộ</label>
+                                <select name="Loai_cuu_ho" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                                    <option value="">-- Chọn loại --</option>
+                                    <option value="lang_thang" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'lang_thang' ? 'selected' : '' }}>Lang thang</option>
+                                    <option value="lac_duong" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'lac_duong' ? 'selected' : '' }}>Lạc đường</option>
+                                    <option value="bi_bo_roi" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'bi_bo_roi' ? 'selected' : '' }}>Bị bỏ rơi</option>
+                                    <option value="bi_nguoc_dai" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'bi_nguoc_dai' ? 'selected' : '' }}>Bị ngược đãi</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Địa điểm phát hiện</label>
+                                <input type="text" name="Dia_diem_cuu_ho" value="{{ old('Dia_diem_cuu_ho', $rescue->Dia_diem_cuu_ho ?? '') }}" placeholder="VD: Đường Nguyễn Văn Cừ, Q5..." class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Người báo cáo</label>
+                                <input type="text" name="Nguoi_bao_cao" value="{{ old('Nguoi_bao_cao', $rescue->Nguoi_bao_cao ?? '') }}" placeholder="Tên người báo" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Chi phí cứu hộ (VNĐ)</label>
+                                <input type="number" name="Chi_phi_cuu_ho" value="{{ old('Chi_phi_cuu_ho', $rescue->Chi_phi_cuu_ho ?? '') }}" min="0" placeholder="VD: 500000" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Ghi chú cứu hộ</label>
+                                <textarea name="Ghi_chu_cuu_ho" rows="2" placeholder="Mô tả tình trạng khi phát hiện..." class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">{{ old('Ghi_chu_cuu_ho', $rescue->Ghi_chu ?? '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
             <div class="flex items-center justify-end gap-3 pt-6">
                 <button type="submit" form="edit-pet-form" class="px-6 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center gap-2">
                     <i data-lucide="save" class="w-4 h-4"></i>

@@ -40,7 +40,7 @@ class Pet extends Model
         'Thu_vien_anh'     => 'array',
     ];
 
-    // Tự sinh UUID khi tạo mới
+    // Tự sinh UUID khi tạo mới và tự động lưu log khi cập nhật
     protected static function boot(): void
     {
         parent::boot();
@@ -49,6 +49,96 @@ class Pet extends Model
                 $model->Ma_thu_cung = Str::uuid()->toString();
             }
         });
+
+        static::updated(function ($model) {
+            $changes = $model->getChanges();
+            $original = $model->getOriginal();
+            
+            $ignored = ['Ngay_cap_nhat'];
+            $logEntries = [];
+            
+            foreach ($changes as $key => $newValue) {
+                if (in_array($key, $ignored)) continue;
+                
+                $oldValue = $original[$key] ?? '';
+                $label = self::getAttributeLabel($key);
+                
+                // Format boolean fields
+                if (in_array($key, ['Da_tiem_phong', 'Da_triet_san', 'Noi_bat', 'Than_thien_nguoi', 'Than_thien_cho', 'Than_thien_meo'])) {
+                    $oldValue = $oldValue ? 'Có' : 'Không';
+                    $newValue = $newValue ? 'Có' : 'Không';
+                }
+                
+                if ($oldValue === '' || $oldValue === null) $oldValue = 'trống';
+                if ($newValue === '' || $newValue === null) $newValue = 'trống';
+
+                // Skip if old and new value are practically the same (e.g. 0.00 vs 0)
+                if ($oldValue == $newValue) continue;
+
+                // For some specific fields, mapping values might be better, but we will leave as is to be simple
+                if ($key === 'Trang_thai') {
+                    $oldValue = self::mapTrangThai($oldValue);
+                    $newValue = self::mapTrangThai($newValue);
+                }
+
+                $logEntries[] = "- Cập nhật {$label} từ '{$oldValue}' thành '{$newValue}'.";
+            }
+            
+            if (!empty($logEntries)) {
+                $content = implode("\n", $logEntries);
+                $userId = auth()->check() ? auth()->id() : (User::whereHas('roles', fn($q) => $q->where('name', 'admin'))->first()->Ma_nguoi_dung ?? null);
+                
+                if ($userId) {
+                    $model->ghiChu()->create([
+                        'Ma_nguoi_dung' => $userId,
+                        'Noi_dung' => $content,
+                    ]);
+                }
+            }
+        });
+    }
+
+    private static function mapTrangThai($value) {
+        return match ($value) {
+            'chua_san_sang' => 'Chưa sẵn sàng',
+            'san_sang'      => 'Sẵn sàng',
+            'da_nhan_nuoi'  => 'Đã nhận nuôi',
+            'da_mat'        => 'Đã mất',
+            'trống'         => 'trống',
+            default         => $value,
+        };
+    }
+
+    public static function getAttributeLabel($key): string
+    {
+        $labels = [
+            'Ten' => 'Tên',
+            'Loai' => 'Loài',
+            'Giong' => 'Giống',
+            'Nhom_tuoi' => 'Nhóm tuổi',
+            'Can_nang' => 'Cân nặng (kg)',
+            'Gioi_tinh' => 'Giới tính',
+            'Da_tiem_phong' => 'Đã tiêm phòng',
+            'Da_triet_san' => 'Đã triệt sản',
+            'Trang_thai' => 'Trạng thái',
+            'Vi_tri' => 'Vị trí',
+            'Than_thien_nguoi' => 'Thân thiện với người',
+            'Than_thien_cho' => 'Thân thiện với chó',
+            'Than_thien_meo' => 'Thân thiện với mèo',
+            'Che_do_an_dac_biet' => 'Chế độ ăn đặc biệt',
+            'Ngay_tiep_nhan' => 'Ngày tiếp nhận',
+            'Phi_nhan_nuoi' => 'Phí nhận nuôi',
+            'Noi_bat' => 'Nổi bật',
+            'Mo_ta' => 'Mô tả',
+            'Nguoi_phu_trach' => 'Người phụ trách',
+            'Anh_dai_dien' => 'Ảnh đại diện',
+            'Mau_long' => 'Màu lông',
+            'Tinh_cach' => 'Tính cách',
+            'Thoi_quen' => 'Thói quen',
+            'Yeu_thich' => 'Sở thích',
+            'Thu_vien_anh' => 'Thư viện ảnh',
+        ];
+        return $labels[$key] ?? $key;
     }
 
     // ── Relationships ───────────────────────────────────────────
