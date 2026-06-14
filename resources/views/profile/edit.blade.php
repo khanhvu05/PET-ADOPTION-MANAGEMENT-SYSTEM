@@ -4,15 +4,17 @@
 
 @section('content')
 <div class="pt-28 pb-20 px-4 md:px-6 lg:px-16 max-w-7xl mx-auto min-h-screen">
-    <!-- Breadcrumb & Header -->
-    <div class="mb-10">
-        <nav class="text-sm font-medium text-slate-500 mb-3 flex items-center gap-2">
-            <a href="/" class="hover:text-primary transition-colors">Trang chủ</a>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            <span class="text-slate-800">Hồ sơ cá nhân</span>
-        </nav>
+    <!-- Breadcrumb -->
+    <nav class="text-sm font-medium text-slate-500 mb-6 flex items-center gap-2">
+        <a href="/" class="hover:text-primary transition-colors">Trang chủ</a>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        <span class="text-slate-800">Hồ sơ cá nhân</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-10 text-center">
         <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Hồ sơ cá nhân</h1>
-        <p class="mt-2 text-slate-600">Cập nhật thông tin tài khoản của bạn, thay đổi mật khẩu bảo mật và quản lý quyền hạn thành viên.</p>
+        <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Cập nhật thông tin tài khoản của bạn, thay đổi mật khẩu bảo mật và quản lý quyền hạn thành viên.</p>
     </div>
 
     <!-- Main Content -->

@@ -73,8 +73,26 @@
         
         <!-- SweetAlert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        <!-- Lucide Icons -->
+        <script src="https://unpkg.com/lucide@latest"></script>
     </head>
     <body class="font-sans antialiased text-slate-900 bg-[#F4F7F6] overflow-hidden">
+        
+        <!-- Mobile Restricted Overlay -->
+        <div class="md:hidden fixed inset-0 z-[999999] bg-[#F4F7F6] flex flex-col items-center justify-center p-6 text-center">
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-slate-400 mb-6 shadow-sm border border-slate-200">
+                <i data-lucide="monitor-x" class="w-12 h-12"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-800 mb-3">Không hỗ trợ di động</h2>
+            <p class="text-slate-500 text-[15px] leading-relaxed mb-8 max-w-[300px]">
+                Trang quản trị không được hỗ trợ ở kích thước màn hình hiện tại. Vui lòng mở trên máy tính để trải nghiệm tốt nhất!
+            </p>
+            <a href="/" class="flex items-center gap-2 px-6 py-3.5 bg-[#e75e5b] text-white rounded-xl font-semibold hover:bg-red-500 transition-colors shadow-md">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                Quay về trang chủ
+            </a>
+        </div>
         
         <!-- Alpine State wrapper for layout -->
         <div x-data="{ expanded: localStorage.getItem('sidebarExpanded') === 'false' ? false : true }" x-init="$watch('expanded', val => localStorage.setItem('sidebarExpanded', val))" class="flex h-screen overflow-hidden">
@@ -638,6 +656,12 @@
         </script>
 
         @stack('scripts')
+        
+        <script>
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        </script>
         
         @if (!request()->routeIs('login', 'register'))
     @include('components.chatbox-widget')

@@ -2,6 +2,7 @@
 @section('title', 'Giới thiệu')
 
 @section('content')
+<div class="w-full overflow-hidden">
 <!-- Hero Section -->
 <section class="relative pt-24 lg:pt-40 pb-10 lg:pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-6 lg:gap-12">
     <!-- Left Text Content -->
@@ -74,7 +75,7 @@
                 </div>
             </div>
             <!-- KPI 3 -->
-            <div class="flex flex-col gap-2 w-max">
+            <div class="flex flex-col gap-2 w-max col-span-2 md:col-span-1 mx-auto md:mx-0">
                 <div class="flex items-center gap-3">
                     <div class="w-[56px] h-[56px] flex items-center justify-center">
                         <svg class="w-10 h-10" fill="#0E7490" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -285,7 +286,7 @@
         </div>
 
         <!-- Card 5 -->
-        <div class="flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
+        <div class="col-span-2 md:col-span-1 w-3/4 sm:w-1/2 md:w-full mx-auto flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:-translate-y-2 transition-transform duration-300">
             <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=400&auto=format&fit=crop" class="w-full h-32 object-cover" alt="Partners holding hands">
             <div class="p-4 flex flex-col justify-center h-24 bg-white border-t-2 border-green-500/20">
                 <span class="text-2xl font-black text-green-500 leading-none mb-1">58</span>
@@ -325,4 +326,5 @@
     </div>
 </section>
 
+</div>
 @endsection

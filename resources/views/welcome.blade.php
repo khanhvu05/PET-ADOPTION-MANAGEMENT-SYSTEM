@@ -11,6 +11,7 @@
 @endsection
 
 @section('content')
+<div class="w-full overflow-hidden">
 <section class="relative pt-24 lg:pt-40 pb-10 lg:pb-20 px-6 lg:px-16 max-w-[1400px] mx-auto flex flex-col-reverse lg:flex-row items-center gap-6 lg:gap-12">
     <!-- Left Text Content -->
     <div class="w-full lg:w-1/2 flex flex-col items-center text-center lg:items-start lg:text-left relative z-10 pt-4 lg:pt-0">
@@ -84,7 +85,7 @@
                 </div>
             </div>
             <!-- KPI 3 -->
-            <div class="flex flex-col gap-2 w-max">
+            <div class="flex flex-col gap-2 w-max col-span-2 md:col-span-1 mx-auto md:mx-0">
                 <div class="flex items-center gap-3">
                     <div class="w-[56px] h-[56px] flex items-center justify-center">
                         <svg class="w-10 h-10" fill="#0E7490" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
@@ -285,7 +286,7 @@
             </div>
             
             <!-- Step 5 -->
-            <div class="flex flex-col items-center text-center relative">
+            <div class="col-span-2 md:col-span-1 flex flex-col items-center text-center relative">
                 <div class="w-[110px] h-[110px] rounded-full bg-gradient-to-br from-[#FFF5ED] to-[#FFE6D1] shadow-[0_8px_20px_rgba(245,138,60,0.15)] flex items-center justify-center mb-6 relative">
                     <!-- Home with Heart (Lucide Custom) -->
                     <svg class="w-12 h-12 text-[#F58A3C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -419,7 +420,7 @@
 
         <!-- Image Slider container -->
         <div class="w-full lg:w-[55%] relative z-10 flex items-center">
-            <button class="arrow-button absolute -left-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+            <button class="arrow-button hidden lg:flex absolute -left-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
             
             <div class="relative w-full h-[350px] rounded-[40px] overflow-hidden flex border-4 border-white shadow-xl">
                 <!-- Before -->
@@ -434,7 +435,7 @@
                 </div>
             </div>
             
-            <button class="arrow-button absolute -right-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+            <button class="arrow-button hidden lg:flex absolute -right-5 z-20"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
         </div>
         
         <!-- Text Content -->
@@ -449,7 +450,7 @@
             </div>
             
             <!-- Happy family photo collage overlapping slightly -->
-            <div class="mt-8 rounded-[40px] overflow-hidden w-[80%] h-40 border-4 border-white shadow-md relative right-[-20%]">
+            <div class="mt-8 rounded-[40px] overflow-hidden w-[80%] h-40 border-4 border-white shadow-md relative lg:right-[-20%]">
                 <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover" alt="Happy Family">
             </div>
         </div>
@@ -622,7 +623,11 @@
     </div>
 </section>
 
+</div>
 @endsection
 
 @section('scripts')
+<script>
+    // FAQ Accordion functionality handled by Alpine.js
+</script>
 @endsection

@@ -51,8 +51,91 @@
                         </div>
                         <div class="flex flex-col gap-1">
                             <!-- Hiển thị HTML sau khi dịch Markdown -->
-                            <div class="bg-white border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2.5 shadow-sm text-slate-800 leading-relaxed" x-html="renderMarkdown(msg.text)"></div>
-                            
+                            <div x-show="msg.text" class="bg-white border border-slate-100 rounded-2xl rounded-tl-none px-4 py-2.5 shadow-sm text-slate-800 leading-relaxed" x-html="renderMarkdown(msg.text)"></div>
+
+                            <!-- Pet Card Slider -->
+                            <template x-if="msg.petCards && msg.petCards.length > 0">
+                                <div class="pet-card-slider mt-2" x-data="{
+                                    current: 0,
+                                    cards: msg.petCards,
+                                    prev() { this.current = this.current > 0 ? this.current - 1 : this.cards.length - 1; },
+                                    next() { this.current = this.current < this.cards.length - 1 ? this.current + 1 : 0; }
+                                }">
+                                    <!-- Card -->
+                                    <div class="relative overflow-hidden">
+                                        <template x-for="(card, i) in cards" :key="i">
+                                            <div x-show="current === i"
+                                                 x-transition:enter="transition ease-out duration-300"
+                                                 x-transition:enter-start="opacity-0 translate-x-4"
+                                                 x-transition:enter-end="opacity-100 translate-x-0"
+                                                 class="pet-card bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-md w-[240px]">
+                                                <!-- Ảnh bé -->
+                                                <div class="relative h-[140px] bg-gradient-to-br from-orange-50 to-teal-50 overflow-hidden">
+                                                    <template x-if="card.image && card.image !== 'null'">
+                                                        <img :src="card.image.startsWith('http') ? card.image : '{{ url('/storage') }}/' + card.image" :alt="card.name" class="w-full h-full object-cover">
+                                                    </template>
+                                                    <template x-if="!card.image || card.image === 'null'">
+                                                        <div class="w-full h-full flex items-center justify-center text-5xl">🐾</div>
+                                                    </template>
+                                                    <!-- Badge loại -->
+                                                    <span class="absolute top-2 left-2 px-2 py-0.5 text-[10px] font-bold rounded-full text-white"
+                                                          :class="card.type === 'Chó' ? 'bg-[#267D8F]' : 'bg-[#E06B25]'"
+                                                          x-text="card.type === 'Chó' ? '🐶 Chó' : '🐱 Mèo'"></span>
+                                                    <!-- Badge giới tính -->
+                                                    <span class="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-white/90 text-slate-600"
+                                                          x-text="card.gender === 'duc' || card.gender === 'Đực' ? '♂ Đực' : '♀ Cái'"></span>
+                                                </div>
+                                                <!-- Thông tin -->
+                                                <div class="p-3">
+                                                    <p class="font-bold text-slate-800 text-sm mb-1 truncate" x-text="'Bé ' + card.name"></p>
+                                                    <p class="text-[11px] text-slate-500 mb-0.5" x-text="card.breed"></p>
+                                                    <div class="flex items-center gap-2 mt-2">
+                                                        <span class="flex items-center gap-1 text-[10px] bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded-full font-medium">
+                                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                                            <span x-text="card.age"></span>
+                                                        </span>
+                                                        <span class="flex items-center gap-1 text-[10px] bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded-full font-medium">
+                                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                                                            <span x-text="card.weight + 'kg'"></span>
+                                                        </span>
+                                                    </div>
+                                                    <!-- Nút xem chi tiết -->
+                                                    <a :href="'{{ url('/') }}/nhan-nuoi/' + card.id"
+                                                       class="mt-2.5 flex items-center justify-center gap-1.5 w-full py-1.5 bg-[#267D8F] hover:bg-teal-700 text-white text-[11px] font-bold rounded-xl transition-all active:scale-95">
+                                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                        Xem chi tiết
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- Điều hướng slider (chỉ hiện nếu > 1 bé) -->
+                                    <template x-if="cards.length > 1">
+                                        <div class="flex items-center justify-between mt-2 px-1">
+                                            <button @click="prev()" class="w-7 h-7 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-teal-400 hover:text-teal-600 flex items-center justify-center shadow-sm transition-all active:scale-90">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                                            </button>
+                                            <!-- Dots -->
+                                            <div class="flex items-center gap-1">
+                                                <template x-for="(c, di) in cards" :key="di">
+                                                    <div @click="current = di" class="transition-all duration-200 rounded-full cursor-pointer"
+                                                         :class="current === di ? 'w-4 h-2 bg-[#267D8F]' : 'w-2 h-2 bg-slate-300 hover:bg-slate-400'"></div>
+                                                </template>
+                                            </div>
+                                            <button @click="next()" class="w-7 h-7 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-teal-400 hover:text-teal-600 flex items-center justify-center shadow-sm transition-all active:scale-90">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+
+                                    <!-- Counter -->
+                                    <template x-if="cards.length > 1">
+                                        <p class="text-center text-[10px] text-slate-400 mt-1" x-text="(current + 1) + ' / ' + cards.length + ' bé'"></p>
+                                    </template>
+                                </div>
+                            </template>
+
                             <!-- Nút chuyển hướng nếu có redirect -->
                             <template x-if="msg.redirect">
                                 <div class="mt-1.5 pl-1">
@@ -374,11 +457,22 @@
                     } else {
                         const data = await response.json();
                         const botTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                        // Ưu tiên pet_cards từ server, fallback parse từ text nếu server chưa parse được
+                        let msgText = data.message || '';
+                        let petCards = data.pet_cards || null;
+                        if (!petCards && msgText.includes('[PET_CARDS:')) {
+                            const parsed = this.parsePetCards(msgText);
+                            petCards = parsed.cards;
+                            msgText = parsed.text;
+                        }
+
                         this.messages.push({
                             sender: 'bot',
-                            text: data.message || '',
+                            text: msgText,
                             time: botTime,
-                            redirect: data.redirect_url || null
+                            redirect: data.redirect_url || null,
+                            petCards: petCards
                         });
                     }
                 } catch (error) {
@@ -404,6 +498,39 @@
 
             saveMessages() {
                 sessionStorage.setItem(this.storageKey, JSON.stringify(this.messages));
+            },
+
+            // Parser JS-side cho thẻ [PET_CARDS:JSON] làm fallback
+            parsePetCards(text) {
+                const marker = '[PET_CARDS:';
+                const pos = text.indexOf(marker);
+                if (pos === -1) return { cards: null, text };
+
+                const arrayStart = pos + marker.length;
+                if (arrayStart >= text.length || text[arrayStart] !== '[') return { cards: null, text };
+
+                let depth = 0, arrayEnd = -1;
+                for (let i = arrayStart; i < text.length; i++) {
+                    if (text[i] === '[') depth++;
+                    else if (text[i] === ']') {
+                        depth--;
+                        if (depth === 0) { arrayEnd = i; break; }
+                    }
+                }
+                if (arrayEnd === -1) return { cards: null, text };
+
+                try {
+                    const jsonStr = text.substring(arrayStart, arrayEnd + 1);
+                    const cards = JSON.parse(jsonStr);
+                    // Tính vị trí kết thúc của toàn bộ thẻ (bao gồm ] đóng ngoài nếu có)
+                    let tagEnd = arrayEnd + 1;
+                    if (tagEnd < text.length && text[tagEnd] === ']') tagEnd++;
+                    const cleanText = (text.substring(0, pos) + text.substring(tagEnd)).trim();
+                    return { cards: Array.isArray(cards) ? cards : null, text: cleanText };
+                } catch (e) {
+                    console.warn('Pet cards parse failed:', e);
+                    return { cards: null, text };
+                }
             },
 
             renderMarkdown(text) {

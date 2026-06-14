@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ChatboxService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 
 class ChatboxController extends Controller
 {
@@ -21,7 +22,7 @@ class ChatboxController extends Controller
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'message' => 'required|string',
+            'message' => 'required|string|max:2000', // IMP-02: Giới hạn 2000 ký tự
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -29,6 +30,17 @@ class ChatboxController extends Controller
         if (!$userId) {
             return response()->json(['message' => 'Vui lòng đăng nhập để sử dụng chatbox.', 'redirect_url' => null], 401);
         }
+
+        // IMP-10: Rate limiting — 20 tin nhắn/phút mỗi user
+        $rateLimitKey = 'chatbox:' . $userId;
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 20)) {
+            $seconds = RateLimiter::availableIn($rateLimitKey);
+            return response()->json([
+                'message' => "Bạn đang nhắn tin quá nhanh! Vui lòng chờ {$seconds} giây rồi thử lại.",
+                'redirect_url' => null
+            ], 429);
+        }
+        RateLimiter::hit($rateLimitKey, 60); // Reset sau 60 giây
 
         $message = $request->input('message');
         $imageFile = $request->file('image');
