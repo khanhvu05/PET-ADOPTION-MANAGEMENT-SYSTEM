@@ -18,13 +18,13 @@
             
             <div class="flex items-center gap-3">
                 <!-- Export Button -->
-                <a href="{{ route('admin.pets.export', request()->query()) }}" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
+                <a href="{{ route('admin.pets.export', request()->query()) }}" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0 active:scale-95">
                     <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Xuất Excel
                 </a>
                 
                 <!-- Add New Button -->
-                <a href="{{ route('admin.pets.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#41859c] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#32697b] transition-all shrink-0">
+                <a href="{{ route('admin.pets.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#41859c] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#32697b] transition-all shrink-0 active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Thêm Thú Cưng
                 </a>
@@ -81,7 +81,7 @@
                     <!-- Search Input -->
                     <div class="w-full md:w-[260px] shrink-0">
                         <div class="relative w-full">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm thú cưng..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] text-slate-900 placeholder-slate-400 transition-all shadow-sm">
+                            <input type="text" name="search" id="search-filter-input" value="{{ request('search') }}" placeholder="Tìm kiếm thú cưng..." class="w-full h-11 pl-4 pr-10 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-[#41859c] focus:ring-1 focus:ring-[#41859c] text-slate-900 placeholder-slate-400 transition-all shadow-sm">
                             <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
@@ -95,7 +95,7 @@
                             open: false, 
                             value: '{{ request('loai', 'all') }}', 
                             options: {'all': 'Tất cả loại', 'cho': 'Chó', 'meo': 'Mèo', 'khac': 'Khác'} 
-                        }">
+                        }" @reset-filters.window="value = 'all'">
                             <label class="text-xs font-bold text-slate-700">Loại thú cưng</label>
                             <input type="hidden" name="loai" x-model="value" id="loai-filter-input">
                             <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
@@ -130,7 +130,7 @@
                                     '{{ $breed }}': '{{ $breed }}',
                                 @endforeach
                             } 
-                        }">
+                        }" @reset-filters.window="value = 'all'">
                             <label class="text-xs font-bold text-slate-700">Giống loài</label>
                             <input type="hidden" name="giong" x-model="value" id="giong-filter-input">
                             <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
@@ -160,7 +160,7 @@
                             open: false, 
                             value: '{{ request('trang_thai', 'all') }}', 
                             options: {'all': 'Tất cả', 'san_sang': 'Sẵn sàng', 'chua_san_sang': 'Chưa sẵn sàng', 'da_nhan_nuoi': 'Đã nhận nuôi', 'da_mat': 'Đã mất'} 
-                        }">
+                        }" @reset-filters.window="value = 'all'">
                             <label class="text-xs font-bold text-slate-700">Trạng thái</label>
                             <input type="hidden" name="trang_thai" x-model="value" id="trang_thai-filter-input">
                             <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
@@ -190,7 +190,7 @@
                             open: false, 
                             value: '{{ request('gioi_tinh', 'all') }}', 
                             options: {'all': 'Tất cả giới tính', 'duc': 'Đực', 'cai': 'Cái'} 
-                        }">
+                        }" @reset-filters.window="value = 'all'">
                             <label class="text-xs font-bold text-slate-700">Giới tính</label>
                             <input type="hidden" name="gioi_tinh" x-model="value" id="gioi_tinh-filter-input">
                             <button type="button" @click="open = !open" @click.away="open = false" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:border-[#41859c] shadow-sm flex items-center justify-between transition-colors hover:bg-slate-50">
@@ -217,9 +217,9 @@
 
                         <!-- Filter Actions -->
                         <div class="flex items-center gap-2 shrink-0">
-                            <a href="{{ route('admin.pets.index') }}" class="flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-xl text-slate-500 shadow-sm hover:bg-slate-50 hover:text-red-500 transition-all" title="Làm mới bộ lọc">
+                            <button type="button" onclick="document.getElementById('search-filter-input').value=''; window.dispatchEvent(new CustomEvent('reset-filters')); setTimeout(() => { document.getElementById('filter-form').dispatchEvent(new Event('submit', {bubbles:true, cancelable: true})); }, 50);" class="flex items-center justify-center w-11 h-11 bg-white border border-slate-200 rounded-xl text-slate-500 shadow-sm hover:bg-slate-50 hover:text-red-500 transition-all" title="Làm mới bộ lọc">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            </a>
+                            </button>
                         </div>
                     </div>
             </form>

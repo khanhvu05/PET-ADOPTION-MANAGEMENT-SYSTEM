@@ -26,21 +26,6 @@
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
         </div>
 
-        <!-- Account Type -->
-        <div class="space-y-1.5">
-            <x-input-label for="Loai_tai_khoan" value="LOẠI TÀI KHOẢN" class="!text-[10px] !text-text-muted" />
-            <div class="grid grid-cols-2 gap-4">
-                <label class="relative flex items-center justify-between p-3 bg-input-dark rounded-xl cursor-pointer border border-transparent hover:border-orange-brand/30 transition-colors">
-                    <span class="text-xs font-bold text-white uppercase tracking-wider">Cá nhân</span>
-                    <input type="radio" name="Loai_tai_khoan" value="ca_nhan" {{ old('Loai_tai_khoan', 'ca_nhan') === 'ca_nhan' ? 'checked' : '' }} class="w-4 h-4 text-orange-brand border-white/20 bg-input-dark focus:ring-orange-brand/50 focus:ring-2">
-                </label>
-                <label class="relative flex items-center justify-between p-3 bg-input-dark rounded-xl cursor-pointer border border-transparent hover:border-orange-brand/30 transition-colors">
-                    <span class="text-xs font-bold text-white uppercase tracking-wider">Tổ chức</span>
-                    <input type="radio" name="Loai_tai_khoan" value="to_chuc" {{ old('Loai_tai_khoan') === 'to_chuc' ? 'checked' : '' }} class="w-4 h-4 text-orange-brand border-white/20 bg-input-dark focus:ring-orange-brand/50 focus:ring-2">
-                </label>
-            </div>
-            <x-input-error :messages="$errors->get('Loai_tai_khoan')" class="mt-1" />
-        </div>
 
         <!-- Email Address -->
         <div class="space-y-1.5">

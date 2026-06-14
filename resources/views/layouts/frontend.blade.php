@@ -168,7 +168,7 @@
                     </a>
                     @endif
                     @if(auth()->user()->isStaff())
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
+                    <a href="{{ route('admin.pets.index') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Trang quản trị
                     </a>
                     @endif

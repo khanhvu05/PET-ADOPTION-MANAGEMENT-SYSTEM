@@ -60,15 +60,12 @@
                             <!-- Loại -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Loài <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Loai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Loai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="" disabled {{ old('Loai') ? '' : 'selected' }}>Chọn loài</option>
-                                        <option value="cho" {{ old('Loai') === 'cho' ? 'selected' : '' }}>Chó</option>
-                                        <option value="meo" {{ old('Loai') === 'meo' ? 'selected' : '' }}>Mèo</option>
-                                        <option value="khac" {{ old('Loai') === 'khac' ? 'selected' : '' }}>Khác</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Loai_select" name="Loai" class="w-full text-sm tom-select-basic">
+                                    <option value="" disabled {{ old('Loai') ? '' : 'selected' }}>Chọn loài</option>
+                                    <option value="cho" {{ old('Loai') === 'cho' ? 'selected' : '' }}>Chó</option>
+                                    <option value="meo" {{ old('Loai') === 'meo' ? 'selected' : '' }}>Mèo</option>
+                                    <option value="khac" {{ old('Loai') === 'khac' ? 'selected' : '' }}>Khác</option>
+                                </select>
                             </div>
                             <!-- Giống loài -->
                             <div>
@@ -117,16 +114,13 @@
                             <!-- Nhóm tuổi -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Nhóm tuổi <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Nhom_tuoi" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Nhom_tuoi') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="" disabled {{ old('Nhom_tuoi') ? '' : 'selected' }}>Chọn nhóm</option>
-                                        <option value="so_sinh" {{ old('Nhom_tuoi') === 'so_sinh' ? 'selected' : '' }}>Sơ sinh (< 3 tháng)</option>
-                                        <option value="nho" {{ old('Nhom_tuoi') === 'nho' ? 'selected' : '' }}>Nhỏ (3-12 tháng)</option>
-                                        <option value="truong_thanh" {{ old('Nhom_tuoi') === 'truong_thanh' ? 'selected' : '' }}>Trưởng thành (1-7 tuổi)</option>
-                                        <option value="gia" {{ old('Nhom_tuoi') === 'gia' ? 'selected' : '' }}>Già (> 7 tuổi)</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Nhom_tuoi_select" name="Nhom_tuoi" class="w-full text-sm tom-select-basic">
+                                    <option value="" disabled {{ old('Nhom_tuoi') ? '' : 'selected' }}>Chọn nhóm tuổi</option>
+                                    <option value="so_sinh" {{ old('Nhom_tuoi') === 'so_sinh' ? 'selected' : '' }}>Sơ sinh (< 3 tháng)</option>
+                                    <option value="nho" {{ old('Nhom_tuoi') === 'nho' ? 'selected' : '' }}>Nhỏ (3-12 tháng)</option>
+                                    <option value="truong_thanh" {{ old('Nhom_tuoi') === 'truong_thanh' ? 'selected' : '' }}>Trưởng thành (1-7 tuổi)</option>
+                                    <option value="gia" {{ old('Nhom_tuoi') === 'gia' ? 'selected' : '' }}>Già (> 7 tuổi)</option>
+                                </select>
                             </div>
                             <!-- Cân nặng -->
                             <div>
@@ -172,13 +166,10 @@
                             <!-- Trạng thái -->
                             <div class="sm:col-span-2">
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Trạng thái hiện tại <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Trang_thai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Trang_thai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="san_sang" {{ old('Trang_thai', 'san_sang') === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
-                                        <option value="chua_san_sang" {{ old('Trang_thai') === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Trang_thai_select" name="Trang_thai" class="w-full text-sm tom-select-basic">
+                                    <option value="san_sang" {{ old('Trang_thai', 'san_sang') === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
+                                    <option value="chua_san_sang" {{ old('Trang_thai') === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -318,14 +309,11 @@
                             <!-- Vị trí -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Vị trí hiện tại</label>
-                                <div class="relative">
-                                    <select name="Vi_tri" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all">
-                                        <option value="">Chưa xác định</option>
-                                        <option value="noi_tru" {{ old('Vi_tri') === 'noi_tru' ? 'selected' : '' }}>Trạm cứu hộ (Nội trú)</option>
-                                        <option value="phong_kham" {{ old('Vi_tri') === 'phong_kham' ? 'selected' : '' }}>Phòng khám thú y</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Vi_tri_select" name="Vi_tri" class="w-full text-sm tom-select-basic">
+                                    <option value="">Chưa xác định</option>
+                                    <option value="noi_tru" {{ old('Vi_tri') === 'noi_tru' ? 'selected' : '' }}>Trạm cứu hộ (Nội trú)</option>
+                                    <option value="phong_kham" {{ old('Vi_tri') === 'phong_kham' ? 'selected' : '' }}>Phòng khám thú y</option>
+                                </select>
                             </div>
                             <!-- Phí -->
                             <div>
@@ -379,7 +367,7 @@
                             </div>
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Loại cứu hộ</label>
-                                <select name="Loai_cuu_ho" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                                <select id="Loai_cuu_ho_select" name="Loai_cuu_ho" class="w-full text-sm tom-select-basic">
                                     <option value="">-- Chọn loại --</option>
                                     <option value="lang_thang" {{ old('Loai_cuu_ho') == 'lang_thang' ? 'selected' : '' }}>Lang thang</option>
                                     <option value="lac_duong" {{ old('Loai_cuu_ho') == 'lac_duong' ? 'selected' : '' }}>Lạc đường</option>
@@ -473,6 +461,79 @@
                 maxOptions: null
             });
         }
+
+        // Initialize basic TomSelects for dropdown styling (rounded corners)
+        document.querySelectorAll('.tom-select-basic').forEach(function(el) {
+            new TomSelect(el, {
+                create: false,
+                controlInput: null, // Disable typing search for standard dropdowns
+            });
+        });
+
+        // === DRAG & DROP & PASTE CHO ẢNH ===
+        const avatarBox = document.querySelector('label[for="anh_upload"]');
+        const galleryBox = document.querySelector('label[for="thu_vien_anh_upload"]');
+        let hoveredZone = null;
+
+        if (avatarBox) {
+            avatarBox.addEventListener('mouseenter', () => hoveredZone = 'avatar');
+            avatarBox.addEventListener('mouseleave', () => { if(hoveredZone === 'avatar') hoveredZone = null; });
+            ['dragover', 'dragenter'].forEach(evt => avatarBox.addEventListener(evt, e => {
+                e.preventDefault();
+                avatarBox.classList.add('border-sidebar-blue', 'bg-slate-100');
+            }));
+            ['dragleave', 'dragend', 'drop'].forEach(evt => avatarBox.addEventListener(evt, e => {
+                e.preventDefault();
+                avatarBox.classList.remove('border-sidebar-blue', 'bg-slate-100');
+            }));
+            avatarBox.addEventListener('drop', e => {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const input = document.getElementById('anh_upload');
+                    input.files = e.dataTransfer.files;
+                    previewImage(input);
+                }
+            });
+        }
+
+        if (galleryBox) {
+            galleryBox.addEventListener('mouseenter', () => hoveredZone = 'gallery');
+            galleryBox.addEventListener('mouseleave', () => { if(hoveredZone === 'gallery') hoveredZone = null; });
+            ['dragover', 'dragenter'].forEach(evt => galleryBox.addEventListener(evt, e => {
+                e.preventDefault();
+                galleryBox.classList.add('border-sidebar-blue', 'bg-slate-100');
+            }));
+            ['dragleave', 'dragend', 'drop'].forEach(evt => galleryBox.addEventListener(evt, e => {
+                e.preventDefault();
+                galleryBox.classList.remove('border-sidebar-blue', 'bg-slate-100');
+            }));
+            galleryBox.addEventListener('drop', e => {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const input = document.getElementById('thu_vien_anh_upload');
+                    input.files = e.dataTransfer.files;
+                    previewMultipleImages(input);
+                }
+            });
+        }
+
+        document.addEventListener('paste', e => {
+            if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+                let hasImage = false;
+                for (let i = 0; i < e.clipboardData.files.length; i++) {
+                    if (e.clipboardData.files[i].type.startsWith('image/')) hasImage = true;
+                }
+                if (hasImage) {
+                    if (hoveredZone === 'avatar' && avatarBox) {
+                        const input = document.getElementById('anh_upload');
+                        input.files = e.clipboardData.files;
+                        previewImage(input);
+                    } else if (galleryBox) {
+                        const input = document.getElementById('thu_vien_anh_upload');
+                        input.files = e.clipboardData.files;
+                        previewMultipleImages(input);
+                    }
+                }
+            }
+        });
     });
     </script>
 </x-admin-layout>

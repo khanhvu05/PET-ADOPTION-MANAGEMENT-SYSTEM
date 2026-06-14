@@ -280,26 +280,33 @@ class PetController extends Controller
             $data['Anh_dai_dien'] = $uploaded['url'];
         }
 
-        // Upload thư viện ảnh phụ
-        if ($request->hasFile('thu_vien_anh_upload')) {
-            // Xóa các ảnh phụ cũ
-            if (is_array($pet->Thu_vien_anh)) {
-                foreach ($pet->Thu_vien_anh as $url) {
+        // Cập nhật thư viện ảnh phụ
+        if ($request->hasFile('thu_vien_anh_upload') || $request->has('deleted_images')) {
+            $currentGallery = is_array($pet->Thu_vien_anh) ? $pet->Thu_vien_anh : [];
+            
+            // Xóa các ảnh cũ bị đánh dấu xóa
+            if ($request->has('deleted_images')) {
+                foreach ($request->deleted_images as $url) {
                     $publicId = $this->cloudinary->extractPublicId($url);
                     if ($publicId) {
                         $this->cloudinary->deleteImage($publicId);
                     }
+                    // Loại bỏ khỏi mảng hiện tại
+                    $currentGallery = array_filter($currentGallery, fn($item) => $item !== $url);
                 }
             }
 
-            $gallery = [];
-            foreach ($request->file('thu_vien_anh_upload') as $file) {
-                $uploaded = $this->cloudinary->uploadImage($file, 'petjam/pets/gallery');
-                if ($uploaded) {
-                    $gallery[] = $uploaded['url'];
+            // Upload và thêm ảnh mới vào gallery
+            if ($request->hasFile('thu_vien_anh_upload')) {
+                foreach ($request->file('thu_vien_anh_upload') as $file) {
+                    $uploaded = $this->cloudinary->uploadImage($file, 'petjam/pets/gallery');
+                    if ($uploaded) {
+                        $currentGallery[] = $uploaded['url'];
+                    }
                 }
             }
-            $data['Thu_vien_anh'] = empty($gallery) ? null : $gallery;
+            
+            $data['Thu_vien_anh'] = empty($currentGallery) ? null : array_values($currentGallery);
         }
 
         unset($data['anh_upload']);

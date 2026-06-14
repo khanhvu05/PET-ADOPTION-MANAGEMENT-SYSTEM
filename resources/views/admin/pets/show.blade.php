@@ -18,11 +18,11 @@
                 <p class="text-sm text-slate-500">Xem và quản lý thông tin chi tiết của thú cưng.</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.pets.index') }}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-sm transition-all shadow-sm flex items-center gap-2">
+                <a href="{{ route('admin.pets.index') }}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:shadow-sm transition-all shadow-sm flex items-center gap-2 active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Quay lại
                 </a>
-                <a href="{{ route('admin.pets.edit', $pet->Ma_thu_cung) }}" class="bg-teal-700 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
+                <a href="{{ route('admin.pets.edit', $pet->Ma_thu_cung) }}" class="bg-sidebar-blue text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-sidebar-blue-hover hover:shadow-md transition-all shadow-sm flex items-center gap-2 active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     Chỉnh sửa
                 </a>
@@ -39,15 +39,17 @@
                         <img src="{{ $pet->Anh_dai_dien ?: $pet->anh_url }}" class="w-full h-full object-cover" alt="{{ $pet->Ten }}">
                     </div>
                     @if(is_array($pet->Thu_vien_anh) && count($pet->Thu_vien_anh) > 0)
-                    <div class="flex gap-2">
-                        @foreach(array_slice($pet->Thu_vien_anh, 0, 3) as $index => $url)
-                            @if($index == 2 && count($pet->Thu_vien_anh) > 3)
-                                <div class="relative w-12 h-12 rounded-lg overflow-hidden">
+                    <div class="grid grid-cols-4 gap-3">
+                        @foreach(array_slice($pet->Thu_vien_anh, 0, 4) as $index => $url)
+                            @if($index == 3 && count($pet->Thu_vien_anh) > 4)
+                                <div class="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-sidebar-blue transition-all" @click="activeTab = 'images'">
                                     <img src="{{ $url }}" class="w-full h-full object-cover bg-slate-100" alt="Thumb">
-                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-xs font-bold text-white cursor-pointer" @click="activeTab = 'images'">+{{ count($pet->Thu_vien_anh) - 2 }}</div>
+                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-sm font-bold text-white">+{{ count($pet->Thu_vien_anh) - 3 }}</div>
                                 </div>
                             @else
-                                <img src="{{ $url }}" class="w-12 h-12 rounded-lg object-cover bg-slate-100" alt="Thumb">
+                                <div class="relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-sidebar-blue transition-all" @click="activeTab = 'images'">
+                                    <img src="{{ $url }}" class="w-full h-full object-cover bg-slate-100" alt="Thumb">
+                                </div>
                             @endif
                         @endforeach
                     </div>
@@ -162,11 +164,25 @@
                     </div>
 
                     <!-- Description -->
-                    <div class="mt-5 bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <div class="mt-5 bg-slate-50 rounded-xl p-4 border border-slate-100"
+                         x-data="{ expanded: false, isOverflowing: false }"
+                         x-init="$nextTick(() => { isOverflowing = $refs.text.scrollHeight > $refs.text.clientHeight; })">
                         <h4 class="text-xs font-bold text-slate-800 mb-2">Mô tả</h4>
-                        <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
-                            {{ $pet->Mo_ta ?: 'Chưa có mô tả.' }}
-                        </p>
+                        <div class="relative">
+                            <p x-ref="text" class="text-sm text-slate-600 leading-relaxed text-justify transition-all duration-300"
+                               :class="expanded ? '' : 'line-clamp-4'">
+                                {!! nl2br(e($pet->Mo_ta ?: 'Chưa có mô tả.')) !!}
+                            </p>
+                            
+                            <button x-show="isOverflowing || expanded" 
+                                    style="display: none;"
+                                    @click="expanded = !expanded" 
+                                    class="text-[13px] font-semibold text-sidebar-blue hover:text-sidebar-blue-hover mt-2 flex items-center gap-1 focus:outline-none transition-colors">
+                                <span x-text="expanded ? 'Thu gọn' : 'Xem thêm'"></span>
+                                <svg x-show="!expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                <svg x-show="expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -305,7 +321,7 @@
                     <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                             <h3 class="text-sm font-bold text-slate-800">Lịch sử tiêm phòng</h3>
-                            <button x-data @click="$dispatch('open-modal', 'add-health-record')" class="px-4 py-2 bg-teal-600 text-white font-bold text-[13px] rounded-xl hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
+                            <button x-data @click="$dispatch('open-modal', 'add-health-record')" class="px-4 py-2 bg-sidebar-blue text-white font-bold text-[13px] rounded-xl hover:bg-sidebar-blue-hover transition-colors shadow-sm flex items-center gap-2 active:scale-95">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                                 Thêm bản ghi mới
                             </button>
@@ -336,8 +352,8 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-end gap-3">
-                                        <button type="button" @click="open = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
-                                        <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg">Lưu bản ghi</button>
+                                        <button type="button" @click="open = false" class="px-4 py-2 text-sm font-semibold text-slate-600 bg-[#E5E7EB] hover:bg-[#D1D5DB] text-[#41859c] rounded-lg active:scale-95">Hủy</button>
+                                        <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-sidebar-blue hover:bg-sidebar-blue-hover rounded-lg active:scale-95">Lưu bản ghi</button>
                                     </div>
                                 </form>
                             </div>
@@ -544,7 +560,14 @@
                                         <span class="text-sm font-bold text-slate-800">{{ $note->nguoiDung->Ho_ten ?? 'Hệ thống' }}</span>
                                         <span class="text-[11px] text-slate-400">{{ $note->Ngay_tao->format('d/m/Y H:i') }}</span>
                                     </div>
-                                    <p class="text-sm text-slate-600 font-medium whitespace-pre-line">{{ $note->Noi_dung }}</p>
+                                    @php
+                                        $noiDung = $note->Noi_dung;
+                                        // Rút gọn các mảng URL JSON dài
+                                        $noiDung = preg_replace('/\'\["http[^\]]+\]\'/', '\'Danh sách ảnh\'', $noiDung);
+                                        // Rút gọn các link URL đơn lẻ dài
+                                        $noiDung = preg_replace('/\'http[^\']+\'/', '\'Ảnh/Tệp đính kèm\'', $noiDung);
+                                    @endphp
+                                    <p class="text-sm text-slate-600 font-medium whitespace-pre-line break-all">{{ $noiDung }}</p>
                                 </div>
                             </div>
                             @endforeach
@@ -644,11 +667,8 @@
                             </div>
                         </div>
                         <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
-                            <button type="button" @click="isEditing = false" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-lg">Hủy</button>
-                            <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                Lưu thay đổi
-                            </button>
+                            <button type="button" @click="isEditing = false" class="px-4 py-2 text-sm font-semibold text-slate-600 bg-[#E5E7EB] hover:bg-[#D1D5DB] text-[#41859c] rounded-lg active:scale-95">Hủy</button>
+                            <button type="submit" class="px-4 py-2 text-sm font-bold text-white bg-sidebar-blue hover:bg-sidebar-blue-hover rounded-lg active:scale-95">Lưu thay đổi</button>
                         </div>
                     </form>
                 </div>

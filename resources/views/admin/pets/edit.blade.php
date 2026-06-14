@@ -14,16 +14,16 @@
         <!-- Header & Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-semibold text-slate-800 tracking-tight">Chỉnh sửa Thú Cưng</h2>
+                <h2 class="text-2xl font-semibold text-slate-800 tracking-tight">Chỉnh sửa thông tin Thú Cưng</h2>
                 <p class="text-sm text-slate-500 mt-1">Cập nhật thông tin cho thú cưng {{ $pet->Ma_hien_thi }} - {{ $pet->Ten }}.</p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.pets.show', $pet->Ma_thu_cung) }}" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                <a href="{{ route('admin.pets.show', $pet->Ma_thu_cung) }}" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     Hủy
                 </a>
-                <button type="submit" form="edit-pet-form" class="px-5 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i>
+                <button type="submit" form="edit-pet-form" class="px-5 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     Lưu Thay Đổi
                 </button>
             </div>
@@ -61,15 +61,11 @@
                             <!-- Loại -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Loài <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Loai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Loai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="" disabled>Chọn loài</option>
-                                        <option value="cho" {{ old('Loai', $pet->Loai) === 'cho' ? 'selected' : '' }}>Chó</option>
-                                        <option value="meo" {{ old('Loai', $pet->Loai) === 'meo' ? 'selected' : '' }}>Mèo</option>
-                                        <option value="khac" {{ old('Loai', $pet->Loai) === 'khac' ? 'selected' : '' }}>Khác</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Loai_select" name="Loai" class="w-full text-sm tom-select-basic">
+                                    <option value="cho" {{ old('Loai', $pet->Loai) === 'cho' ? 'selected' : '' }}>Chó</option>
+                                    <option value="meo" {{ old('Loai', $pet->Loai) === 'meo' ? 'selected' : '' }}>Mèo</option>
+                                    <option value="khac" {{ old('Loai', $pet->Loai) === 'khac' ? 'selected' : '' }}>Khác</option>
+                                </select>
                             </div>
                             <!-- Giống loài -->
                             <div>
@@ -118,16 +114,12 @@
                             <!-- Nhóm tuổi -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Nhóm tuổi <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Nhom_tuoi" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Nhom_tuoi') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="" disabled>Chọn nhóm</option>
-                                        <option value="so_sinh" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'so_sinh' ? 'selected' : '' }}>Sơ sinh (< 3 tháng)</option>
-                                        <option value="nho" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'nho' ? 'selected' : '' }}>Nhỏ (3-12 tháng)</option>
-                                        <option value="truong_thanh" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'truong_thanh' ? 'selected' : '' }}>Trưởng thành (1-7 tuổi)</option>
-                                        <option value="gia" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'gia' ? 'selected' : '' }}>Già (> 7 tuổi)</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Nhom_tuoi_select" name="Nhom_tuoi" class="w-full text-sm tom-select-basic">
+                                    <option value="so_sinh" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'so_sinh' ? 'selected' : '' }}>Sơ sinh (< 3 tháng)</option>
+                                    <option value="nho" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'nho' ? 'selected' : '' }}>Nhỏ (3-12 tháng)</option>
+                                    <option value="truong_thanh" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'truong_thanh' ? 'selected' : '' }}>Trưởng thành (1-7 tuổi)</option>
+                                    <option value="gia" {{ old('Nhom_tuoi', $pet->Nhom_tuoi) === 'gia' ? 'selected' : '' }}>Già (> 7 tuổi)</option>
+                                </select>
                             </div>
                             <!-- Cân nặng -->
                             <div>
@@ -173,15 +165,12 @@
                             <!-- Trạng thái -->
                             <div class="sm:col-span-2">
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Trạng thái hiện tại <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <select name="Trang_thai" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all @error('Trang_thai') border-red-300 focus:ring-red-500/20 focus:border-red-500 @enderror">
-                                        <option value="san_sang" {{ old('Trang_thai', $pet->Trang_thai) === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
-                                        <option value="chua_san_sang" {{ old('Trang_thai', $pet->Trang_thai) === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
-                                        <option value="da_nhan_nuoi" {{ old('Trang_thai', $pet->Trang_thai) === 'da_nhan_nuoi' ? 'selected' : '' }}>Đã nhận nuôi</option>
-                                        <option value="da_mat" {{ old('Trang_thai', $pet->Trang_thai) === 'da_mat' ? 'selected' : '' }}>Đã mất</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Trang_thai_select" name="Trang_thai" class="w-full text-sm tom-select-basic">
+                                    <option value="san_sang" {{ old('Trang_thai', $pet->Trang_thai) === 'san_sang' ? 'selected' : '' }}>Sẵn sàng nhận nuôi</option>
+                                    <option value="chua_san_sang" {{ old('Trang_thai', $pet->Trang_thai) === 'chua_san_sang' ? 'selected' : '' }}>Chưa sẵn sàng</option>
+                                    <option value="da_nhan_nuoi" {{ old('Trang_thai', $pet->Trang_thai) === 'da_nhan_nuoi' ? 'selected' : '' }}>Đã nhận nuôi</option>
+                                    <option value="da_mat" {{ old('Trang_thai', $pet->Trang_thai) === 'da_mat' ? 'selected' : '' }}>Đã mất</option>
+                                </select>
                                 @if($pet->Trang_thai !== 'da_nhan_nuoi')
                                     <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
                                         <i data-lucide="info" class="w-3 h-3 text-sidebar-blue"></i>
@@ -237,18 +226,23 @@
                         <div>
                             <h4 class="text-[13px] font-medium text-slate-700 mb-3">Thư viện ảnh phụ (Hiển thị chi tiết)</h4>
                             <div class="flex flex-col gap-4">
-                                <label for="thu_vien_anh_upload" class="w-full py-6 border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 hover:border-sidebar-blue/50 transition-all flex flex-col items-center justify-center">
-                                    <i data-lucide="images" class="w-6 h-6 text-slate-400 mb-2"></i>
-                                    <span class="text-[13px] font-medium text-slate-600">Cập nhật thư viện ảnh phụ (Sẽ thay thế ảnh cũ)</span>
-                                    <span class="text-xs text-slate-400 mt-1">Giúp hiển thị đa góc độ của thú cưng</span>
-                                    <input type="file" id="thu_vien_anh_upload" name="thu_vien_anh_upload[]" accept="image/jpeg,image/png,image/webp" multiple class="hidden" onchange="previewMultipleImages(this)">
+                                <label for="thu_vien_anh_selector" class="w-full py-6 border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl cursor-pointer hover:bg-slate-100 hover:border-sidebar-blue/50 transition-all flex flex-col items-center justify-center">
+                                    <svg class="w-6 h-6 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <span class="text-[13px] font-medium text-slate-600">Thêm ảnh vào thư viện</span>
+                                    <span class="text-xs text-slate-400 mt-1">Bạn có thể chọn nhiều ảnh cùng lúc</span>
+                                    <input type="file" id="thu_vien_anh_selector" accept="image/jpeg,image/png,image/webp" multiple class="hidden" onchange="previewMultipleImages(this)">
                                 </label>
+                                <!-- Input ẩn này chứa danh sách file tổng hợp để gửi lên server -->
+                                <input type="file" id="thu_vien_anh_upload" name="thu_vien_anh_upload[]" multiple class="hidden">
                                 
                                 <div id="multiple-images-preview" class="flex flex-wrap gap-3 {{ empty($pet->Thu_vien_anh) ? 'empty:hidden' : '' }} mt-2">
                                     @if(is_array($pet->Thu_vien_anh))
                                         @foreach($pet->Thu_vien_anh as $url)
-                                            <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm border border-slate-200 relative">
+                                            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group existing-image-preview">
                                                 <img src="{{ $url }}" class="w-full h-full object-cover">
+                                                <button type="button" onclick="removeExistingImage(this, '{{ $url }}')" class="absolute top-1 right-1 bg-white/90 hover:bg-red-500 hover:text-white text-slate-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all shadow-sm">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                </button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -334,14 +328,11 @@
                             <!-- Vị trí -->
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Vị trí hiện tại</label>
-                                <div class="relative">
-                                    <select name="Vi_tri" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue text-slate-800 appearance-none transition-all">
-                                        <option value="">Chưa xác định</option>
-                                        <option value="noi_tru" {{ old('Vi_tri', $pet->Vi_tri) === 'noi_tru' ? 'selected' : '' }}>Trạm cứu hộ (Nội trú)</option>
-                                        <option value="phong_kham" {{ old('Vi_tri', $pet->Vi_tri) === 'phong_kham' ? 'selected' : '' }}>Phòng khám thú y</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                                </div>
+                                <select id="Vi_tri_select" name="Vi_tri" class="w-full text-sm tom-select-basic">
+                                    <option value="">Chưa xác định</option>
+                                    <option value="noi_tru" {{ old('Vi_tri', $pet->Vi_tri) === 'noi_tru' ? 'selected' : '' }}>Trạm cứu hộ (Nội trú)</option>
+                                    <option value="phong_kham" {{ old('Vi_tri', $pet->Vi_tri) === 'phong_kham' ? 'selected' : '' }}>Phòng khám thú y</option>
+                                </select>
                             </div>
                             <!-- Phí -->
                             <div>
@@ -396,7 +387,7 @@
                             </div>
                             <div>
                                 <label class="block text-[13px] font-medium text-slate-700 mb-1.5">Loại cứu hộ</label>
-                                <select name="Loai_cuu_ho" class="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200/80 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-sidebar-blue/20 focus:border-sidebar-blue transition-all">
+                                <select id="Loai_cuu_ho_select" name="Loai_cuu_ho" class="w-full text-sm tom-select-basic">
                                     <option value="">-- Chọn loại --</option>
                                     <option value="lang_thang" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'lang_thang' ? 'selected' : '' }}>Lang thang</option>
                                     <option value="lac_duong" {{ old('Loai_cuu_ho', $rescue->Loai_cuu_ho ?? '') == 'lac_duong' ? 'selected' : '' }}>Lạc đường</option>
@@ -428,8 +419,8 @@
 
             
             <div class="flex items-center justify-end gap-3 pt-6">
-                <button type="submit" form="edit-pet-form" class="px-6 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center gap-2">
-                    <i data-lucide="save" class="w-4 h-4"></i>
+                <button type="submit" form="edit-pet-form" class="px-6 py-2.5 text-sm font-medium text-white bg-sidebar-blue border border-transparent rounded-xl hover:opacity-90 transition-all shadow-[0_2px_8px_-2px_rgba(63,137,154,0.4)] flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     Xác nhận Lưu
                 </button>
             </div>
@@ -449,23 +440,61 @@
         }
     }
 
+    let selectedGalleryFiles = []; // Mảng lưu trữ các file mới chọn
+
     function previewMultipleImages(input) {
         const container = document.getElementById('multiple-images-preview');
-        container.innerHTML = '';
         
-        if (input.files) {
+        if (input.files && input.files.length > 0) {
             Array.from(input.files).forEach((file) => {
+                selectedGalleryFiles.push(file);
+                const index = selectedGalleryFiles.length - 1;
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const div = document.createElement('div');
-                    div.className = 'w-16 h-16 rounded-xl overflow-hidden shadow-sm border border-slate-200';
-                    div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                    div.className = 'w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group new-image-preview';
+                    div.dataset.index = index;
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <button type="button" class="absolute top-1 right-1 bg-white/90 hover:bg-red-500 hover:text-white text-slate-700 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-all shadow-sm" onclick="removeNewImage(this, ${index})">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    `;
                     container.appendChild(div);
                 };
                 reader.readAsDataURL(file);
             });
             container.classList.remove('empty:hidden');
+            updateGalleryFileInput();
         }
+        // Cho phép chọn lại đúng file cũ (chỉ xóa ở thẻ selector, không ảnh hưởng thẻ upload)
+        input.value = '';
+    }
+
+    function removeNewImage(btn, index) {
+        selectedGalleryFiles[index] = null; // Mark as removed
+        btn.closest('.new-image-preview').remove();
+        updateGalleryFileInput();
+    }
+
+    function updateGalleryFileInput() {
+        const dataTransfer = new DataTransfer();
+        selectedGalleryFiles.forEach(file => {
+            if (file) dataTransfer.items.add(file);
+        });
+        document.getElementById('thu_vien_anh_upload').files = dataTransfer.files;
+    }
+
+    function removeExistingImage(btn, url) {
+        btn.closest('div').remove();
+        
+        // Thêm input ẩn báo hiệu cho server biết ảnh này bị xóa
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'deleted_images[]';
+        hiddenInput.value = url;
+        document.getElementById('edit-pet-form').appendChild(hiddenInput);
     }
 
     function updateCharCount(textarea, countId, max) {
@@ -484,6 +513,79 @@
                 maxOptions: null
             });
         }
+
+        // Initialize basic TomSelects for dropdown styling (rounded corners)
+        document.querySelectorAll('.tom-select-basic').forEach(function(el) {
+            new TomSelect(el, {
+                create: false,
+                controlInput: null, // Disable typing search for standard dropdowns
+            });
+        });
+
+        // === DRAG & DROP & PASTE CHO ẢNH ===
+        const avatarBox = document.querySelector('label[for="anh_upload"]');
+        const galleryBox = document.querySelector('label[for="thu_vien_anh_selector"]');
+        let hoveredZone = null;
+
+        if (avatarBox) {
+            avatarBox.addEventListener('mouseenter', () => hoveredZone = 'avatar');
+            avatarBox.addEventListener('mouseleave', () => { if(hoveredZone === 'avatar') hoveredZone = null; });
+            ['dragover', 'dragenter'].forEach(evt => avatarBox.addEventListener(evt, e => {
+                e.preventDefault();
+                avatarBox.classList.add('border-sidebar-blue', 'bg-slate-100');
+            }));
+            ['dragleave', 'dragend', 'drop'].forEach(evt => avatarBox.addEventListener(evt, e => {
+                e.preventDefault();
+                avatarBox.classList.remove('border-sidebar-blue', 'bg-slate-100');
+            }));
+            avatarBox.addEventListener('drop', e => {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const input = document.getElementById('anh_upload');
+                    input.files = e.dataTransfer.files;
+                    previewImage(input);
+                }
+            });
+        }
+
+        if (galleryBox) {
+            galleryBox.addEventListener('mouseenter', () => hoveredZone = 'gallery');
+            galleryBox.addEventListener('mouseleave', () => { if(hoveredZone === 'gallery') hoveredZone = null; });
+            ['dragover', 'dragenter'].forEach(evt => galleryBox.addEventListener(evt, e => {
+                e.preventDefault();
+                galleryBox.classList.add('border-sidebar-blue', 'bg-slate-100');
+            }));
+            ['dragleave', 'dragend', 'drop'].forEach(evt => galleryBox.addEventListener(evt, e => {
+                e.preventDefault();
+                galleryBox.classList.remove('border-sidebar-blue', 'bg-slate-100');
+            }));
+            galleryBox.addEventListener('drop', e => {
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const input = document.getElementById('thu_vien_anh_selector');
+                    input.files = e.dataTransfer.files;
+                    previewMultipleImages(input);
+                }
+            });
+        }
+
+        document.addEventListener('paste', e => {
+            if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+                let hasImage = false;
+                for (let i = 0; i < e.clipboardData.files.length; i++) {
+                    if (e.clipboardData.files[i].type.startsWith('image/')) hasImage = true;
+                }
+                if (hasImage) {
+                    if (hoveredZone === 'avatar' && avatarBox) {
+                        const input = document.getElementById('anh_upload');
+                        input.files = e.clipboardData.files;
+                        previewImage(input);
+                    } else if (galleryBox) {
+                        const input = document.getElementById('thu_vien_anh_selector');
+                        input.files = e.clipboardData.files;
+                        previewMultipleImages(input);
+                    }
+                }
+            }
+        });
     });
     </script>
 </x-admin-layout>

@@ -247,7 +247,9 @@ class AdoptionController extends Controller
      */
     public function edit($id)
     {
-        return redirect()->route('admin.adoptions.show', $id);
+        $application = AdoptionApplication::with(['thuCung', 'answers'])->findOrFail($id);
+        $questions = \App\Models\AdoptionQuestion::orderBy('Thu_tu')->get();
+        return view('admin.adoptions.edit', compact('application', 'questions'));
     }
 
     /**
@@ -257,14 +259,49 @@ class AdoptionController extends Controller
     {
         $application = AdoptionApplication::with('thuCung')->findOrFail($id);
 
+        if ($request->has('update_info')) {
+            $validated = $request->validate([
+                'Ho_ten'          => 'required|string|max:100',
+                'So_dien_thoai'   => 'required|string',
+                'Dia_chi'         => 'required|string|max:500',
+                'Nghe_nghiep'     => 'nullable|string|max:100',
+                'Loai_nha_o'      => 'nullable|string|max:100'
+            ]);
+
+            $application->update([
+                'Ho_ten' => $validated['Ho_ten'],
+                'So_dien_thoai' => $validated['So_dien_thoai'],
+                'Dia_chi' => $validated['Dia_chi'],
+                'Nghe_nghiep' => $validated['Nghe_nghiep'],
+                'Loai_nha_o' => $validated['Loai_nha_o']
+            ]);
+
+            return redirect()->route('admin.adoptions.show', $id)->with('success', 'Đã cập nhật thông tin đơn nhận nuôi thành công!');
+        }
+
         $newStatus = $request->input('Trang_thai');
         $ghiChu = $request->input('Ghi_chu_admin');
 
         $currentStatus = $application->Trang_thai;
 
         if ($newStatus === $currentStatus) {
-            $application->update(['Ghi_chu_admin' => $ghiChu]);
-            return back()->with('success', 'Đã cập nhật ghi chú thành công.');
+            $newNote = trim($ghiChu);
+            if (!empty($newNote)) {
+                $timestamp = now()->format('d/m/Y H:i');
+                $appendedNote = "[{$timestamp}] Admin: " . $newNote;
+                $finalNote = empty($application->Ghi_chu_admin) ? $appendedNote : $application->Ghi_chu_admin . "\n\n" . $appendedNote;
+                $application->update(['Ghi_chu_admin' => $finalNote]);
+            }
+            
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Đã thêm ghi chú thành công.', 
+                    'ghi_chu' => $application->Ghi_chu_admin,
+                    'timestamp' => now()->format('d/m/Y H:i')
+                ]);
+            }
+            return back()->with('success', 'Đã thêm ghi chú thành công.');
         }
 
         if ($newStatus === 'tu_choi' && empty($ghiChu)) {

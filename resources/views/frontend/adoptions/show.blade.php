@@ -186,11 +186,25 @@
                         </div>
 
                         <!-- Câu chuyện -->
-                        <div class="bg-[#FAFAFA] rounded-[24px] p-6 border border-gray-100 relative overflow-hidden">
-                            <h3 class="text-[15px] font-black text-[#1D2B53] mb-4">Câu chuyện của {{ $pet->Ten }}</h3>
-                            <p class="text-[13px] text-gray-500 font-medium leading-relaxed whitespace-pre-wrap">
-                                {{ $pet->Mo_ta ?: 'Chưa có thông tin mô tả chi tiết cho thú cưng này.' }}
-                            </p>
+                        <div class="bg-[#FAFAFA] rounded-[24px] p-6 border border-gray-100 relative overflow-hidden"
+                             x-data="{ expanded: false, isOverflowing: false }"
+                             x-init="$nextTick(() => { isOverflowing = $refs.text.scrollHeight > $refs.text.clientHeight; })">
+                            <h3 class="text-[15px] font-black text-[#1D2B53] mb-4 relative z-10">Câu chuyện của {{ $pet->Ten }}</h3>
+                            
+                            <div class="relative z-10">
+                                <p x-ref="text" class="text-[13px] text-gray-500 font-medium leading-relaxed text-justify transition-all duration-300"
+                                   :class="expanded ? '' : 'line-clamp-4'">{!! nl2br(e($pet->Mo_ta ?: 'Chưa có thông tin mô tả chi tiết cho thú cưng này.')) !!}</p>
+                                
+                                <button x-show="isOverflowing || expanded" 
+                                        style="display: none;"
+                                        @click="expanded = !expanded" 
+                                        class="text-[13px] font-bold text-[#F58A3C] hover:text-orange-600 mt-2 flex items-center gap-1 focus:outline-none transition-colors">
+                                    <span x-text="expanded ? 'Thu gọn' : 'Xem thêm'"></span>
+                                    <svg x-show="!expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    <svg x-show="expanded" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                </button>
+                            </div>
+
                             <div class="absolute bottom-4 right-4 flex items-center justify-center w-8 h-8 opacity-20">
                                 <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                             </div>

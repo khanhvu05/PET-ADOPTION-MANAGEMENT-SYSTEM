@@ -161,7 +161,7 @@ class InterviewScheduleController extends Controller
         $slot = InterviewSlot::with(['schedules.donNhanNuoi.thuCung', 'schedules.donNhanNuoi.nguoiDung'])->findOrFail($id);
         
         $scheduled = $slot->schedules->filter(function($s) {
-            return in_array($s->Ket_qua_phong_van, [null, '']) && in_array($s->Trang_thai, ['cho_xac_nhan_don', 'cho_duyet', 'da_xac_nhan', 'da_doi_lich']);
+            return in_array($s->Ket_qua_phong_van, [null, '']) && in_array($s->Trang_thai, ['cho_xac_nhan_don', 'cho_duyet', 'da_xac_nhan', 'da_doi_lich', 'cho_phong_van']);
         });
 
         $history = $slot->schedules->filter(function($s) {

@@ -40,7 +40,7 @@ class PasswordResetSuccessMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.password-reset-success',
+            view: 'emails.password-reset-success',
         );
     }
 

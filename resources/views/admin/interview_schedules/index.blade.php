@@ -15,7 +15,7 @@
                 <h2 class="text-2xl font-bold text-slate-800">Quản lý Lịch phỏng vấn</h2>
                 <p class="text-sm text-slate-500 mt-1">Thiết lập các khung giờ phỏng vấn để người nhận nuôi có thể đặt lịch</p>
             </div>
-            <button x-data @click="$dispatch('open-modal', 'add-slot-modal')" class="bg-teal-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors shadow-sm flex items-center gap-2">
+            <button x-data @click="$dispatch('open-modal', 'add-slot-modal')" class="bg-sidebar-blue text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-sidebar-blue/80 transition-colors shadow-sm flex items-center gap-2 active:scale-90">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Thêm slot mới
             </button>
@@ -251,20 +251,38 @@
                 let reason = '';
                 if (result === 'tu_choi') {
                     const { value: text } = await Swal.fire({
-                        title: 'Lý do không đạt',
+                        html: `
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                                    <i data-lucide="x-circle" class="w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 mb-1">Lý do không đạt</h3>
+                            </div>
+                        `,
                         input: 'textarea',
                         inputPlaceholder: 'Nhập lý do ứng viên không đạt phỏng vấn...',
                         showCancelButton: true,
                         confirmButtonText: 'Xác nhận',
                         cancelButtonText: 'Hủy',
+                        buttonsStyling: false,
+                        customClass: {
+                            popup: 'rounded-2xl p-6 w-[400px]',
+                            input: 'w-full mt-4 rounded-xl border-slate-200 focus:border-red-500 focus:ring-red-500 text-sm p-3 bg-slate-50',
+                            actions: 'mt-4 w-full flex justify-center gap-3',
+                            confirmButton: 'bg-red-500 hover:bg-red-600 text-white font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
+                            cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
+                        },
+                        didOpen: () => {
+                            if (window.lucide) {
+                                window.lucide.createIcons({
+                                    root: document.querySelector('.swal2-container')
+                                });
+                            }
+                        },
                         inputValidator: (value) => {
                             if (!value) {
                                 return 'Bạn cần nhập lý do!'
                             }
-                        },
-                        customClass: {
-                            confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
-                            cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
                         }
                     });
                     if (text) {
@@ -274,15 +292,61 @@
                     }
                 } else if (result === 'dat') {
                     const confirm = await Swal.fire({
-                        title: 'Xác nhận',
-                        text: 'Bạn đánh giá ứng viên này Đạt phỏng vấn? Đơn sẽ chuyển sang trạng thái PV thành công.',
-                        icon: 'question',
+                        html: `
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 bg-teal-50 text-sidebar-blue rounded-full flex items-center justify-center mb-4">
+                                    <i data-lucide="check-circle" class="w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Đánh giá Đạt?</h3>
+                                <p class="text-sm text-slate-500 text-center">Bạn đánh giá ứng viên này Đạt phỏng vấn? Đơn sẽ chuyển sang trạng thái PV thành công.</p>
+                            </div>
+                        `,
                         showCancelButton: true,
+                        buttonsStyling: false,
                         confirmButtonText: 'Đồng ý',
                         cancelButtonText: 'Hủy',
                         customClass: {
-                            confirmButton: 'bg-green-600 hover:bg-green-700 text-white font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
-                            cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
+                            popup: 'rounded-2xl p-6 w-[400px]',
+                            actions: 'mt-6 w-full flex justify-center gap-3',
+                            confirmButton: 'bg-sidebar-blue hover:opacity-90 text-white font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
+                            cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
+                        },
+                        didOpen: () => {
+                            if (window.lucide) {
+                                window.lucide.createIcons({
+                                    root: document.querySelector('.swal2-container')
+                                });
+                            }
+                        }
+                    });
+                    if (!confirm.isConfirmed) return;
+                } else if (result === 'vang_mat') {
+                    const confirm = await Swal.fire({
+                        html: `
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center mb-4">
+                                    <i data-lucide="user-x" class="w-8 h-8"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-800 mb-2">Đánh dấu vắng mặt?</h3>
+                                <p class="text-sm text-slate-500 text-center">Bạn có chắc chắn ứng viên này không tham gia phỏng vấn?</p>
+                            </div>
+                        `,
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonText: 'Đồng ý',
+                        cancelButtonText: 'Hủy',
+                        customClass: {
+                            popup: 'rounded-2xl p-6 w-[400px]',
+                            actions: 'mt-6 w-full flex justify-center gap-3',
+                            confirmButton: 'bg-slate-700 hover:opacity-90 text-white font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm',
+                            cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-[10px] px-6 py-2.5 transition-colors shadow-sm'
+                        },
+                        didOpen: () => {
+                            if (window.lucide) {
+                                window.lucide.createIcons({
+                                    root: document.querySelector('.swal2-container')
+                                });
+                            }
                         }
                     });
                     if (!confirm.isConfirmed) return;

@@ -1,27 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Nhắc Nhở: Vui Lòng Chọn Lịch Phỏng Vấn</title>
-</head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #f59e0b; border-radius: 8px;">
-        <h2 style="color: #d97706;">Nhắc nhở chọn lịch phỏng vấn</h2>
-        <p>Xin chào <strong>{{ $application->Ho_ten }}</strong>,</p>
-        <p>Chúng tôi nhận thấy bạn vẫn chưa chọn lịch phỏng vấn để nhận nuôi bé <strong>{{ $application->thuCung->Ten }}</strong>.</p>
-        
-        <p style="color: #b91c1c; font-weight: bold;">Thời hạn xác nhận của bạn chỉ còn lại 3 giờ!</p>
+@extends('emails.template', ['subject' => 'Nhắc Nhở: Vui Lòng Chọn Lịch Phỏng Vấn PetJam'])
 
-        <p>Vui lòng nhấp vào nút dưới đây để chọn lịch ngay, nếu không đơn của bạn sẽ bị hủy tự động:</p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ route('frontend.user.adoptions.index') }}" style="background-color: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                Chọn Lịch Ngay
-            </a>
-        </div>
+@section('content')
+<span class="title-icon">⏰</span>
+<h1 class="main-title font-bold text-orange" style="color: #d97706;">Nhắc nhở chọn lịch phỏng vấn<br><span style="color: #0f172a; font-size: 20px;">Về hồ sơ nhận nuôi bé {{ $application->thuCung->Ten ?? 'thú cưng' }}</span></h1>
 
-        <p>Nếu bạn gặp khó khăn, vui lòng liên hệ hotline: <strong>0987.654.321</strong>.</p>
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #777;">Trân trọng,<br>Đội ngũ PetJam</p>
+<p>Xin chào <strong>{{ $application->Ho_ten ?? 'bạn' }}</strong>,</p>
+<p>Chúng tôi nhận thấy bạn vẫn chưa chọn lịch phỏng vấn để tiếp tục quy trình nhận nuôi bé <strong>{{ $application->thuCung->Ten ?? 'thú cưng' }}</strong>.</p>
+
+<div class="alert-box danger" style="background-color: #fffbeb; border-color: #fcd34d; color: #b45309;">
+    <div class="alert-icon">⏳</div>
+    <div>
+        <strong style="color: #b91c1c;">Thời hạn xác nhận của bạn chỉ còn lại 3 giờ!</strong><br>
+        Vui lòng chọn lịch ngay, nếu không đơn của bạn sẽ bị hệ thống tự động hủy.
     </div>
-</body>
-</html>
+</div>
+
+<div class="text-center" style="margin: 30px 0;">
+    <a href="{{ route('frontend.user.adoptions.index') }}" class="btn btn-primary" style="display: inline-block;">Chọn Lịch Ngay</a>
+</div>
+
+<div class="contact-info">
+    <p>Nếu bạn gặp khó khăn, vui lòng liên hệ với chúng tôi qua:</p>
+    <div class="contact-row">
+        <span>📞</span> Hotline: 0987.654.321
+    </div>
+</div>
+@endsection

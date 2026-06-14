@@ -279,7 +279,11 @@
 
             <!-- Body -->
             <div class="body-content" style="background-color: #ffffff;">
-                {!! $content !!}
+                @if(isset($content))
+                    {!! $content !!}
+                @else
+                    @yield('content')
+                @endif
             </div>
 
             <!-- Footer with Clouds & Dogs -->

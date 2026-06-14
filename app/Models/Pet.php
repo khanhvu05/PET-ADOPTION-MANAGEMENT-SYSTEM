@@ -81,6 +81,18 @@ class Pet extends Model
                     $newValue = self::mapTrangThai($newValue);
                 }
 
+                // Xử lý mảng (như Thu_vien_anh) hoặc các trường chứa link ảnh dài
+                if ($key === 'Thu_vien_anh' || $key === 'Anh_dai_dien') {
+                    if (is_array($oldValue)) $oldValue = count($oldValue) . ' ảnh';
+                    else $oldValue = $oldValue ? 'Dữ liệu ảnh cũ' : 'trống';
+                    
+                    if (is_array($newValue)) $newValue = count($newValue) . ' ảnh';
+                    else $newValue = $newValue ? 'Dữ liệu ảnh mới' : 'trống';
+                } else {
+                    if (is_array($oldValue)) $oldValue = count($oldValue) . ' mục';
+                    if (is_array($newValue)) $newValue = count($newValue) . ' mục';
+                }
+
                 $logEntries[] = "- Cập nhật {$label} từ '{$oldValue}' thành '{$newValue}'.";
             }
             

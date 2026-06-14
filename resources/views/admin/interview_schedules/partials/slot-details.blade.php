@@ -76,10 +76,10 @@
                                 <td class="px-4 py-4 text-center whitespace-nowrap">
                                     @php
                                         $statusMap = [
-                                            'cho_xac_nhan_don' => ['label' => 'Chờ xác nhận', 'class' => 'bg-amber-50 text-amber-700 border-amber-200'],
+                                            'cho_xac_nhan_don' => ['label' => 'Đang xử lý', 'class' => 'bg-amber-50 text-amber-700 border-amber-200'],
                                             'cho_duyet'        => ['label' => 'Chờ duyệt', 'class' => 'bg-slate-100 text-slate-600 border-slate-200'],
                                             'da_xac_nhan'      => ['label' => 'Đã xác nhận', 'class' => 'bg-blue-50 text-blue-700 border-blue-200'],
-                                            'cho_phong_van'    => ['label' => 'Chờ phỏng vấn', 'class' => 'bg-blue-50 text-blue-700 border-blue-200'],
+                                            'cho_phong_van'    => ['label' => 'Đang xử lý', 'class' => 'bg-blue-50 text-blue-700 border-blue-200'],
                                             'da_doi_lich'      => ['label' => 'Đã đổi lịch', 'class' => 'bg-purple-50 text-purple-700 border-purple-200'],
                                         ];
                                         $st = $statusMap[$s->Trang_thai] ?? ['label' => $s->Trang_thai, 'class' => 'bg-slate-100 text-slate-600 border-slate-200'];

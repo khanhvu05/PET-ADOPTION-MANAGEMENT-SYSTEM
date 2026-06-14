@@ -1,26 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Mời Phỏng Vấn Nhận Nuôi</title>
-</head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-        <h2 style="color: #0d9488;">Chúc mừng bạn!</h2>
-        <p>Xin chào <strong>{{ $application->Ho_ten }}</strong>,</p>
-        <p>Hồ sơ xin nhận nuôi bé <strong>{{ $application->thuCung->Ten }}</strong> của bạn đã vượt qua vòng sơ loại của PetJam.</p>
-        <p>Để tiếp tục quy trình, mời bạn truy cập vào đường link bên dưới để chọn lịch phỏng vấn phù hợp nhất với bạn (Trực tiếp tại trạm hoặc Online):</p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ route('frontend.user.adoptions.index') }}" style="background-color: #0d9488; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                Chọn Lịch Phỏng Vấn
-            </a>
-        </div>
+@extends('emails.template', ['subject' => 'Mời Phỏng Vấn Nhận Nuôi PetJam'])
 
-        <p style="color: #e11d48; font-weight: bold;">Lưu ý quan trọng: Vui lòng xác nhận lịch trong vòng 24h kể từ khi nhận email này. Nếu quá hạn, hệ thống sẽ tự động hủy đơn đăng ký của bạn.</p>
+@section('content')
+<span class="title-icon">🎉</span>
+<h1 class="main-title font-bold text-orange">Chúc mừng!<br><span style="color: #0f172a; font-size: 20px;">Hồ sơ nhận nuôi {{ $application->thuCung->Ten ?? 'thú cưng' }} đã vượt qua vòng sơ loại</span></h1>
 
-        <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ hotline: <strong>0987.654.321</strong>.</p>
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #777;">Trân trọng,<br>Đội ngũ PetJam</p>
+<div class="pet-card-large">
+    @if($application->thuCung && $application->thuCung->anh_url)
+        <img src="{{ $application->thuCung->anh_url }}" alt="{{ $application->thuCung->Ten }}" class="pet-photo">
+    @else
+        <div class="pet-photo" style="background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 48px;">🐾</div>
+    @endif
+</div>
+
+<p>Xin chào <strong>{{ $application->Ho_ten ?? 'bạn' }}</strong>,</p>
+<p>PETJAM rất vui thông báo rằng hồ sơ xin nhận nuôi bé <strong>{{ $application->thuCung->Ten ?? 'thú cưng' }}</strong> của bạn đã vượt qua vòng đánh giá sơ bộ.</p>
+<p>Để tiếp tục quy trình, mời bạn truy cập vào đường link bên dưới để chọn lịch phỏng vấn phù hợp nhất với bạn (Trực tiếp tại trạm hoặc Online):</p>
+
+<div class="text-center" style="margin: 30px 0;">
+    <a href="{{ route('frontend.user.adoptions.index') }}" class="btn btn-primary" style="display: inline-block;">Chọn Lịch Phỏng Vấn</a>
+</div>
+
+<div class="alert-box danger">
+    <div class="alert-icon">⚠️</div>
+    <div>
+        <strong>Lưu ý quan trọng:</strong> Vui lòng xác nhận lịch trong vòng 24h kể từ khi nhận email này. Nếu quá hạn, hệ thống sẽ tự động hủy đơn đăng ký của bạn.
     </div>
-</body>
-</html>
+</div>
+
+<div class="contact-info">
+    <p>Nếu bạn cần hỗ trợ, vui lòng liên hệ với chúng tôi qua:</p>
+    <div class="contact-row">
+        <span>📞</span> Hotline: 0987.654.321
+    </div>
+    <div class="contact-row">
+        <span>✉️</span> support@petjam.com
+    </div>
+</div>
+@endsection

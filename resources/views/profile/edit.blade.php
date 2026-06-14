@@ -21,11 +21,11 @@
         <div class="lg:col-span-4 lg:sticky lg:top-32 self-start space-y-6 hidden lg:block">
             <!-- Custom Navigation -->
             <nav class="space-y-1 text-sm border-l-2 border-slate-100 pl-4 py-2 font-medium">
-                <a href="#info" class="flex items-center py-2 text-slate-500 hover:text-orange-brand transition-colors">
+                <a href="#info" class="flex items-center py-2 text-slate-500 hover:text-primary transition-colors">
                     <span class="text-slate-400 w-8 font-bold text-xs tracking-wider">[01]</span>
                     <span>Thông tin cá nhân</span>
                 </a>
-                <a href="#security" class="flex items-center py-2 text-slate-500 hover:text-orange-brand transition-colors">
+                <a href="#security" class="flex items-center py-2 text-slate-500 hover:text-primary transition-colors">
                     <span class="text-slate-400 w-8 font-bold text-xs tracking-wider">[02]</span>
                     <span>Bảo mật mật khẩu</span>
                 </a>

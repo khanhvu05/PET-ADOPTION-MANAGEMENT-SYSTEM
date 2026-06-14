@@ -30,7 +30,7 @@
 
         <div>
             <x-input-label for="Loai_tai_khoan" value="Loại tài khoản" />
-            <select id="Loai_tai_khoan" name="Loai_tai_khoan" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-1 block w-full">
+            <select id="Loai_tai_khoan" name="Loai_tai_khoan" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed mt-1 block w-full">
                 <option value="ca_nhan" {{ old('Loai_tai_khoan', $user->Loai_tai_khoan) === 'ca_nhan' ? 'selected' : '' }}>Cá nhân</option>
                 <option value="to_chuc" {{ old('Loai_tai_khoan', $user->Loai_tai_khoan) === 'to_chuc' ? 'selected' : '' }}>Tổ chức</option>
             </select>
@@ -42,7 +42,7 @@
                 <div class="mt-4 p-4 bg-orange-50/50 border border-orange-100 rounded-lg">
                     <p class="text-sm text-slate-600">
                         Địa chỉ email của bạn chưa được xác minh.
-                        <button form="send-verification" class="font-medium text-orange-brand hover:text-orange-600 focus:outline-none focus:underline transition duration-150">
+                        <button form="send-verification" class="font-medium text-primary hover:text-orange-600 focus:outline-none focus:underline transition duration-150">
                             Nhấp vào đây để gửi lại email xác minh.
                         </button>
                     </p>
