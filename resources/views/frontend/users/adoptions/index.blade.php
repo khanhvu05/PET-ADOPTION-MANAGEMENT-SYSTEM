@@ -19,7 +19,7 @@
         <!-- Breadcrumb & Header -->
         <div class="mb-8">
             <nav class="flex text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-2">
+                <ol class="flex flex-wrap items-center gap-2">
                     <li><a href="/" class="hover:text-[#F58A3C] transition-colors">Trang chủ</a></li>
                     <li><i data-lucide="chevron-right" class="w-3 h-3 text-gray-400"></i></li>
                     <li><span class="text-gray-500">Tài khoản</span></li>
@@ -124,7 +124,7 @@
             <!-- Main Content Container -->
             <div id="adoption-list-container" class="flex-1 min-w-0 bg-white rounded-2xl shadow-sm p-6 relative">
                 <!-- Search & Sort Bar -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6 relative z-30">
+                <div class="flex flex-col sm:flex-row gap-4 justify-between items-end sm:items-center mb-6 relative z-30">
                     <div class="w-full sm:w-[380px] relative">
                         <input type="text" id="search-input" value="{{ request('search') }}" placeholder="Tìm kiếm thú cưng (tên, mã đơn...)" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded-[12px] text-[13px] focus:outline-none focus:border-[#F58A3C] focus:ring-1 focus:ring-[#F58A3C] transition-all">
                         <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
@@ -214,7 +214,7 @@
 
                             <!-- Right: Status Box -->
                             <div class="w-full xl:w-[280px] shrink-0 flex flex-row items-center gap-4 bg-[#F9FDFC] p-4 rounded-lg">
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     @if($app->Trang_thai === 'hoan_thanh')
                                         <div class="flex items-start gap-2.5 mb-3">
                                             <i data-lucide="home" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
@@ -226,7 +226,7 @@
                                     @elseif($app->Trang_thai === 'cho_xac_nhan_don' && !$app->interview_slot_id)
                                         <div class="flex items-start gap-2.5">
                                             <i data-lucide="calendar-clock" class="w-5 h-5 text-[#F58A3C] shrink-0 mt-0.5"></i>
-                                            <div class="w-full">
+                                            <div class="flex-1 min-w-0">
                                                 <h4 class="text-[13px] font-semibold text-[#F58A3C] mb-2">Cần xác nhận lịch</h4>
                                                 <form action="{{ route('frontend.user.adoptions.schedule-interview', $app->Ma_don) }}" method="POST" class="ajax-schedule-form">
                                                     @csrf
@@ -268,7 +268,7 @@
                                         </div>
                                     @endif
                                     
-                                    <div class="flex flex-wrap items-center justify-start gap-2 mt-4 pt-3 border-t border-gray-100">
+                                    <div class="flex flex-wrap items-center justify-center xl:justify-start gap-2 mt-4 pt-3 border-t border-gray-100">
                                         <a href="{{ route('frontend.adoptions.show', $app->Ma_thu_cung) }}" class="inline-block px-4 py-1.5 rounded-[10px] border border-[#F58A3C] text-[#F58A3C] hover:bg-[#F58A3C] hover:text-white text-[11px] font-medium transition-colors">
                                             Xem chi tiết
                                         </a>
@@ -303,13 +303,13 @@
                 <!-- Pagination Footer -->
                 @if($applications->hasPages() || $applications->count() > 0)
                 <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-[12px] text-gray-500 font-medium">
+                    <p class="text-[12px] text-gray-500 font-medium text-center sm:text-left">
                         Hiển thị {{ $applications->firstItem() ?? 0 }} – {{ $applications->lastItem() ?? 0 }} trong {{ $applications->total() }} kết quả
                     </p>
                     
-                    <div class="flex items-center gap-6">
+                    <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
                         @if($applications->hasPages())
-                            <div class="flex gap-1" id="pagination-links">
+                            <div class="flex gap-1 overflow-x-auto max-w-full pb-2 sm:pb-0 scrollbar-hide" id="pagination-links">
                                 {{ $applications->appends(request()->query())->links('vendor.pagination.tailwind') }}
                             </div>
                         @endif
