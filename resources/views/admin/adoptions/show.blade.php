@@ -422,7 +422,7 @@
                         @endif
 
                         @if($application->Trang_thai === 'da_duyet')
-                            <button type="button" onclick="confirmAction('hoan_thanh', 'Xác nhận đã bàn giao thú cưng cho người nhận nuôi thành công?')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors">
+                            <button type="button" onclick="confirmAction('hoan_thanh', 'Xác nhận đã bàn giao thú cưng cho người nhận nuôi thành công?')" class="w-full bg-sidebar-blue hover:bg-sidebar-blue/80 text-white font-medium text-sm py-2.5 rounded-[8px] transition-colors active:scale-90">
                                 Hoàn tất bàn giao & Đã nhận nuôi
                             </button>
                         @endif

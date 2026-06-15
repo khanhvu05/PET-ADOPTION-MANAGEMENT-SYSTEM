@@ -139,7 +139,7 @@ class UserAdoptionController extends Controller
                     [
                         'Ma_slot' => $slot->Ma_slot,
                         'Ket_qua_phong_van' => null,
-                        'Trang_thai' => 'cho_phong_van',
+                        'Trang_thai' => 'da_xac_nhan',
                         'Ghi_chu' => 'Người dùng tự đăng ký lịch'
                     ]
                 );
@@ -162,9 +162,15 @@ class UserAdoptionController extends Controller
 
             $mailService->send($user->email, $subject, $body);
 
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => true, 'message' => 'Xác nhận lịch phỏng vấn thành công! Chúng tôi đã gửi email thông tin chi tiết cho bạn.']);
+            }
             return back()->with('success', 'Xác nhận lịch phỏng vấn thành công! Chúng tôi đã gửi email thông tin chi tiết cho bạn.');
 
         } catch (\Exception $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            }
             return back()->with('error', $e->getMessage());
         }
     }

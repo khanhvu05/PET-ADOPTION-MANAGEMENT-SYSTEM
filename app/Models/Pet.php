@@ -265,10 +265,17 @@ class Pet extends Model
         if ($this->Anh_dai_dien) {
             return $this->Anh_dai_dien;
         }
-        return match ($this->Loai) {
-            'cho'  => 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300&h=300&fit=crop',
-            'meo'  => 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=300&fit=crop',
-            default => 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=300&h=300&fit=crop',
-        };
+        $hash = abs(crc32($this->Ma_thu_cung ?? $this->Ten ?? 'pet')) % 100 + 1;
+
+        if ($this->Loai === 'cho') {
+            return "https://placedog.net/500/500?id={$hash}";
+        } elseif ($this->Loai === 'meo') {
+            $catNames = ['millie', 'neo', 'poppy', 'bella', 'louie', 'boki', 'peaches', 'cinnamon', 'zika', 'guster'];
+            $catName = $catNames[$hash % count($catNames)];
+            return "https://placecats.com/{$catName}/500/500";
+        } else {
+            $otherIndex = ($hash % 5) + 1;
+            return asset("images/other_pets/{$otherIndex}.jpg");
+        }
     }
 }

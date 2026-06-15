@@ -61,12 +61,12 @@
                             </div>
                         </div>
                         <!-- Thumbnails -->
+                        @if(is_array($pet->Thu_vien_anh) && count($pet->Thu_vien_anh) > 0)
                         <div class="flex gap-2">
                             <img src="{{ $pet->AnhUrl }}" @click="mainImage = '{{ $pet->AnhUrl }}'" :class="mainImage === '{{ $pet->AnhUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
                             @php
-                                $thumbs = is_array($pet->Thu_vien_anh) ? $pet->Thu_vien_anh : [];
+                                $thumbs = $pet->Thu_vien_anh;
                                 $slicedThumbs = array_slice($thumbs, 0, 3);
-                                $padCount = 3 - count($slicedThumbs);
                             @endphp
                             @foreach($slicedThumbs as $thumb)
                                 @php
@@ -74,10 +74,8 @@
                                 @endphp
                                 <img src="{{ $thumbUrl }}" @click="mainImage = '{{ $thumbUrl }}'" :class="mainImage === '{{ $thumbUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
                             @endforeach
-                            @for($i = 0; $i < $padCount; $i++)
-                                <img src="{{ $pet->AnhUrl }}" @click="mainImage = '{{ $pet->AnhUrl }}'" :class="mainImage === '{{ $pet->AnhUrl }}' ? 'border-[#F58A3C] border-2 shadow-sm' : 'border-gray-200 border'" class="w-[calc(25%-6px)] aspect-square rounded-xl object-cover cursor-pointer hover:border-[#F58A3C] transition">
-                            @endfor
                         </div>
+                        @endif
 
                         <!-- Zoom Modal -->
                         <div x-show="isZoomed" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" @keydown.escape.window="isZoomed = false">

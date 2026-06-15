@@ -3,6 +3,11 @@
 @section('title', 'Lịch Sử Nhận Nuôi')
 
 @section('content')
+<style>
+    body, .min-h-screen, button, input, select, textarea { font-family: 'Inter', sans-serif !important; }
+    svg.lucide, [data-lucide] { stroke-width: 1.5 !important; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <div class="min-h-screen pt-20 pb-20">
     <!-- Hero Banner -->
     <section class="w-full mx-auto pb-6 flex justify-center relative">
@@ -22,7 +27,7 @@
                     <li class="text-[#1D2B53] font-semibold" aria-current="page">Lịch sử nhận nuôi</li>
                 </ol>
             </nav>
-            <h1 class="text-3xl font-black text-[#1D2B53] tracking-tight mb-2">Lịch sử nhận nuôi</h1>
+            <h1 class="text-3xl font-semibold text-[#1D2B53] tracking-tight mb-2">Lịch sử nhận nuôi</h1>
             <p class="text-gray-500 text-[15px]">Theo dõi hành trình yêu thương và những người bạn bốn chân đã tìm thấy mái ấm.</p>
         </div>
 
@@ -30,8 +35,8 @@
             <!-- Sidebar -->
             <aside class="w-full lg:w-[260px] shrink-0 space-y-6">
                 <!-- Tổng quan -->
-                <div class="bg-[#FFFDFB] rounded-[20px] p-5 shadow-sm border border-orange-50">
-                    <h3 class="font-bold text-[#1D2B53] text-[15px] flex items-center gap-2 mb-5">
+                <div class="bg-[#FFFDFB] rounded-xl p-5 shadow-sm border border-orange-50">
+                    <h3 class="font-medium text-[#1D2B53] text-[15px] flex items-center gap-2 mb-5">
                         <i data-lucide="paw-print" class="w-5 h-5 text-[#F58A3C] fill-[#F58A3C]"></i> Tổng quan
                     </h3>
                     <div class="space-y-4">
@@ -40,32 +45,32 @@
                                 <i data-lucide="link" class="w-4 h-4 text-[#F58A3C]"></i>
                                 Tổng số đơn
                             </div>
-                            <span class="font-black text-[15px] text-[#1D2B53]">{{ str_pad($totalPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="font-semibold text-[15px] text-[#1D2B53]">{{ str_pad($totalPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="flex items-center justify-between border-b border-gray-50 pb-3">
                             <div class="flex items-center gap-2 text-[13px] font-medium text-gray-500">
                                 <i data-lucide="home" class="w-4 h-4 text-emerald-500"></i>
                                 Đã nhận nuôi
                             </div>
-                            <span class="font-black text-[15px] text-[#1D2B53]">{{ str_pad($adoptedPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="font-semibold text-[15px] text-[#1D2B53]">{{ str_pad($adoptedPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2 text-[13px] font-medium text-gray-500">
                                 <i data-lucide="clock" class="w-4 h-4 text-red-400"></i>
                                 Đang xử lý
                             </div>
-                            <span class="font-black text-[15px] text-[#1D2B53]">{{ str_pad($pendingPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="font-semibold text-[15px] text-[#1D2B53]">{{ str_pad($pendingPets ?? 0, 2, '0', STR_PAD_LEFT) }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Bộ lọc -->
-                <form id="filter-form" action="{{ route('frontend.user.adoptions.index') }}" method="GET" class="bg-white rounded-[20px] p-5 shadow-sm border border-gray-100">
+                <form id="filter-form" action="{{ route('frontend.user.adoptions.index') }}" method="GET" class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                     <input type="hidden" name="search" value="{{ request('search') }}">
                     <input type="hidden" name="sort" value="{{ request('sort', 'newest') }}">
                     <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                     
-                    <h3 class="font-bold text-[#1D2B53] text-[15px] flex items-center gap-2 mb-4">
+                    <h3 class="font-medium text-[#1D2B53] text-[15px] flex items-center gap-2 mb-4">
                         <i data-lucide="filter" class="w-4 h-4 text-gray-400"></i> Bộ lọc
                     </h3>
                     
@@ -97,17 +102,17 @@
                             </div>
                         </div>
                         
-                        <button type="button" id="reset-filters" class="w-full flex items-center justify-center gap-1.5 py-2.5 text-[12px] font-bold text-gray-500 bg-white border border-gray-200 hover:bg-gray-50 rounded-[10px] transition-colors mt-2">
+                        <button type="button" id="reset-filters" class="w-full flex items-center justify-center gap-1.5 py-2.5 text-[12px] font-medium text-gray-500 bg-white border border-gray-200 hover:bg-gray-50 rounded-[10px] transition-colors mt-2">
                             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Đặt lại bộ lọc
                         </button>
                     </div>
                 </form>
 
                 <!-- Hỗ trợ -->
-                <div class="bg-[#FFF5EF] rounded-[20px] p-5 relative overflow-hidden">
-                    <h3 class="text-[#1D2B53] font-bold text-[15px] mb-2">Bạn cần hỗ trợ?</h3>
+                <div class="bg-[#FFF5EF] rounded-xl p-5 relative overflow-hidden">
+                    <h3 class="text-[#1D2B53] font-medium text-[15px] mb-2">Bạn cần hỗ trợ?</h3>
                     <p class="text-[12px] text-gray-600 mb-5 leading-relaxed pr-8">Đội ngũ PetJam luôn sẵn sàng hỗ trợ bạn 24/7.</p>
-                    <a href="/lien-he" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#F58A3C] hover:bg-[#e07930] text-white text-[12px] font-bold rounded-[8px] transition-colors shadow-sm relative z-10">
+                    <a href="/lien-he" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#F58A3C] hover:bg-[#e07930] text-white text-[12px] font-medium rounded-[8px] transition-colors shadow-sm relative z-10">
                         Liên hệ ngay <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                     </a>
                     
@@ -117,7 +122,7 @@
             </aside>
 
             <!-- Main Content Container -->
-            <div id="adoption-list-container" class="flex-1 min-w-0 bg-white rounded-[24px] shadow-sm p-6 relative">
+            <div id="adoption-list-container" class="flex-1 min-w-0 bg-white rounded-2xl shadow-sm p-6 relative">
                 <!-- Search & Sort Bar -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6 relative z-30">
                     <div class="w-full sm:w-[380px] relative">
@@ -128,7 +133,7 @@
                     <div class="flex items-center gap-2">
                         <span class="text-[13px] font-medium text-gray-500 whitespace-nowrap">Sắp xếp:</span>
                         <div class="relative">
-                            <select id="sort-select" data-icon-class="text-gray-400" class="custom-select-trigger text-[13px] font-bold text-[#1D2B53] bg-white hover:bg-gray-50 border border-gray-200 rounded-xl cursor-pointer pl-4 py-2.5 transition-all shadow-sm outline-none">
+                            <select id="sort-select" data-icon-class="text-gray-400" class="custom-select-trigger text-[13px] font-medium text-[#1D2B53] bg-white hover:bg-gray-50 border border-gray-200 rounded-xl cursor-pointer pl-4 py-2.5 transition-all shadow-sm outline-none">
                                 <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
                                 <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Cũ nhất</option>
                             </select>
@@ -144,11 +149,11 @@
                 <!-- List of Adoptions -->
                 <div class="space-y-4">
                     @forelse($applications as $app)
-                        <div class="bg-white rounded-[20px] border border-gray-100 p-4 flex flex-col xl:flex-row gap-5 items-start xl:items-center transition-all hover:border-[#F58A3C]/30 hover:shadow-[0_4px_20px_rgba(245,138,60,0.06)] group">
+                        <div class="bg-white rounded-xl border border-gray-100 p-4 flex flex-col xl:flex-row gap-5 items-start xl:items-center transition-all hover:border-[#F58A3C]/30 hover:shadow-[0_4px_20px_rgba(245,138,60,0.06)] group">
                             <!-- Left: Image & Info -->
                             <div class="flex gap-4 flex-1 w-full">
                                 <!-- Image -->
-                                <div class="w-[100px] h-[100px] rounded-[16px] overflow-hidden shrink-0 bg-gray-50 relative">
+                                <div class="w-[100px] h-[100px] rounded-lg overflow-hidden shrink-0 bg-gray-50 relative">
                                     @if($app->thuCung && $app->thuCung->AnhUrl)
                                         <img src="{{ $app->thuCung->AnhUrl }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="{{ $app->thuCung->Ten }}">
                                     @else
@@ -161,7 +166,7 @@
                                 <!-- Info -->
                                 <div class="flex-1 min-w-0 flex flex-col justify-center py-1">
                                     <div class="flex items-center gap-2 mb-1">
-                                        <h3 class="text-[17px] font-black text-[#1D2B53] truncate">{{ $app->thuCung ? $app->thuCung->Ten : 'Thú cưng đã bị xóa' }}</h3>
+                                        <h3 class="text-[17px] font-semibold text-[#1D2B53] truncate">{{ $app->thuCung ? $app->thuCung->Ten : 'Thú cưng đã bị xóa' }}</h3>
                                         @if($app->thuCung)
                                             @if($app->thuCung->Gioi_tinh === 'duc')
                                                 <i data-lucide="mars" class="w-4 h-4 text-blue-500"></i>
@@ -185,7 +190,7 @@
                                             ];
                                             $cfg = $statusConfig[$app->Trang_thai] ?? ['text' => 'text-gray-600', 'border' => 'border-gray-200', 'bg' => 'bg-white'];
                                         @endphp
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border {{ $cfg['border'] }} {{ $cfg['text'] }} {{ $cfg['bg'] }}">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium border {{ $cfg['border'] }} {{ $cfg['text'] }} {{ $cfg['bg'] }}">
                                             <i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-1.5 {{ $cfg['text'] }}"></i>
                                             {{ $app->trang_thai_label }}
                                         </span>
@@ -208,13 +213,13 @@
                             </div>
 
                             <!-- Right: Status Box -->
-                            <div class="w-full xl:w-[280px] shrink-0 flex flex-row items-center gap-4 bg-[#F9FDFC] p-4 rounded-[16px]">
+                            <div class="w-full xl:w-[280px] shrink-0 flex flex-row items-center gap-4 bg-[#F9FDFC] p-4 rounded-lg">
                                 <div class="flex-1">
                                     @if($app->Trang_thai === 'hoan_thanh')
                                         <div class="flex items-start gap-2.5 mb-3">
                                             <i data-lucide="home" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-[13px] font-black text-emerald-700 mb-1">Đã về mái ấm mới</h4>
+                                                <h4 class="text-[13px] font-semibold text-emerald-700 mb-1">Đã về mái ấm mới</h4>
                                                 <p class="text-[11px] text-gray-500 leading-tight font-medium">{{ $app->thuCung->Ten ?? 'Bé' }} đang có một cuộc sống hạnh phúc bên gia đình mới.</p>
                                             </div>
                                         </div>
@@ -222,7 +227,7 @@
                                         <div class="flex items-start gap-2.5">
                                             <i data-lucide="calendar-clock" class="w-5 h-5 text-[#F58A3C] shrink-0 mt-0.5"></i>
                                             <div class="w-full">
-                                                <h4 class="text-[13px] font-black text-[#F58A3C] mb-2">Cần xác nhận lịch</h4>
+                                                <h4 class="text-[13px] font-semibold text-[#F58A3C] mb-2">Cần xác nhận lịch</h4>
                                                 <form action="{{ route('frontend.user.adoptions.schedule-interview', $app->Ma_don) }}" method="POST" class="ajax-schedule-form">
                                                     @csrf
                                                     <div class="relative mb-2.5 z-10">
@@ -233,7 +238,7 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                    <button type="submit" class="w-full py-2 bg-[#F58A3C] text-white text-[12px] font-bold rounded-[10px] hover:bg-[#e07930] hover:shadow-md transition-all">Xác nhận lịch</button>
+                                                    <button type="submit" class="w-full py-2 bg-[#F58A3C] text-white text-[12px] font-medium rounded-[10px] hover:bg-[#e07930] hover:shadow-md transition-all">Xác nhận lịch</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -241,7 +246,7 @@
                                         <div class="flex items-start gap-2.5 mb-3">
                                             <i data-lucide="calendar-check" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-[13px] font-black text-blue-700 mb-1">Đã hẹn phỏng vấn</h4>
+                                                <h4 class="text-[13px] font-semibold text-blue-700 mb-1">Đã hẹn phỏng vấn</h4>
                                                 <p class="text-[11px] text-gray-500 leading-tight font-medium">{{ date('d/m/Y', strtotime($app->interviewSlot->Ngay ?? now())) }} lúc {{ substr($app->interviewSlot->Gio_bat_dau ?? '00:00',0,5) }}</p>
                                             </div>
                                         </div>
@@ -249,7 +254,7 @@
                                         <div class="flex items-start gap-2.5 mb-3">
                                             <i data-lucide="clock" class="w-5 h-5 text-[#F58A3C] shrink-0 mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-[13px] font-black text-[#1D2B53] mb-1">Đơn đang được xử lý</h4>
+                                                <h4 class="text-[13px] font-semibold text-[#1D2B53] mb-1">Đơn đang được xử lý</h4>
                                                 <p class="text-[11px] text-gray-500 leading-tight font-medium">Chúng tôi đang xem xét hồ sơ của bạn. Vui lòng chờ trong giây lát.</p>
                                             </div>
                                         </div>
@@ -257,21 +262,21 @@
                                         <div class="flex items-start gap-2.5 mb-3">
                                             <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0 mt-0.5"></i>
                                             <div>
-                                                <h4 class="text-[13px] font-black text-red-700 mb-1">Đã từ chối/Hủy</h4>
+                                                <h4 class="text-[13px] font-semibold text-red-700 mb-1">Đã từ chối/Hủy</h4>
                                                 <p class="text-[11px] text-gray-500 leading-tight font-medium">Đơn đăng ký không thành công.</p>
                                             </div>
                                         </div>
                                     @endif
                                     
-                                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4 pt-3 border-t border-gray-100">
-                                        <a href="{{ route('frontend.adoptions.show', $app->Ma_thu_cung) }}" class="inline-block px-4 py-1.5 rounded-[10px] border border-[#F58A3C] text-[#F58A3C] hover:bg-[#F58A3C] hover:text-white text-[11px] font-bold transition-colors">
+                                    <div class="flex flex-wrap items-center justify-start gap-2 mt-4 pt-3 border-t border-gray-100">
+                                        <a href="{{ route('frontend.adoptions.show', $app->Ma_thu_cung) }}" class="inline-block px-4 py-1.5 rounded-[10px] border border-[#F58A3C] text-[#F58A3C] hover:bg-[#F58A3C] hover:text-white text-[11px] font-medium transition-colors">
                                             Xem chi tiết
                                         </a>
                                         @if(in_array($app->Trang_thai, ['cho_duyet', 'cho_xac_nhan_don']))
                                             <form id="cancel-form-{{ $app->Ma_don }}" action="{{ route('frontend.adoptions.cancel', $app->Ma_don) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="button" onclick="confirmCancel('{{ $app->Ma_don }}')" class="px-4 py-1.5 rounded-[10px] border border-red-200 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white text-[11px] font-bold transition-colors">
+                                                <button type="button" onclick="confirmCancel('{{ $app->Ma_don }}')" class="px-4 py-1.5 rounded-[10px] border border-red-200 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white text-[11px] font-medium transition-colors">
                                                     Hủy đơn
                                                 </button>
                                             </form>
@@ -282,13 +287,13 @@
                             </div>
                         </div>
                     @empty
-                        <div class="bg-gray-50/50 rounded-[20px] p-12 text-center border border-dashed border-gray-200 flex flex-col items-center">
+                        <div class="bg-gray-50/50 rounded-xl p-12 text-center border border-dashed border-gray-200 flex flex-col items-center">
                             <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm">
                                 <i data-lucide="inbox" class="w-8 h-8 text-gray-300"></i>
                             </div>
-                            <h3 class="text-[15px] font-bold text-[#1D2B53] mb-2">Chưa có hồ sơ nào</h3>
+                            <h3 class="text-[15px] font-medium text-[#1D2B53] mb-2">Chưa có hồ sơ nào</h3>
                             <p class="text-gray-500 text-[13px] mb-6 max-w-sm">Không tìm thấy đơn đăng ký nhận nuôi nào phù hợp với bộ lọc hiện tại.</p>
-                            <a href="{{ route('frontend.adoptions.index') }}" class="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-[#1D2B53] text-[13px] font-bold rounded-full transition-colors shadow-sm">
+                            <a href="{{ route('frontend.adoptions.index') }}" class="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-[#1D2B53] text-[13px] font-medium rounded-full transition-colors shadow-sm">
                                 Xem danh sách thú cưng
                             </a>
                         </div>
@@ -312,7 +317,7 @@
                         <div class="flex items-center gap-2">
                             <span class="text-[12px] text-gray-500 font-medium">Hiển thị</span>
                             <div class="relative">
-                                <select id="per-page-select" data-icon-class="text-gray-400" class="custom-select-trigger text-[12px] font-bold text-[#1D2B53] border border-gray-200 rounded-xl py-1.5 pl-3 outline-none bg-white hover:bg-gray-50 cursor-pointer transition-all shadow-sm">
+                                <select id="per-page-select" data-icon-class="text-gray-400" class="custom-select-trigger text-[12px] font-medium text-[#1D2B53] border border-gray-200 rounded-xl py-1.5 pl-3 outline-none bg-white hover:bg-gray-50 cursor-pointer transition-all shadow-sm">
                                     <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
                                     <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
                                     <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
@@ -465,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         text: data.message || 'Xác nhận lịch phỏng vấn thành công.',
                         icon: 'success',
                         confirmButtonColor: '#F58A3C',
-                        customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-bold' }
+                        customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-medium' }
                     }).then(() => {
                         updateList();
                     });
@@ -474,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: 'Lỗi', 
                         text: data.message || 'Có lỗi xảy ra', 
                         icon: 'error',
-                        customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-bold bg-red-500' }
+                        customClass: { popup: 'rounded-2xl', confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-medium bg-red-500' }
                     });
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
@@ -502,8 +507,8 @@ function confirmCancel(appId) {
         cancelButtonText: 'Đóng',
         customClass: {
             popup: 'rounded-2xl',
-            confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-bold',
-            cancelButton: 'rounded-full px-6 py-2.5 text-[13px] font-bold'
+            confirmButton: 'rounded-full px-6 py-2.5 text-[13px] font-medium',
+            cancelButton: 'rounded-full px-6 py-2.5 text-[13px] font-medium'
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -546,14 +551,14 @@ function initCustomSelects() {
             Array.from(select.options).forEach((option, index) => {
                 if (option.disabled && !option.value) return; 
                 const item = document.createElement('div');
-                item.className = 'px-3 py-2 mx-1 rounded-[8px] cursor-pointer text-[13px] transition-colors flex items-center ' + (option.selected ? 'bg-[#FFF9F5] font-bold text-[#F58A3C]' : 'font-medium text-gray-700 hover:bg-[#FFF9F5] hover:text-[#F58A3C]');
+                item.className = 'px-3 py-2 mx-1 rounded-[8px] cursor-pointer text-[13px] transition-colors flex items-center ' + (option.selected ? 'bg-[#FFF9F5] font-medium text-[#F58A3C]' : 'font-medium text-gray-700 hover:bg-[#FFF9F5] hover:text-[#F58A3C]');
                 item.textContent = option.text;
                 item.addEventListener('click', function(e) {
                     e.stopPropagation();
                     select.selectedIndex = index;
                     textSpan.textContent = option.text;
                     Array.from(itemsDiv.children).forEach(child => child.className = 'px-3 py-2 mx-1 rounded-[8px] cursor-pointer text-[13px] transition-colors flex items-center font-medium text-gray-700 hover:bg-[#FFF9F5] hover:text-[#F58A3C]');
-                    item.className = 'px-3 py-2 mx-1 rounded-[8px] cursor-pointer text-[13px] transition-colors flex items-center bg-[#FFF9F5] font-bold text-[#F58A3C]';
+                    item.className = 'px-3 py-2 mx-1 rounded-[8px] cursor-pointer text-[13px] transition-colors flex items-center bg-[#FFF9F5] font-medium text-[#F58A3C]';
                     closeAllSelects();
                     const event = new Event('change', { bubbles: true });
                     select.dispatchEvent(event);
