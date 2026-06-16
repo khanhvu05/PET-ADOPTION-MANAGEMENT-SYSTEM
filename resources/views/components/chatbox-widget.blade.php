@@ -1,4 +1,4 @@
-<div x-data="petjamChatbox" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+<div x-data="petjamChatbox" class="fixed bottom-24 md:bottom-6 right-6 z-50 flex flex-col items-end">
 
     <!-- KHUNG CHATBOX -->
     <div x-show="isOpen" 
