@@ -270,7 +270,7 @@ class Pet extends Model
         if ($this->Loai === 'cho') {
             return "https://placedog.net/500/500?id={$hash}";
         } elseif ($this->Loai === 'meo') {
-            $catNames = ['millie', 'neo', 'poppy', 'bella', 'louie', 'boki', 'peaches', 'cinnamon', 'zika', 'guster'];
+            $catNames = ['millie', 'neo', 'poppy', 'bella', 'louie'];
             $catName = $catNames[$hash % count($catNames)];
             return "https://placecats.com/{$catName}/500/500";
         } else {

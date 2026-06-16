@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\CheckAdmin::class,
         ]);
+        $middleware->redirectUsersTo(fn (\Illuminate\Http\Request $request) => $request->user()->isStaff() ? route('admin.pets.index') : route('frontend.adoptions.index'));
         $middleware->web(append: [
             \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
