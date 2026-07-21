@@ -141,12 +141,71 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
         $customerRole->syncPermissions([]);
 
-        // ─── 3. Gán role admin cho tài khoản mặc định ────────────────────────────
+        // ─── 3. Tạo/Cập nhật Vai trò tùy chỉnh (Custom Preset Roles) ─────────────
+
+        // Xóa toàn bộ vai trò tùy chỉnh cũ (la_vai_tro_he_thong = false)
+        Role::where('la_vai_tro_he_thong', false)->each(function ($role) {
+            $role->syncPermissions([]);
+            $role->delete();
+        });
+
+        // Preset 1: Quản trị viên (IT Admin)
+        // Chỉ có quyền nhân sự + cài đặt hệ thống. KHÔNG có dashboard, KHÔNG có posts.
+        $roleQTV = Role::create([
+            'name'               => 'Quản trị viên',
+            'mo_ta'              => 'Quản lý tài khoản nhân viên và cài đặt hệ thống.',
+            'la_vai_tro_he_thong' => false,
+        ]);
+        $roleQTV->syncPermissions([
+            'staff.view', 'staff.create', 'staff.edit', 'staff.toggle_status', 'staff.assign_permissions',
+            'settings.view', 'settings.edit',
+        ]);
+
+        // Preset 2: Nhân viên Cứu hộ & Y tế
+        // Toàn quyền về hồ sơ thú cưng, bệnh án, cứu hộ.
+        $roleYTe = Role::create([
+            'name'               => 'Nhân viên Cứu hộ & Y tế',
+            'mo_ta'              => 'Tiếp nhận thú cưng, ghi chép hồ sơ sức khỏe và thông tin cứu hộ.',
+            'la_vai_tro_he_thong' => false,
+        ]);
+        $roleYTe->syncPermissions([
+            'dashboard.view',
+            'pets.view', 'pets.create', 'pets.edit', 'pets.notes', 'pets.health', 'pets.rescue',
+        ]);
+
+        // Preset 3: Nhân viên Xử lý Đơn
+        // Toàn quyền xử lý đơn nhận nuôi (duyệt, từ chối, đóng đơn...).
+        $roleDon = Role::create([
+            'name'               => 'Nhân viên Xử lý Đơn',
+            'mo_ta'              => 'Tiếp nhận, thẩm định và ra quyết định với các đơn đăng ký nhận nuôi.',
+            'la_vai_tro_he_thong' => false,
+        ]);
+        $roleDon->syncPermissions([
+            'dashboard.view',
+            'adoptions.view', 'adoptions.create', 'adoptions.review',
+            'adoptions.complete', 'adoptions.edit_info', 'adoptions.add_note', 'adoptions.delete',
+        ]);
+
+        // Preset 4: Nhân viên Phỏng vấn
+        // Quản lý lịch phỏng vấn + xem đơn (chỉ đọc để nắm context).
+        $rolePV = Role::create([
+            'name'               => 'Nhân viên Phỏng vấn',
+            'mo_ta'              => 'Sắp xếp lịch phỏng vấn, phân công và cập nhật kết quả buổi phỏng vấn.',
+            'la_vai_tro_he_thong' => false,
+        ]);
+        $rolePV->syncPermissions([
+            'dashboard.view',
+            'adoptions.view',
+            'interviews.view', 'interviews.create', 'interviews.delete',
+            'interviews.update_result', 'interviews.assign',
+        ]);
+
+        // ─── 4. Gán role admin cho tài khoản mặc định ────────────────────────────
         $adminUser = \App\Models\User::where('Email', 'admin@petjam.vn')->first();
         if ($adminUser) {
             $adminUser->syncRoles(['admin']);
         }
 
-        $this->command->info('✅ Đã seed ' . count($permissions) . ' permissions và 3 roles hệ thống.');
+        $this->command->info('✅ Đã seed ' . count($permissions) . ' permissions, 3 roles hệ thống và 4 vai trò tùy chỉnh.');
     }
 }

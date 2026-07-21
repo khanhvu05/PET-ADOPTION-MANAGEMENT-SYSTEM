@@ -132,7 +132,7 @@
         <a href="{{ route('frontend.about.index') }}" class="nav-link {{ request()->routeIs('frontend.about.index') ? 'active' : '' }}">Giới Thiệu</a>
         <a href="{{ route('frontend.adoptions.index') }}" class="nav-link {{ request()->routeIs('frontend.adoptions.*') ? 'active' : '' }}">Nhận Nuôi</a>
         {{-- <a href="{{ route('frontend.donations.index') }}" class="nav-link {{ request()->routeIs('frontend.donations.*') ? 'active' : '' }}">Ủng Hộ</a> --}}
-        <a href="#" class="nav-link">Tin Tức</a>
+        {{-- <a href="#" class="nav-link">Tin Tức</a> --}}
     </nav>
 
     <!-- Auth Actions -->
@@ -233,7 +233,7 @@
                 <li><a href="#" class="hover:text-white transition-colors">Cứu hộ</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">Chăm sóc thú cưng</a></li>
                 <li><a href="#" class="hover:text-white transition-colors">Tư vấn</a></li>
-                <li><a href="#" class="hover:text-white transition-colors">Tin tức</a></li>
+                {{-- <li><a href="#" class="hover:text-white transition-colors">Tin tức</a></li> --}}
             </ul>
         </div>
 
@@ -291,10 +291,12 @@
         </a>
     </div>
 
+    {{-- 
     <a href="#" class="flex flex-col items-center justify-center gap-1 w-1/5 text-gray-400 hover:text-primary transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-2-2h-2"></path></svg>
         <span class="text-[9px] font-bold">Tin tức</span>
     </a>
+    --}}
     
     <button @click="accountMenuOpen = true" class="flex flex-col items-center justify-center gap-1 w-1/5 text-gray-400 hover:text-primary transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
