@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetJam - WBS Org Chart Layout</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+        .wbs-mixed-container {
+            width: max-content;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+        }
+        
+        /* CSS Tree Logic */
+        .tree ul {
+            padding-top: 25px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            padding-left: 0;
+            margin: 0;
+        }
+        .tree li {
+            float: left;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 25px 5px 0 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 1.5px solid #888;
+            width: 50%;
+            height: 25px;
+        }
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 1.5px solid #888;
+        }
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+        .tree li:only-child {
+            padding-top: 0;
+        }
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+        .tree li:last-child::before {
+            border-right: 1.5px solid #888;
+        }
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1.5px solid #888;
+            width: 0;
+            height: 25px;
+            transform: translateX(-50%);
+        }
+
+        /* Node Styles matching the screenshot */
+        .node-level-0 {
+            background-color: #004aad; /* Dark Blue */
+            color: white;
+            padding: 16px 50px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+        
+        .node-level-1 {
+            background-color: #38bdf8; /* Bright Blue */
+            color: black;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-block;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .node-level-2 {
+            background-color: #ccfbf1; /* Light Teal */
+            border: 1px solid #5eead4;
+            color: black;
+            padding: 10px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-block;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+            width: 140px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            line-height: 1.4;
+            white-space: normal;
+        }
+        
+        .level-3-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            gap: 12px;
+            padding-top: 20px;
+        }
+        
+        /* The vertical line connecting level 3 nodes */
+        .level-3-stack::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 15px; /* Stop before the last item */
+            left: 50%;
+            width: 1.5px;
+            background-color: #888;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        .level-3-stack:empty {
+            display: none;
+        }
+        
+        .node-level-3 {
+            background-color: #e0f2fe; /* Light Blue */
+            border: 1px solid #7dd3fc;
+            color: black;
+            padding: 8px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: normal;
+            width: 140px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+            line-height: 1.3;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .btn-download {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: #004aad;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 9999;
+        }
+        .btn-download:hover {
+            background: #003682;
+        }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<button id="downloadBtn" class="btn-download">📸 Tải ảnh toàn bộ WBS</button>
+
+<div class="wbs-mixed-container">
+    <div class="tree">
+        <ul>
+            <li>
+                <div class="node-level-0">HỆ THỐNG QUẢN LÝ NHẬN NUÔI THÚ CƯNG PETJAM</div>
+                <ul>
+                    <li>
+                        <div class="node-level-1">1. QUẢN LÝ DỰ ÁN</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">1.1 Khởi tạo dự án</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">1.1.1 Xây dựng Điều lệ dự án</div>
+                                    <div class="node-level-3">1.1.2 Xác định các bên liên quan</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">1.2 Lập kế hoạch dự án</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">1.2.1 Xây dựng Bảng phân rã công việc WBS</div>
+                                    <div class="node-level-3">1.2.2 Xây dựng Lịch trình dự án</div>
+                                    <div class="node-level-3">1.2.3 Lập Kế hoạch quản lý dự án tổng thể</div>
+                                    <div class="node-level-3">1.2.4 Lập Kế hoạch quản lý rủi ro</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">1.3 Thực thi dự án</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">1.3.1 Điều phối và quản lý công việc dự án</div>
+                                    <div class="node-level-3">1.3.2 Tổ chức họp nhóm dự án định kỳ</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">1.4 Giám sát & Kiểm soát dự án</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">1.4.1 Theo dõi tiến độ & Báo cáo trạng thái hàng tuần</div>
+                                    <div class="node-level-3">1.4.2 Kiểm soát thay đổi phạm vi</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">1.5 Kết thúc dự án</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">1.5.1 Nghiệm thu dự án</div>
+                                    <div class="node-level-3">1.5.2 Tổng kết dự án & Bài học kinh nghiệm</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="node-level-1">2. THU THẬP & PHÂN TÍCH YÊU CẦU</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">2.1 Khảo sát yêu cầu người dùng</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">2.2 Đặc tả yêu cầu hệ thống</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">2.3 Mô hình hóa nghiệp vụ</div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="node-level-1">3. THIẾT KẾ</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">3.1 Thiết kế CSDL mức khái niệm & logic</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">3.2 Thiết kế CSDL mức vật lý</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">3.3 Thiết kế giao diện người dùng</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">3.4 Thiết kế giao diện Quản trị viên/Nhân viên</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">3.5 Thiết kế kiến trúc hệ thống & tích hợp dịch vụ bên thứ ba</div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="node-level-1">4. PHÁT TRIỂN HỆ THỐNG</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">4.1 Xác thực & Quản lý người dùng</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">4.1.1 Đăng ký tài khoản</div>
+                                    <div class="node-level-3">4.1.2 Đăng nhập / Đăng xuất</div>
+                                    <div class="node-level-3">4.1.3 Quên mật khẩu</div>
+                                    <div class="node-level-3">4.1.4 Xác thực Email</div>
+                                    <div class="node-level-3">4.1.5 Quản lý hồ sơ cá nhân</div>
+                                    <div class="node-level-3">4.1.6 Quản lý Vai trò & Phân quyền (RBAC)</div>
+                                    <div class="node-level-3">4.1.7 Quản lý danh sách người dùng</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">4.2 Quản lý Thú cưng</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">4.2.1 CRUD hồ sơ thú cưng</div>
+                                    <div class="node-level-3">4.2.2 Tìm kiếm & lọc thú cưng</div>
+                                    <div class="node-level-3">4.2.3 Quản lý ca cứu hộ</div>
+                                    <div class="node-level-3">4.2.4 Quản lý lịch sử tiêm phòng & sức khỏe</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">4.3 Nhận nuôi & Lịch phỏng vấn</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">4.3.1 Gửi đơn đăng ký nhận nuôi</div>
+                                    <div class="node-level-3">4.3.2 Hủy đơn nhận nuôi</div>
+                                    <div class="node-level-3">4.3.3 Xem lịch sử đơn nhận nuôi</div>
+                                    <div class="node-level-3">4.3.4 Quản trị đơn nhận nuôi</div>
+                                    <div class="node-level-3">4.3.5 Đặt lịch phỏng vấn</div>
+                                    <div class="node-level-3">4.3.6 Quản lý lịch phỏng vấn</div>
+                                    <div class="node-level-3">4.3.7 Thông báo Email quy trình phỏng vấn & nhận nuôi</div>
+                                    <div class="node-level-3">4.3.8 Tự động hóa quy tắc trạng thái đơn & lịch</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">4.4 Tích hợp Chatbot AI & gợi ý thú cưng</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">4.5 Quản trị hệ thống</div>
+                                <div class="level-3-stack">
+                                    <div class="node-level-3">4.5.1 Bảng điều khiển thống kê (Dashboard)</div>
+                                    <div class="node-level-3">4.5.2 Cài đặt hệ thống (Settings)</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="node-level-1">5. KIỂM THỬ</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">5.1 Lập kế hoạch & kịch bản kiểm thử</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">5.2 Kiểm thử đơn vị</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">5.3 Kiểm thử tích hợp</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">5.4 Kiểm thử chấp nhận người dùng</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">5.5 Lập biên bản kiểm thử & Sửa lỗi</div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="node-level-1">6. TRIỂN KHAI</div>
+                        <ul>
+                            <li>
+                                <div class="node-level-2">6.1 Thiết lập môi trường triển khai</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">6.2 Triển khai ứng dụng lên môi trường thực tế</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">6.3 Đào tạo người dùng</div>
+                            </li>
+                            <li>
+                                <div class="node-level-2">6.4 Bàn giao sản phẩm & tài liệu kỹ thuật</div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        this.innerHTML = '⏳ Đang xử lý ảnh...';
+        html2canvas(document.querySelector('.wbs-mixed-container'), {
+            scale: 2,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'WBS-PetJam-OrgChart.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            this.innerHTML = '📸 Tải ảnh toàn bộ WBS';
+        });
+    });
+</script>
+</body>
+</html>

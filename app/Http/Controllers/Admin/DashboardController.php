@@ -49,12 +49,14 @@ class DashboardController extends Controller
         list($adoptionsTotal, $adoptionsPct) = $calcMetric(AdoptionApplication::query());
         $kpiStats[] = ['label' => 'ĐƠN NHẬN NUÔI', 'count' => number_format($adoptionsTotal), 'percent' => $adoptionsPct, 'is_positive' => $adoptionsPct >= 0];
 
+        /* 
         list($donationsTotal, $donationsPct) = $calcMetric(Donation::where('Trang_thai', 'success'), true, 'So_tien');
         // Format without decimals for VND
         $kpiStats[] = ['label' => 'TỔNG QUYÊN GÓP', 'count' => number_format($donationsTotal, 0, ',', '.') . 'đ', 'percent' => $donationsPct, 'is_positive' => $donationsPct >= 0];
 
         list($campaignsTotal, $campaignsPct) = $calcMetric(DonationCampaign::query());
         $kpiStats[] = ['label' => 'CHIẾN DỊCH', 'count' => number_format($campaignsTotal), 'percent' => $campaignsPct, 'is_positive' => $campaignsPct >= 0];
+        */
 
         list($usersTotal, $usersPct) = $calcMetric(User::query());
         $kpiStats[] = ['label' => 'NGƯỜI DÙNG', 'count' => number_format($usersTotal), 'percent' => $usersPct, 'is_positive' => $usersPct >= 0];

@@ -35,11 +35,9 @@
                 <i data-lucide="paw-print" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 Nhận nuôi ngay
             </a>
-            <!-- 
-            <a href="{{ route('frontend.donations.process') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
+            {{-- <a href="{{ route('frontend.donations.process') }}" class="btn-outline-teal text-xs sm:text-base px-4 sm:px-8 py-3 sm:py-3.5 bg-white border-[1.5px] border-secondary text-secondary flex-1 lg:flex-none justify-center whitespace-nowrap">
                 Ủng hộ ngay
-            </a>
-            -->
+            </a> --}}
         </div>
 
         <!-- KPIs row -->
@@ -457,7 +455,8 @@
     </div>
 </section>
 
-<!-- Donation Section (Full Width Beige Background) (Hidden)
+{{-- 
+<!-- Donation Section (Full Width Beige Background) -->
 <section class="donation-section py-12 lg:py-20 px-6 lg:px-16 w-full mt-10 lg:mt-20 relative overflow-hidden">
     <div class="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
         <div class="flex flex-col items-center text-center lg:items-start lg:text-left justify-center">
@@ -501,7 +500,7 @@
         </div>
     </div>
 </section>
--->
+--}}
 
 <!-- News Section -->
 <section class="py-12 lg:py-20 px-6 lg:px-16 max-w-[1400px] mx-auto bg-cute-pattern">

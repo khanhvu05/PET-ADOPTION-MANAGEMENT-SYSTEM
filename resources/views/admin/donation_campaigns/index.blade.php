@@ -19,10 +19,12 @@
             </div>
             
             <div class="flex items-center gap-3">
+                @can('campaigns.export')
                 <button type="button" onclick="exportExcel()" class="flex items-center justify-center gap-2 h-10 px-4 bg-white border border-slate-200 rounded-xl font-bold text-sm text-slate-700 shadow-sm hover:bg-slate-50 transition-all shrink-0">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
                     Xuất Excel
                 </button>
+                @endcan
                 <script>
                     function exportExcel() {
                         const form = document.getElementById('filter-form');
@@ -33,10 +35,12 @@
                     }
                 </script>
                 
+                @can('campaigns.create')
                 <a href="{{ route('admin.donation_campaigns.create') }}" class="flex items-center justify-center gap-2 h-10 px-5 bg-[#3f899a] text-white rounded-xl font-bold text-sm shadow-sm hover:bg-[#3f899a]/80 hover:shadow-md transition-all shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                     Tạo Chiến Dịch
                 </a>
+                @endcan
             </div>
         </div>
 
@@ -303,6 +307,7 @@
                                 <!-- Cột Thao tác -->
                                 <td class="py-3 px-4">
                                     <div class="flex items-center justify-center gap-2">
+                                        @can('campaigns.edit')
                                         <a href="{{ route('admin.donation_campaigns.edit', $campaign->Ma_chien_dich) }}" class="flex items-center justify-center w-8 h-8 rounded border border-slate-200 text-orange-500 hover:bg-orange-50 transition-colors shadow-sm" title="Chỉnh sửa">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
@@ -312,6 +317,7 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                         </button>
                                         @endif
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

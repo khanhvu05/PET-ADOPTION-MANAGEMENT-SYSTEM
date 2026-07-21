@@ -78,6 +78,7 @@
                 </div>
             </div>
 
+            {{-- 
             <!-- Third Chart: Campaign Donations -->
             <div class="lg:col-span-12 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
@@ -89,6 +90,7 @@
                     <canvas id="campaignChart"></canvas>
                 </div>
             </div>
+            --}}
         </div>
 
         <!-- Data Table -->

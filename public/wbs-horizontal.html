@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetJam - WBS Horizontal Tree</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 40px;
+            color: #334155;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 20px;
+        }
+
+        .wbs-wrapper {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: inline-block; /* to wrap tightly around the tree */
+            min-width: min-content;
+        }
+
+        .tree {
+            display: flex;
+        }
+
+        .tree ul {
+            position: relative;
+            padding-left: 40px;
+            list-style: none;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tree li {
+            position: relative;
+            padding: 12px 0 12px 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Horizontal line */
+        .tree li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 40px;
+            border-top: 2px solid #94a3b8;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical line */
+        .tree li::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-left: 2px solid #94a3b8;
+        }
+
+        /* First and Last Child adjust for vertical line */
+        .tree li:first-child::after {
+            top: 50%;
+        }
+
+        .tree li:last-child::after {
+            bottom: 50%;
+        }
+
+        /* Remove lines for the very first root */
+        .tree > ul > li::before, 
+        .tree > ul > li::after {
+            display: none;
+        }
+        .tree > ul {
+            padding-left: 0;
+        }
+        .tree > ul > li {
+            padding-left: 0;
+        }
+
+        /* Node Styling */
+        .node {
+            position: relative;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            z-index: 2;
+            transition: transform 0.2s;
+        }
+        .node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .node-root {
+            background-color: #fee2e2;
+            border: 2px solid #fca5a5;
+            color: #991b1b;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .node-phase {
+            background-color: #e0f2fe;
+            border: 2px solid #7dd3fc;
+            color: #0369a1;
+            font-weight: bold;
+        }
+
+        .node-task {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        .node-subtask {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .btn-download {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 9999;
+        }
+        .btn-download:hover {
+            background: #0284c7;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn-download" onclick="downloadImage()">⬇️ Tải ảnh WBS (PNG)</button>
+
+    <div class="container">
+        <div class="wbs-wrapper" id="wbs-chart">
+            <div class="tree">
+                <ul>
+                    <li>
+                        <div class="node node-root">Hệ thống quản lý nhận nuôi thú cưng PetJam</div>
+                        <ul>
+                            <!-- Phase 1 -->
+                            <li>
+                                <div class="node node-phase">1. Quản lý dự án</div>
+                                <ul>
+                                    <li>
+                                        <div class="node node-task">1.1. Khởi tạo dự án</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">1.1.1. Xây dựng Điều lệ dự án</div></li>
+                                            <li><div class="node node-subtask">1.1.2. Xác định các bên liên quan</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">1.2. Lập kế hoạch dự án</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">1.2.1. Xây dựng Bảng phân rã công việc WBS</div></li>
+                                            <li><div class="node node-subtask">1.2.2. Xây dựng Lịch trình dự án</div></li>
+                                            <li><div class="node node-subtask">1.2.3. Lập Kế hoạch quản lý dự án tổng thể</div></li>
+                                            <li><div class="node node-subtask">1.2.4. Lập Kế hoạch quản lý rủi ro</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">1.3. Thực thi dự án</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">1.3.1. Điều phối & quản lý công việc</div></li>
+                                            <li><div class="node node-subtask">1.3.2. Tổ chức họp nhóm định kỳ</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">1.4. Giám sát & Kiểm soát</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">1.4.1. Theo dõi tiến độ & Báo cáo</div></li>
+                                            <li><div class="node node-subtask">1.4.2. Kiểm soát thay đổi phạm vi</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">1.5. Kết thúc dự án</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">1.5.1. Nghiệm thu dự án</div></li>
+                                            <li><div class="node node-subtask">1.5.2. Tổng kết & Bài học kinh nghiệm</div></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Phase 2 -->
+                            <li>
+                                <div class="node node-phase">2. Thu thập & Phân tích yêu cầu</div>
+                                <ul>
+                                    <li><div class="node node-task">2.1. Khảo sát yêu cầu người dùng</div></li>
+                                    <li><div class="node node-task">2.2. Đặc tả yêu cầu hệ thống</div></li>
+                                    <li><div class="node node-task">2.3. Mô hình hóa nghiệp vụ</div></li>
+                                </ul>
+                            </li>
+                            <!-- Phase 3 -->
+                            <li>
+                                <div class="node node-phase">3. Thiết kế</div>
+                                <ul>
+                                    <li><div class="node node-task">3.1. Thiết kế CSDL mức khái niệm & logic</div></li>
+                                    <li><div class="node node-task">3.2. Thiết kế CSDL mức vật lý</div></li>
+                                    <li><div class="node node-task">3.3. Thiết kế giao diện Khách hàng</div></li>
+                                    <li><div class="node node-task">3.4. Thiết kế giao diện Quản trị/Nhân viên</div></li>
+                                    <li><div class="node node-task">3.5. Thiết kế kiến trúc & tích hợp dịch vụ</div></li>
+                                </ul>
+                            </li>
+                            <!-- Phase 4 -->
+                            <li>
+                                <div class="node node-phase">4. Phát triển hệ thống</div>
+                                <ul>
+                                    <li>
+                                        <div class="node node-task">4.1. Xác thực & Quản lý người dùng</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">4.1.1. Đăng ký tài khoản</div></li>
+                                            <li><div class="node node-subtask">4.1.2. Đăng nhập / Đăng xuất</div></li>
+                                            <li><div class="node node-subtask">4.1.3. Quên mật khẩu</div></li>
+                                            <li><div class="node node-subtask">4.1.4. Xác thực Email</div></li>
+                                            <li><div class="node node-subtask">4.1.5. Quản lý hồ sơ cá nhân</div></li>
+                                            <li><div class="node node-subtask">4.1.6. Quản lý Vai trò & Phân quyền</div></li>
+                                            <li><div class="node node-subtask">4.1.7. Quản lý danh sách người dùng</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">4.2. Quản lý Thú cưng</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">4.2.1. CRUD hồ sơ thú cưng</div></li>
+                                            <li><div class="node node-subtask">4.2.2. Tìm kiếm & lọc thú cưng</div></li>
+                                            <li><div class="node node-subtask">4.2.3. Quản lý ca cứu hộ</div></li>
+                                            <li><div class="node node-subtask">4.2.4. Quản lý lịch sử tiêm phòng & sức khỏe</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">4.3. Nhận nuôi & Lịch phỏng vấn</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">4.3.1. Gửi đơn đăng ký nhận nuôi</div></li>
+                                            <li><div class="node node-subtask">4.3.2. Hủy đơn nhận nuôi</div></li>
+                                            <li><div class="node node-subtask">4.3.3. Xem lịch sử đơn nhận nuôi</div></li>
+                                            <li><div class="node node-subtask">4.3.4. Quản trị đơn nhận nuôi</div></li>
+                                            <li><div class="node node-subtask">4.3.5. Đặt lịch phỏng vấn</div></li>
+                                            <li><div class="node node-subtask">4.3.6. Quản lý lịch phỏng vấn</div></li>
+                                            <li><div class="node node-subtask">4.3.7. Thông báo Email quy trình</div></li>
+                                            <li><div class="node node-subtask">4.3.8. Tự động hóa trạng thái đơn & lịch</div></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">4.4. Tích hợp Chatbot AI & gợi ý</div>
+                                    </li>
+                                    <li>
+                                        <div class="node node-task">4.6. Quản trị hệ thống</div>
+                                        <ul>
+                                            <li><div class="node node-subtask">4.6.1. Bảng điều khiển thống kê (Dashboard)</div></li>
+                                            <li><div class="node node-subtask">4.6.2. Cài đặt hệ thống (Settings)</div></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Phase 5 -->
+                            <li>
+                                <div class="node node-phase">5. Kiểm thử</div>
+                                <ul>
+                                    <li><div class="node node-task">5.1. Lập kế hoạch & kịch bản kiểm thử</div></li>
+                                    <li><div class="node node-task">5.2. Kiểm thử đơn vị & chức năng</div></li>
+                                    <li><div class="node node-task">5.3. Kiểm thử tích hợp</div></li>
+                                    <li><div class="node node-task">5.4. Kiểm thử chấp nhận người dùng</div></li>
+                                    <li><div class="node node-task">5.5. Lập biên bản kiểm thử & Sửa lỗi</div></li>
+                                </ul>
+                            </li>
+                            <!-- Phase 6 -->
+                            <li>
+                                <div class="node node-phase">6. Triển khai</div>
+                                <ul>
+                                    <li><div class="node node-task">6.1. Thiết lập môi trường triển khai</div></li>
+                                    <li><div class="node node-task">6.2. Triển khai ứng dụng lên môi trường thực</div></li>
+                                    <li><div class="node node-task">6.3. Đào tạo người dùng</div></li>
+                                    <li><div class="node node-task">6.4. Bàn giao sản phẩm & tài liệu kỹ thuật</div></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to export to PNG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function downloadImage() {
+            const chart = document.getElementById('wbs-chart');
+            const originalTransform = chart.style.transform;
+            
+            html2canvas(chart, {
+                scale: 2, 
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'WBS-PetJam-Horizontal.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

@@ -30,12 +30,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'Ma_nguoi_dung',
         'Ten_dang_nhap',
         'Ho_ten',
+        'Chuc_danh',
         'Email',
         'Mat_khau_hash',
         'So_dien_thoai',
         'Dia_chi',
         'Ngay_sinh',
         'Loai_tai_khoan',
+        'co_quyen_tuy_chinh',
         'Nguon_dang_ky',
         'Anh_dai_dien',
         'Trang_thai',
@@ -59,8 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'Mat_khau_hash' => 'hashed',
+            'email_verified_at'    => 'datetime',
+            'Mat_khau_hash'        => 'hashed',
+            'co_quyen_tuy_chinh'   => 'boolean',
         ];
     }
 

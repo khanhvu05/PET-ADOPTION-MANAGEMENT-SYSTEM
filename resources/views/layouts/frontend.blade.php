@@ -131,7 +131,7 @@
         <a href="/" class="nav-link {{ $isHome ? 'active' : '' }}">Trang Chủ</a>
         <a href="{{ route('frontend.about.index') }}" class="nav-link {{ request()->routeIs('frontend.about.index') ? 'active' : '' }}">Giới Thiệu</a>
         <a href="{{ route('frontend.adoptions.index') }}" class="nav-link {{ request()->routeIs('frontend.adoptions.*') ? 'active' : '' }}">Nhận Nuôi</a>
-        <!-- <a href="{{ route('frontend.donations.index') }}" class="nav-link {{ request()->routeIs('frontend.donations.*') ? 'active' : '' }}">Ủng Hộ</a> -->
+        {{-- <a href="{{ route('frontend.donations.index') }}" class="nav-link {{ request()->routeIs('frontend.donations.*') ? 'active' : '' }}">Ủng Hộ</a> --}}
         <a href="#" class="nav-link">Tin Tức</a>
     </nav>
 

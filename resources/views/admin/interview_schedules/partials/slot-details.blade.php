@@ -24,10 +24,12 @@
         <div>
             <div class="flex items-center justify-between mb-4">
                 <h4 class="font-bold text-slate-800">Danh sách hồ sơ phỏng vấn ({{ $scheduled->count() }})</h4>
+                @can('interviews.edit')
                 <button type="button" onclick="document.getElementById('modal-slot-id').value = '{{ $slot->Ma_slot }}'; window.dispatchEvent(new CustomEvent('open-modal', { detail: 'add-application-modal' }))" class="flex items-center gap-1.5 px-3 py-1.5 border border-teal-200 text-teal-700 bg-teal-50 hover:bg-teal-100 rounded text-sm font-semibold transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Thêm hồ sơ (đổi lịch)
                 </button>
+                @endcan
             </div>
 
             <div class="border border-slate-200 rounded-lg overflow-visible">
@@ -101,6 +103,7 @@
                                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                                 Xem chi tiết
                                             </a>
+                                            @can('interviews.edit')
                                             <div class="h-px bg-slate-100 my-1"></div>
                                             <button
                                                 type="button"
@@ -123,6 +126,7 @@
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                                                 Vắng mặt
                                             </button>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

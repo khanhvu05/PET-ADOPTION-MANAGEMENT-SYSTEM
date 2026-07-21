@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetJam - WBS Vertical Outline</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #ffffff; margin: 0; padding: 40px; color: #334155; }
+        .wbs-wrapper { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .root-node { border: 2px solid #fca5a5; background-color: #fee2e2; color: #991b1b; padding: 14px 24px; font-size: 18px; font-weight: 700; border-radius: 6px; display: inline-block; margin-bottom: 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); text-transform: uppercase; letter-spacing: 0.5px; position: relative; z-index: 2; }
+        .v-tree { margin-left: 24px; position: relative; }
+        .wbs-outline > .v-tree::before { content: ''; position: absolute; top: -10px; left: 0; width: 2px; height: 10px; background-color: #cbd5e1; }
+        .v-item { position: relative; padding-top: 15px; padding-left: 20px; }
+        .v-item::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background-color: #cbd5e1; }
+        .phase-node { border: 2px solid #7dd3fc; background-color: #e0f2fe; color: #0369a1; padding: 10px 16px; font-size: 15px; font-weight: 700; border-radius: 6px; display: inline-block; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); position: relative; z-index: 2; transition: all 0.2s ease; }
+        .task-node { border: 1px solid #cbd5e1; background-color: #ffffff; color: #475569; padding: 8px 14px; font-size: 14px; font-weight: 500; border-radius: 4px; display: inline-block; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); position: relative; z-index: 2; transition: all 0.2s ease; }
+        .phase-node:hover, .task-node:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translateY(-1px); }
+        .v-item-phase::before { content: ''; position: absolute; top: 36px; left: 0; width: 20px; height: 2px; background-color: #cbd5e1; }
+        .v-item-phase:last-child::after { bottom: auto; height: 36px; }
+        .v-item-task::before { content: ''; position: absolute; top: 33px; left: 0; width: 20px; height: 2px; background-color: #cbd5e1; }
+        .v-item-task:last-child::after { bottom: auto; height: 33px; }
+    </style>
+</head>
+<body>
+<div class="wbs-wrapper">
+    <div class="wbs-outline">
+        <div class="root-node">Hệ thống quản lý nhận nuôi thú cưng PetJam</div>
+<div class="v-tree">
+<div class="v-item v-item-phase">
+  <div class="phase-node">1. QUẢN LÝ DỰ ÁN</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">1.1. Khởi tạo dự án</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">1.1.1. Xây dựng Điều lệ dự án</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.1.2. Xác định các bên liên quan</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">1.2. Lập kế hoạch dự án</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">1.2.1. Xây dựng Bảng phân rã công việc WBS</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.2.2. Xây dựng Lịch trình dự án</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.2.3. Lập Kế hoạch quản lý dự án tổng thể</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.2.4. Lập Kế hoạch quản lý rủi ro</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">1.3. Thực thi dự án</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">1.3.1. Điều phối và quản lý công việc dự án</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.3.2. Tổ chức họp nhóm dự án định kỳ</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">1.4. Giám sát & Kiểm soát dự án</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">1.4.1. Theo dõi tiến độ & Báo cáo trạng thái hàng tuần</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.4.2. Kiểm soát thay đổi phạm vi</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">1.5. Kết thúc dự án</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">1.5.1. Nghiệm thu dự án</div></div>
+<div class="v-item v-item-task"><div class="task-node">1.5.2. Tổng kết dự án & Bài học kinh nghiệm</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">2. THU THẬP & PHÂN TÍCH YÊU CẦU</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">2.1. Khảo sát yêu cầu người dùng</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">2.2. Đặc tả yêu cầu hệ thống</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">2.3. Mô hình hóa nghiệp vụ</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">3. THIẾT KẾ</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">3.1. Thiết kế CSDL mức khái niệm & logic</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">3.2. Thiết kế CSDL mức vật lý</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">3.3. Thiết kế giao diện Khách hàng</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">3.4. Thiết kế giao diện Quản trị/Nhân viên</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">3.5. Thiết kế kiến trúc & tích hợp dịch vụ</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">4. PHÁT TRIỂN HỆ THỐNG</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">4.1. Xác thực & Quản lý người dùng</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.1.1. Đăng ký tài khoản</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.2. Đăng nhập / Đăng xuất</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.3. Quên mật khẩu</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.4. Xác thực Email</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.5. Quản lý hồ sơ cá nhân</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.6. Quản lý Vai trò & Phân quyền</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.1.7. Quản lý danh sách người dùng</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">4.2. Quản lý Thú cưng</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.2.1. CRUD hồ sơ thú cưng</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.2.2. Tìm kiếm & lọc thú cưng</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.2.3. Quản lý ca cứu hộ</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.2.4. Quản lý lịch sử tiêm phòng & sức khỏe</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.2.5. Xuất danh sách thú cưng ra Excel</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">4.3. Nhận nuôi & Lịch phỏng vấn</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.3.1. Gửi đơn đăng ký nhận nuôi</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.2. Hủy đơn nhận nuôi</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.3. Xem lịch sử đơn nhận nuôi</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.4. Quản trị đơn nhận nuôi</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.5. Đặt lịch phỏng vấn</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.6. Quản lý lịch phỏng vấn</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.7. Thông báo Email quy trình</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.3.8. Tự động hóa trạng thái đơn</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">4.4. Ủng hộ & Gây quỹ</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.4.1. Quản lý chiến dịch gây quỹ</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.4.2. Trang ủng hộ & tích hợp thanh toán</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.4.3. Lịch sử ủng hộ của người dùng</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.4.4. Quản lý & thống kê ủng hộ</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">4.5. Chatbot hỗ trợ</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.5.1. Tích hợp Chatbot AI</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.5.2. Quản lý cấu hình Chatbot</div></div>
+</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">4.6. Quản trị hệ thống & Tiện ích</div>
+<div class="v-tree">
+<div class="v-item v-item-task"><div class="task-node">4.6.1. Bảng điều khiển (Dashboard)</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.6.2. Tìm kiếm tổng quát</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.6.3. Thông báo trong ứng dụng</div></div>
+<div class="v-item v-item-task"><div class="task-node">4.6.4. Cài đặt hệ thống</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">5. KIỂM THỬ</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">5.1. Lập kế hoạch & kịch bản kiểm thử</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">5.2. Kiểm thử đơn vị & chức năng</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">5.3. Kiểm thử tích hợp</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">5.4. Kiểm thử chấp nhận người dùng (UAT)</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">5.5. Biên bản kiểm thử & Sửa lỗi</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">6. TRIỂN KHAI</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">6.1. Thiết lập môi trường triển khai</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">6.2. Triển khai lên môi trường thực tế</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">6.3. Đào tạo người dùng</div>
+</div>
+<div class="v-item v-item-task">
+  <div class="task-node">6.4. Bàn giao sản phẩm & tài liệu kỹ thuật</div>
+</div>
+</div>
+</div>
+<div class="v-item v-item-phase">
+  <div class="phase-node">7. HỖ TRỢ SAU BÀN GIAO</div>
+<div class="v-tree">
+<div class="v-item v-item-task">
+  <div class="task-node">7.1. Hỗ trợ vận hành & khắc phục sự cố</div>
+</div>
+</div>
+</div>
+</div>
+    </div>
+</div>
+</body>
+</html>

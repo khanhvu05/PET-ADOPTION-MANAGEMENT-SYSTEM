@@ -53,10 +53,12 @@
                 <p class="text-sm text-slate-500">Cấu hình các thông số cơ bản và tùy chỉnh hoạt động của hệ thống.</p>
             </div>
             <div class="flex items-center gap-3" x-show="activeTab === 'general'">
+                @can('settings.edit')
                 <button class="bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                     Lưu Thay Đổi
                 </button>
+                @endcan
             </div>
         </div>
 
@@ -85,7 +87,7 @@
                             <svg class="w-5 h-5" :class="activeTab === 'notification' ? 'text-teal-700' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                             Thông báo
                         </a>
-                        <a href="#roles" @click="activeTab = 'roles'" class="flex items-center gap-3 px-4 py-3.5 transition-colors border-l-4"
+                        <a href="#roles" @click="activeTab = 'roles'" class="hidden flex items-center gap-3 px-4 py-3.5 transition-colors border-l-4"
                            :class="activeTab === 'roles' ? 'bg-teal-50 text-teal-700 border-teal-600 font-semibold' : 'text-slate-600 border-transparent hover:bg-slate-50 hover:text-slate-900 font-medium'">
                             <svg class="w-5 h-5" :class="activeTab === 'roles' ? 'text-teal-700' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                             Phân quyền
@@ -266,10 +268,12 @@
                     </div>
                     
                     <div class="flex justify-end gap-3">
+                        @can('settings.edit')
                         <button type="submit" class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-bold text-sm shadow hover:bg-teal-700 transition-colors flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             Lưu Cài Đặt
                         </button>
+                        @endcan
                     </div>
                     </form>
                 </div>
@@ -321,9 +325,11 @@
 
                                                 <!-- Action buttons -->
                                                 <div class="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    @can('staff.assign_permissions')
                                                     <button type="submit" form="form-role-{{ $role->id }}" class="text-[11px] font-bold bg-white text-teal-600 border border-teal-200 hover:bg-teal-50 px-3 py-1.5 rounded-lg shadow-sm transition-colors">
                                                         Lưu quyền
                                                     </button>
+                                                    @endcan
                                                 </div>
                                                 
                                                 <form action="{{ route('admin.roles.permissions.update', $role) }}" method="POST" id="form-role-{{ $role->id }}">
@@ -428,9 +434,11 @@
                                 </div>
                             </div>
                             <div class="flex justify-end pt-2">
+                                @can('settings.edit')
                                 <button type="submit" class="bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 transition-all cursor-pointer shadow-sm">
                                     Lưu Hạn Mức
                                 </button>
+                                @endcan
                             </div>
                         </form>
                     </div>
@@ -450,9 +458,11 @@
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Thêm Groq API Key mới</label>
                                 <input type="password" name="api_key" placeholder="gsk_..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors shadow-sm text-slate-900" required>
                             </div>
+                            @can('settings.edit')
                             <button type="submit" class="bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 transition-all cursor-pointer whitespace-nowrap">
                                 Xác Minh & Thêm
                             </button>
+                            @endcan
                         </form>
 
                         <!-- Danh sách key hiện tại -->

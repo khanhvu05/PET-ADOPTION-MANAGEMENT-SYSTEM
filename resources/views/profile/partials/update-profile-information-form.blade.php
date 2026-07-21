@@ -12,7 +12,7 @@
         @csrf
     </form>
 
-    <form x-data="profileForm()" @submit.prevent="submitForm" method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+    <form x-data="profileForm()" @submit.prevent="submitForm" method="post" action="{{ $updateRoute ?? route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 

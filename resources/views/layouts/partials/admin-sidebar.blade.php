@@ -28,12 +28,13 @@
     <!-- Navigation Links -->
     <nav class="flex-1 overflow-y-auto px-2 pb-2 custom-scrollbar">
         
-        <!-- SECTION: TỔNG QUAN (Ẩn theo yêu cầu) 
+        <!-- SECTION: TỔNG QUAN --> 
         <div class="mt-2 mb-1">
             <h3 x-show="expanded" class="px-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">Tổng Quan</h3>
             <div x-show="!expanded" class="h-3 border-b border-white/10 mx-2 mb-2"></div>
         </div>
         
+        @can('dashboard.view')
         <div class="space-y-0.5">
             <a href="{{ route('dashboard') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('dashboard') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -44,9 +45,8 @@
                 </svg>
                 <span class="text-[12px] truncate" x-show="expanded">Dashboard</span>
             </a>
-
         </div>
-        -->
+        @endcan
 
         <!-- SECTION: QUẢN LÝ -->
         <div class="mt-3 mb-1">
@@ -55,6 +55,7 @@
         </div>
 
         <div class="space-y-0.5">
+            @can('pets.view')
             <!-- Thú Cưng -->
             <a href="{{ route('admin.pets.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.pets.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -68,7 +69,9 @@
                 </svg>
                 <span class="text-[12px] truncate" x-show="expanded">Thú Cưng</span>
             </a>
+            @endcan
 
+            @if(auth()->user()->hasAnyPermission(['adoptions.view', 'interviews.view']))
             <!-- Đơn Nhận Nuôi Dropdown -->
             <div x-data="{ open: {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.interview_schedules.*') ? 'true' : 'false' }} }" class="space-y-0.5">
                 <button @click="open = !open; if(!expanded) expanded = true" 
@@ -86,12 +89,19 @@
                 <div x-show="open && expanded" 
                      x-collapse
                      class="pl-7 pr-2 space-y-0.5 pt-0.5">
+                     @can('adoptions.view')
                      <a href="{{ route('admin.adoptions.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.adoptions.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Đơn</a>
+                     @endcan
+                     @can('interviews.view')
                      <a href="{{ route('admin.interview_schedules.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.interview_schedules.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Lịch phỏng vấn</a>
+                     @endcan
                 </div>
             </div>
+            @endif
 
-            <!-- Ủng Hộ Dropdown (Ẩn đi theo yêu cầu) 
+            {{-- 
+            @if(auth()->user()->hasAnyPermission(['donations.view', 'campaigns.view']))
+            <!-- Ủng Hộ Dropdown --> 
             <div x-data="{ open: {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'true' : 'false' }} }" class="space-y-0.5">
                 <button @click="open = !open; if(!expanded) expanded = true" 
                    class="w-full flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.donations.*') || request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -108,28 +118,46 @@
                 <div x-show="open && expanded" 
                      x-collapse
                      class="pl-7 pr-2 space-y-0.5 pt-0.5">
+                     @can('donations.view')
                      <a href="{{ route('admin.donations.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donations.index') || request()->routeIs('admin.donations.show') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Quản lý Ủng hộ</a>
+                     @endcan
+                     @can('campaigns.view')
                      <a href="{{ route('admin.donation_campaigns.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.donation_campaigns.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Chiến dịch Gây quỹ</a>
+                     @endcan
                 </div>
             </div>
-            -->
+            @endif
+            --}}
 
 
-            <!-- Quản Lý Người Dùng (Ẩn theo yêu cầu) 
-            @can('access_users')
-            <a href="{{ route('admin.users.index') }}" 
-               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.users.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
-               :class="!expanded ? 'justify-center px-0' : ''">
-                <div class="relative flex items-center justify-center">
-                    <svg class="w-[18px] h-[18px] shrink-0 transition-transform duration-300 group-hover:scale-110 {{ request()->routeIs('admin.users.*') ? 'text-white' : 'text-white/70 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            @if(auth()->user()->hasAnyPermission(['staff.view', 'clients.view']))
+            <!-- Phân Quyền Dropdown --> 
+            <div x-data="{ open: {{ request()->routeIs('admin.staff.*') || request()->routeIs('admin.clients.*') ? 'true' : 'false' }} }" class="space-y-0.5">
+                <button @click="open = !open; if(!expanded) expanded = true" 
+                   class="w-full flex items-center justify-between px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.staff.*') || request()->routeIs('admin.clients.*') ? 'bg-white/15 text-white font-bold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+                   :class="!expanded && 'justify-center px-0'"
+                >
+                    <div class="flex items-center gap-2.5">
+                        <svg class="w-[18px] h-[18px] shrink-0 {{ request()->routeIs('admin.staff.*') || request()->routeIs('admin.clients.*') ? 'text-orange-brand' : 'text-white/80 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span class="text-[12px] truncate" x-show="expanded">Phân Quyền</span>
+                    </div>
+                    <svg x-show="expanded" class="w-3.5 h-3.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open && expanded" 
+                     x-collapse
+                     class="pl-7 pr-2 space-y-0.5 pt-0.5">
+                     @can('staff.view')
+                     <a href="{{ route('admin.staff.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.staff.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Nhân Viên</a>
+                     @endcan
+                     @can('clients.view')
+                     <a href="{{ route('admin.clients.index') }}" class="block px-2 py-1.5 text-[11px] rounded-lg transition-colors {{ request()->routeIs('admin.clients.*') ? 'bg-white/15 text-white font-bold' : 'text-white/60 hover:text-white hover:bg-white/10 font-medium' }}">Khách Hàng</a>
+                     @endcan
                 </div>
-                <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Người Dùng</span>
-            </a>
-            @endcan
-            -->
+            </div>
+            @endif
         </div>
 
-        @can('access_settings')
+        @can('settings.view')
         <!-- SECTION: CÀI ĐẶT -->
         <div class="mt-3 mb-1">
             <h3 x-show="expanded" class="px-2 text-[9px] font-bold text-white/50 uppercase tracking-widest">Cài Đặt</h3>
@@ -139,7 +167,7 @@
 
         <div class="space-y-0.5">
 
-            @can('access_settings')
+            @can('settings.view')
             <!-- Cài Đặt Hệ Thống -->
             <a href="{{ route('admin.settings.index') }}" 
                class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.settings.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
@@ -152,11 +180,11 @@
             @endcan
 
             <!-- Cài Đặt Tài Khoản -->
-            <a href="{{ route('profile.edit') }}" 
-               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('profile.edit') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
+            <a href="{{ route('admin.profile.edit') }}" 
+               class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors group {{ request()->routeIs('admin.profile.*') ? 'bg-white/15 text-white shadow-inner font-semibold' : 'text-white/80 hover:bg-white/10 hover:text-white font-medium' }}"
                :class="!expanded ? 'justify-center px-0' : ''">
                 <div class="relative flex items-center justify-center">
-                    <svg class="w-[18px] h-[18px] shrink-0 transition-transform duration-300 group-hover:scale-110 {{ request()->routeIs('profile.edit') ? 'text-white' : 'text-white/70 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <svg class="w-[18px] h-[18px] shrink-0 transition-transform duration-300 group-hover:scale-110 {{ request()->routeIs('admin.profile.*') ? 'text-white' : 'text-white/70 group-hover:text-white' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 </div>
                 <span class="text-[12px] truncate transition-opacity duration-300" x-show="expanded" x-transition:enter="transition-opacity ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">Tài Khoản</span>
             </a>

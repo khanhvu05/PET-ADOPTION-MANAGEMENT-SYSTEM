@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biểu đồ Use Case - PetJam</title>
+    <!-- Thư viện Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <!-- Thư viện html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Box bao quanh biểu đồ (khung System) */
+        .diagram-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border: 1px solid #000;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .diagram-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .btn-download {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="downloadBtn" class="btn-download">📸 Tải ảnh Use Case</button>
+
+    <div class="diagram-container" id="capture">
+        <!-- Code Mermaid -->
+        <div class="mermaid">
+            flowchart TB
+                %% Định nghĩa CSS
+                classDef actor fill:transparent,stroke:none,color:#000,font-size:16px,font-family:Times New Roman
+                classDef usecase fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000,font-size:14px,font-family:Times New Roman
+                classDef system fill:transparent,stroke:none
+
+                %% Tác nhân
+                Admin(("🙎‍♂️<br><br>Nhân viên / Admin")):::actor
+                
+                %% Khung hệ thống (Trong Mermaid không có viền cho subgraph đẹp nên ta dùng div bên ngoài làm viền)
+                subgraph System [" "]
+                    direction TB
+                    
+                    UC1(["Quản lý hồ sơ thú cưng"]):::usecase
+                    
+                    UC2(["Xem danh sách, tìm kiếm<br>và lọc hồ sơ thú cưng"]):::usecase
+                    UC3(["Thêm mới hồ sơ thú cưng"]):::usecase
+                    UC4(["Cập nhật hồ sơ thú cưng"]):::usecase
+                    UC5(["Xuất dữ liệu hồ sơ excel"]):::usecase
+                    
+                    UC6(["Xem chi tiết thông tin<br>hồ sơ thú cưng"]):::usecase
+                    
+                    UC7(["Cập nhật lịch sử tiêm phòng"]):::usecase
+                    UC8(["Xem lịch sử cập nhật<br>hồ sơ thú cưng"]):::usecase
+                end
+
+                class System system
+
+                %% Liên kết giữa Actor và UC chính
+                Admin --- UC1
+
+                %% Liên kết extend (Nét đứt, có mũi tên)
+                UC2 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC1
+                UC3 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC1
+                UC4 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC1
+                UC5 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC1
+                UC6 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC1
+                
+                UC7 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC6
+                UC8 -. "&lt;&lt;extend&gt;&gt;" .-&gt; UC6
+        </div>
+    </div>
+    
+    <div class="diagram-title">Hình 1. Biểu đồ ca sử dụng quy trình quản lý hồ sơ thú cưng<br>(Nguồn: Nhóm thực hiện)</div>
+
+    <script>
+        // Cấu hình Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                curve: 'basis' // Làm cong đường mũi tên cho giống UML
+            }
+        });
+
+        // Xử lý nút tải ảnh
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const btn = this;
+            btn.innerHTML = '⏳ Đang xử lý ảnh...';
+            
+            html2canvas(document.getElementById('capture'), {
+                scale: 2, // Độ phân giải cao
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'UseCase-QuanLyHoSoThuCung.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = '📸 Tải ảnh Use Case';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Mô tả Use Case - Phân Quyền</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13pt;
+            background: #f0f0f0;
+            padding: 40px;
+            color: #000;
+        }
+        .page {
+            background: #fff;
+            width: 750px;
+            margin: 0 auto 50px auto;
+            padding: 50px 60px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        .section-title {
+            font-style: italic;
+            font-size: 12pt;
+            margin-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 6px;
+        }
+        td {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            vertical-align: top;
+            font-size: 12pt;
+        }
+        td.label {
+            width: 26%;
+            font-weight: bold;
+            background: #fff;
+        }
+        td.content {
+            width: 74%;
+        }
+        td.content ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        td.content ol li {
+            margin-bottom: 4px;
+        }
+        .sub-label {
+            font-weight: bold;
+        }
+        .caption {
+            font-style: italic;
+            font-size: 12pt;
+            text-align: center;
+            margin-top: 4px;
+            margin-bottom: 40px;
+        }
+
+        .btn-download {
+            position: fixed;
+            top: 20px; right: 20px;
+            padding: 10px 20px;
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            z-index: 9999;
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .page { box-shadow: none; padding: 20px; margin: 0; }
+            .btn-download { display: none; }
+        }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<button class="btn-download" onclick="window.print()">🖨️ In / Xuất PDF</button>
+
+<div id="all-content">
+
+<!-- ================================================ UC1 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.1. Mô tả kịch bản ca sử dụng <u>Quản lý nhân viên</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Quản lý nhân viên</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên thực hiện quản lý toàn bộ tài khoản nhân viên trong hệ thống. Quản trị viên có thể xem danh sách nhân viên, tìm kiếm và lọc theo các tiêu chí, thêm nhân viên mới, cập nhật thông tin, phân quyền chi tiết cũng như khóa hoặc mở khóa tài khoản nhân viên. Sau khi thao tác, hệ thống cập nhật thông tin và lưu lại kết quả xử lý.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền truy cập chức năng quản lý nhân viên.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào mục "Phân Quyền" trên thanh điều hướng bên trái, sau đó chọn "Nhân Viên" trong danh sách con hiện ra.</li>
+                    <li>Hệ thống hiển thị danh sách tài khoản nhân viên hiện có kèm thông tin tổng quan (tên, email, chức danh, vai trò, trạng thái).</li>
+                    <li>Quản trị viên chọn thao tác cần thực hiện.</li>
+                    <li>Hệ thống xử lý yêu cầu và phản hồi kết quả tương ứng.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Danh sách nhân viên được hiển thị đầy đủ. Quản trị viên có thể thực hiện các thao tác quản lý tài khoản nhân viên một cách linh hoạt theo từng nhu cầu.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Quản lý nhân viên<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC2 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.2. Mô tả kịch bản ca sử dụng <u>Tạo vai trò</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Tạo vai trò</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên tạo các vai trò (Role) tùy chỉnh để làm template phân quyền cho nhóm nhân viên. Mỗi vai trò được gán một tập hợp quyền hạn nhất định theo từng module chức năng. Sau khi tạo, vai trò này có thể được gán cho nhiều nhân viên khác nhau khi thêm mới hoặc cập nhật tài khoản.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền quản lý vai trò.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào mục "Phân Quyền" trên thanh điều hướng bên trái, chọn "Nhân Viên", sau đó nhấp vào nút "Tạo vai trò" ở góc trên bên phải trang danh sách nhân viên.</li>
+                    <li>Hệ thống hiển thị form tạo vai trò mới gồm tên vai trò, mô tả và bảng danh sách quyền theo module.</li>
+                    <li>Quản trị viên nhập tên vai trò vào trường "Tên vai trò" và mô tả vào trường "Mô tả".</li>
+                    <li>Quản trị viên tích chọn các ô checkbox tương ứng với từng quyền hạn theo module (Thú cưng, Đơn nhận nuôi, Lịch phỏng vấn, Ủng hộ, Chiến dịch...).</li>
+                    <li>Quản trị viên nhấp vào nút "Lưu vai trò".</li>
+                    <li>Hệ thống kiểm tra tính hợp lệ của dữ liệu.</li>
+                    <li>Hệ thống lưu vai trò mới vào cơ sở dữ liệu.</li>
+                    <li>Hệ thống hiển thị thông báo tạo vai trò thành công.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>6a. Tên vai trò bị trống hoặc đã tồn tại:</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo lỗi.</li>
+                    <li>Quản trị viên chỉnh sửa lại thông tin.</li>
+                    <li>Hệ thống tiếp tục kiểm tra dữ liệu.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Vai trò mới được tạo thành công và có thể được gán cho nhân viên trong các thao tác tiếp theo.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Tạo vai trò<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC3 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.3. Mô tả kịch bản ca sử dụng <u>Xem danh sách nhân viên</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Xem danh sách nhân viên</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên xem toàn bộ danh sách tài khoản nhân viên đang hoạt động trong hệ thống. Quản trị viên có thể tìm kiếm nhân viên theo tên hoặc email, lọc theo vai trò hoặc trạng thái tài khoản, đồng thời xem tóm tắt quyền hạn được gán cho từng nhân viên ngay trên danh sách.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền xem danh sách nhân viên.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào mục "Phân Quyền" trên thanh điều hướng bên trái, sau đó chọn "Nhân Viên" trong danh sách con hiện ra.</li>
+                    <li>Hệ thống hiển thị danh sách nhân viên với thông tin: tên, email, chức danh, vai trò, trạng thái và các quyền đang được gán.</li>
+                    <li>Quản trị viên nhập từ khóa vào ô "Tìm kiếm" để lọc theo tên hoặc email nhân viên.</li>
+                    <li>Quản trị viên nhấp vào dropdown "Vai trò" hoặc "Trạng thái" để lọc danh sách theo tiêu chí tương ứng.</li>
+                    <li>Hệ thống tự động cập nhật danh sách theo điều kiện lọc đã chọn.</li>
+                    <li>Quản trị viên xem thông tin chi tiết từng nhân viên hoặc chọn thao tác tiếp theo.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>3a. Không tìm thấy nhân viên phù hợp:</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo "Không có kết quả phù hợp".</li>
+                    <li>Quản trị viên điều chỉnh lại từ khóa hoặc bộ lọc.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Danh sách nhân viên được hiển thị theo đúng điều kiện tìm kiếm và lọc mà quản trị viên đã chọn.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Xem danh sách nhân viên<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC4 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.4. Mô tả kịch bản ca sử dụng <u>Thêm nhân viên mới</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Thêm nhân viên mới</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên tạo tài khoản nhân viên mới trong hệ thống. Quản trị viên nhập thông tin cá nhân của nhân viên, thiết lập mật khẩu ban đầu, sau đó gán vai trò có sẵn hoặc tùy chỉnh quyền hạn chi tiết theo từng module cho nhân viên đó. Hệ thống lưu tài khoản mới và nhân viên có thể đăng nhập ngay sau khi tài khoản được tạo.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền tạo tài khoản nhân viên.</li>
+                    <li>Địa chỉ email của nhân viên mới chưa tồn tại trong hệ thống.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào nút "+ Thêm nhân viên" ở góc trên bên phải trang danh sách nhân viên.</li>
+                    <li>Hệ thống điều hướng đến trang tạo tài khoản nhân viên mới và hiển thị form nhập liệu.</li>
+                    <li>Quản trị viên điền đầy đủ thông tin vào các trường: "Họ và tên", "Email", "Số điện thoại", "Chức danh", "Mật khẩu" và "Xác nhận mật khẩu".</li>
+                    <li>Quản trị viên chọn vai trò (Role) phù hợp cho nhân viên từ dropdown "Vai trò".</li>
+                    <li>Quản trị viên tích chọn thêm các ô checkbox quyền hạn chi tiết theo từng module nếu cần (ngoài quyền mặc định của vai trò).</li>
+                    <li>Quản trị viên nhấp vào nút "Tạo tài khoản".</li>
+                    <li>Hệ thống kiểm tra tính hợp lệ của dữ liệu đầu vào.</li>
+                    <li>Hệ thống tạo tài khoản nhân viên mới và gán quyền tương ứng.</li>
+                    <li>Hệ thống hiển thị thông báo tạo tài khoản thành công và điều hướng về trang danh sách nhân viên.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>7a. Email đã tồn tại trong hệ thống:</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo lỗi "Email đã được sử dụng".</li>
+                    <li>Quản trị viên nhập lại email khác.</li>
+                </ol>
+                <p>7b. Dữ liệu nhập chưa hợp lệ (thiếu trường bắt buộc, mật khẩu không khớp...):</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo lỗi tương ứng tại trường vi phạm.</li>
+                    <li>Quản trị viên bổ sung và chỉnh sửa thông tin.</li>
+                    <li>Hệ thống tiếp tục kiểm tra dữ liệu.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Tài khoản nhân viên mới được tạo thành công với đầy đủ thông tin và quyền hạn đã thiết lập, hiển thị trong danh sách nhân viên của hệ thống.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Thêm nhân viên mới<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC5 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.5. Mô tả kịch bản ca sử dụng <u>Cập nhật thông tin nhân viên</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Cập nhật thông tin nhân viên</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên chỉnh sửa thông tin cá nhân hoặc cập nhật lại quyền hạn của một tài khoản nhân viên đang tồn tại trong hệ thống. Quản trị viên có thể thay đổi vai trò, điều chỉnh quyền chi tiết theo từng module hoặc cập nhật thông tin liên lạc. Sau khi lưu, hệ thống áp dụng ngay thay đổi và ghi lại nhật ký cập nhật.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền chỉnh sửa thông tin nhân viên.</li>
+                    <li>Tài khoản nhân viên cần cập nhật đã tồn tại trong hệ thống.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào biểu tượng chỉnh sửa (✏️) tương ứng với nhân viên cần cập nhật trong danh sách.</li>
+                    <li>Hệ thống điều hướng đến trang chỉnh sửa và hiển thị form với thông tin hiện tại của nhân viên cùng bảng quyền hạn đang được gán.</li>
+                    <li>Quản trị viên chỉnh sửa các trường thông tin cá nhân và/hoặc tích chọn lại các ô checkbox quyền hạn theo nhu cầu.</li>
+                    <li>Quản trị viên nhấp vào nút "Lưu thay đổi".</li>
+                    <li>Hệ thống kiểm tra tính hợp lệ của dữ liệu.</li>
+                    <li>Hệ thống cập nhật thông tin và quyền hạn mới cho tài khoản nhân viên.</li>
+                    <li>Hệ thống hiển thị thông báo cập nhật thành công.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>5a. Dữ liệu chỉnh sửa không hợp lệ:</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo lỗi tại trường vi phạm.</li>
+                    <li>Quản trị viên chỉnh sửa lại thông tin.</li>
+                    <li>Hệ thống tiếp tục kiểm tra dữ liệu.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Thông tin và quyền hạn của nhân viên được cập nhật thành công, có hiệu lực ngay từ lần đăng nhập tiếp theo của nhân viên đó.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Cập nhật thông tin nhân viên<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC6 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.6. Mô tả kịch bản ca sử dụng <u>Khóa hoặc Mở tài khoản nhân viên</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Khóa hoặc Mở tài khoản nhân viên</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên thay đổi trạng thái hoạt động của một tài khoản nhân viên. Khi tài khoản bị khóa, nhân viên đó không thể đăng nhập vào hệ thống. Khi tài khoản được mở khóa, nhân viên có thể tiếp tục truy cập bình thường. Thao tác này không xóa dữ liệu của nhân viên khỏi hệ thống.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền thay đổi trạng thái tài khoản nhân viên.</li>
+                    <li>Tài khoản nhân viên cần thao tác đã tồn tại trong hệ thống.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên tìm thấy nhân viên cần thay đổi trạng thái trong danh sách.</li>
+                    <li>Quản trị viên nhấp vào nút "Khóa tài khoản" (hoặc "Mở khóa" nếu tài khoản đang bị khóa) tương ứng với nhân viên đó.</li>
+                    <li>Hệ thống hiển thị hộp thoại xác nhận thao tác.</li>
+                    <li>Quản trị viên nhấp vào nút "Xác nhận" trong hộp thoại.</li>
+                    <li>Hệ thống cập nhật trạng thái tài khoản nhân viên.</li>
+                    <li>Hệ thống hiển thị thông báo thay đổi trạng thái thành công.</li>
+                    <li>Trạng thái mới của tài khoản được phản ánh ngay trên danh sách nhân viên.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>4a. Quản trị viên hủy xác nhận:</p>
+                <ol>
+                    <li>Hệ thống đóng hộp thoại, không thay đổi trạng thái tài khoản.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Trạng thái tài khoản nhân viên được cập nhật thành công. Nhân viên bị khóa sẽ không thể đăng nhập vào hệ thống cho đến khi được mở khóa.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Khóa hoặc Mở tài khoản nhân viên<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC7 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.7. Mô tả kịch bản ca sử dụng <u>Quản lý khách hàng</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Quản lý khách hàng</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên thực hiện quản lý các tài khoản khách hàng (người dùng cuối) đã đăng ký trên hệ thống. Quản trị viên có thể xem danh sách khách hàng, tìm kiếm, lọc theo trạng thái tài khoản, cũng như khóa hoặc mở khóa tài khoản của khách hàng khi cần thiết.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền truy cập chức năng quản lý khách hàng.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào mục "Phân Quyền" trên thanh điều hướng bên trái, sau đó chọn "Khách Hàng" trong danh sách con hiện ra.</li>
+                    <li>Hệ thống hiển thị danh sách tài khoản khách hàng hiện có.</li>
+                    <li>Quản trị viên chọn thao tác cần thực hiện (xem danh sách, khóa/mở tài khoản).</li>
+                    <li>Hệ thống xử lý yêu cầu và phản hồi kết quả tương ứng.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Danh sách khách hàng được hiển thị và quản trị viên có thể thực hiện các thao tác quản lý tài khoản cần thiết.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Quản lý khách hàng<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC8 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.8. Mô tả kịch bản ca sử dụng <u>Xem danh sách khách hàng</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Xem danh sách khách hàng</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên xem danh sách toàn bộ tài khoản khách hàng đã đăng ký trên hệ thống. Quản trị viên có thể tìm kiếm khách hàng theo tên hoặc email, lọc theo trạng thái tài khoản, và xem thông tin tổng quan như ngày đăng ký, số điện thoại và trạng thái tài khoản của từng khách hàng.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền xem danh sách khách hàng.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên nhấp vào mục "Phân Quyền" trên thanh điều hướng bên trái, sau đó chọn "Khách Hàng" trong danh sách con hiện ra.</li>
+                    <li>Hệ thống hiển thị danh sách tài khoản khách hàng gồm: tên, email, ngày đăng ký, số điện thoại và trạng thái tài khoản.</li>
+                    <li>Quản trị viên nhập từ khóa vào ô "Tìm kiếm" để lọc theo tên hoặc email khách hàng.</li>
+                    <li>Quản trị viên nhấp vào dropdown "Trạng thái" để lọc danh sách theo trạng thái tài khoản (hoạt động / bị khóa).</li>
+                    <li>Hệ thống tự động cập nhật danh sách theo điều kiện lọc đã chọn.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>3a. Không tìm thấy khách hàng phù hợp:</p>
+                <ol>
+                    <li>Hệ thống hiển thị thông báo "Không có kết quả phù hợp".</li>
+                    <li>Quản trị viên điều chỉnh lại từ khóa hoặc bộ lọc.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Danh sách khách hàng được hiển thị theo đúng điều kiện tìm kiếm và lọc đã chọn.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Xem danh sách khách hàng<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+<!-- ================================================ UC9 ================================================ -->
+<div class="page">
+    <p class="section-title">2.x.9. Mô tả kịch bản ca sử dụng <u>Khóa hoặc Mở tài khoản khách hàng</u></p>
+    <table>
+        <tr>
+            <td class="label">Tên ca sử dụng</td>
+            <td class="content">Khóa hoặc Mở tài khoản khách hàng</td>
+        </tr>
+        <tr>
+            <td class="label">Mô tả</td>
+            <td class="content">Quản trị viên thay đổi trạng thái hoạt động của một tài khoản khách hàng. Khi tài khoản bị khóa, khách hàng không thể đăng nhập hoặc thực hiện các giao dịch như gửi đơn nhận nuôi và ủng hộ. Khi tài khoản được mở khóa, khách hàng có thể tiếp tục sử dụng hệ thống bình thường. Thao tác này không xóa dữ liệu lịch sử của khách hàng.</td>
+        </tr>
+        <tr>
+            <td class="label">Tác nhân</td>
+            <td class="content">Quản trị viên đã đăng nhập</td>
+        </tr>
+        <tr>
+            <td class="label">Điều kiện đầu vào</td>
+            <td class="content">
+                <ol>
+                    <li>Quản trị viên đã đăng nhập vào hệ thống.</li>
+                    <li>Quản trị viên có quyền thay đổi trạng thái tài khoản khách hàng.</li>
+                    <li>Tài khoản khách hàng cần thao tác đã tồn tại trong hệ thống.</li>
+                    <li>Hệ thống đang hoạt động bình thường.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Các luồng sự kiện</td>
+            <td class="content">
+                <p class="sub-label">Luồng chính:</p>
+                <ol>
+                    <li>Quản trị viên tìm thấy khách hàng cần thay đổi trạng thái trong danh sách.</li>
+                    <li>Quản trị viên nhấp vào nút "Khóa tài khoản" (hoặc "Mở khóa" nếu tài khoản đang bị khóa) tương ứng với khách hàng đó.</li>
+                    <li>Hệ thống hiển thị hộp thoại xác nhận thao tác.</li>
+                    <li>Quản trị viên nhấp vào nút "Xác nhận" trong hộp thoại.</li>
+                    <li>Hệ thống cập nhật trạng thái tài khoản khách hàng.</li>
+                    <li>Hệ thống hiển thị thông báo thay đổi trạng thái thành công.</li>
+                    <li>Trạng thái mới của tài khoản được phản ánh ngay trên danh sách khách hàng.</li>
+                </ol>
+                <p class="sub-label">Luồng thay thế:</p>
+                <p>4a. Quản trị viên hủy xác nhận:</p>
+                <ol>
+                    <li>Hệ thống đóng hộp thoại, không thay đổi trạng thái tài khoản.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Kết quả trả về</td>
+            <td class="content">Trạng thái tài khoản khách hàng được cập nhật thành công. Khách hàng bị khóa sẽ không thể đăng nhập hay thực hiện bất kỳ giao dịch nào trên hệ thống cho đến khi được mở khóa.</td>
+        </tr>
+    </table>
+    <p class="caption">Bảng: Mô tả kịch bản ca sử dụng Khóa hoặc Mở tài khoản khách hàng<br>(Nguồn: Nhóm thực hiện)</p>
+</div>
+
+</div><!-- end all-content -->
+</body>
+</html>
