@@ -178,7 +178,7 @@ class ChatboxService
             $response = Http::withToken($key)
                 ->timeout(5)
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'meta-llama/llama-4-scout-17b-16e-instruct',
+                    'model' => 'llama-3.3-70b-versatile',
                     'messages' => [
                         ['role' => 'user', 'content' => 'ping']
                     ],
@@ -537,7 +537,7 @@ class ChatboxService
             $response = Http::withToken($key)
                 ->timeout(30)
                 ->post('https://api.groq.com/openai/v1/chat/completions', [
-                    'model' => 'meta-llama/llama-4-scout-17b-16e-instruct',
+                    'model' => 'llama-3.3-70b-versatile',
                     'messages' => $messages,
                     'max_tokens' => 1024,
                     'temperature' => 0.7
