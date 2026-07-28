@@ -163,7 +163,12 @@
                             </div>
                             <button @click="userMenuOpen = !userMenuOpen" class="w-10 h-10 rounded-[1rem] bg-slate-100 border-0 ring-2 ring-transparent hover:ring-orange-brand/30 flex items-center justify-center overflow-hidden shrink-0 transition-all shadow-md cursor-pointer relative group">
                                 @if(Auth::user() && Auth::user()->Anh_dai_dien)
-                                    <img src="{{ asset('storage/' . Auth::user()->Anh_dai_dien) }}" alt="Avatar" class="w-full h-full object-cover">
+                                    @php
+                                        $avatarUrl = Str::startsWith(Auth::user()->Anh_dai_dien, ['http://', 'https://']) 
+                                            ? Auth::user()->Anh_dai_dien 
+                                            : asset('storage/' . Auth::user()->Anh_dai_dien);
+                                    @endphp
+                                    <img src="{{ $avatarUrl }}" alt="Avatar" class="w-full h-full object-cover">
                                 @else
                                     @php
                                         $initials = 'AD';

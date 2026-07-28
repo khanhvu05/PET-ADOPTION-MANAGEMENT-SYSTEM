@@ -52,7 +52,7 @@
                 <h2 class="text-2xl font-bold text-slate-900 mb-1">Cài Đặt Hệ Thống</h2>
                 <p class="text-sm text-slate-500">Cấu hình các thông số cơ bản và tùy chỉnh hoạt động của hệ thống.</p>
             </div>
-            <div class="flex items-center gap-3" x-show="activeTab === 'general'">
+            <div class="hidden flex items-center gap-3" x-show="activeTab === 'general'">
                 @can('settings.edit')
                 <button class="bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-teal-800 hover:shadow-md transition-all shadow-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
@@ -97,7 +97,7 @@
                             <svg class="w-5 h-5" :class="activeTab === 'backup' ? 'text-teal-700' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
                             Sao lưu & Phục hồi
                         </a>
-                        <a href="#chatbox" @click="activeTab = 'chatbox'" class="flex items-center gap-3 px-4 py-3.5 transition-colors border-l-4"
+                        <a href="#chatbox" @click="activeTab = 'chatbox'" class="hidden flex items-center gap-3 px-4 py-3.5 transition-colors border-l-4"
                            :class="activeTab === 'chatbox' ? 'bg-teal-50 text-teal-700 border-teal-600 font-semibold' : 'text-slate-600 border-transparent hover:bg-slate-50 hover:text-slate-900 font-medium'">
                             <svg class="w-5 h-5" :class="activeTab === 'chatbox' ? 'text-teal-700' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                             Cấu hình Chatbox AI
@@ -123,7 +123,7 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Logo Upload -->
-                            <div class="col-span-1 md:col-span-2 flex items-start gap-6" x-data="{ photoName: null, photoPreview: null }">
+                            <div class="hidden col-span-1 md:col-span-2 flex items-start gap-6" x-data="{ photoName: null, photoPreview: null }">
                                 <div class="w-24 h-24 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-300 flex items-center justify-center shrink-0 relative group cursor-pointer hover:bg-slate-100 hover:border-teal-500 transition-colors overflow-hidden" @click="$refs.logoInput.click()">
                                     <!-- Hiển thị ảnh hiện tại hoặc ảnh preview -->
                                     <div x-show="!photoPreview">
@@ -188,7 +188,7 @@
                     </div>
 
                     <!-- Regional Settings -->
-                    <div class="bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
+                    <div class="hidden bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
                         <h3 class="text-lg font-bold text-slate-900 mb-6">Khu Vực & Ngôn Ngữ</h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -232,7 +232,7 @@
                     </div>
 
                     <!-- Advanced Options -->
-                    <div class="bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
+                    <div class="hidden bg-white border border-slate-200 rounded-xl shadow p-6 lg:p-8">
                         <h3 class="text-lg font-bold text-slate-900 mb-6">Tùy Chọn Hoạt Động</h3>
                         
                         <div class="space-y-6">

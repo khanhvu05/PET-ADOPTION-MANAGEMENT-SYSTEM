@@ -1,5 +1,21 @@
 @php
     $isHome = request()->is('/');
+    $adminUrl = '#';
+    if(auth()->check() && auth()->user()->isStaff()) {
+        if(auth()->user()->can('dashboard.view')) {
+            $adminUrl = route('dashboard');
+        } elseif(auth()->user()->can('pets.view')) {
+            $adminUrl = route('admin.pets.index');
+        } elseif(auth()->user()->can('adoptions.view')) {
+            $adminUrl = route('admin.adoptions.index');
+        } elseif(auth()->user()->can('interviews.view')) {
+            $adminUrl = route('admin.interviews.index');
+        } elseif(auth()->user()->can('staff.view')) {
+            $adminUrl = route('admin.staff.index');
+        } elseif(auth()->user()->can('settings.view')) {
+            $adminUrl = route('admin.settings.index');
+        }
+    }
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" style="color-scheme: light;">
@@ -168,7 +184,7 @@
                     </a>
                     @endif
                     @if(auth()->user()->isStaff())
-                    <a href="{{ route('admin.pets.index') }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
+                    <a href="{{ $adminUrl }}" class="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-teal-600 hover:bg-teal-50 transition-colors border-t border-gray-50 mt-1 pt-2">
                         <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Trang quản trị
                     </a>
                     @endif
@@ -361,7 +377,7 @@
                 </a>
                 
                 @if(auth()->user()->isStaff())
-                    <a href="{{ route('admin.pets.index') }}" class="flex items-center justify-between py-3.5 px-2 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <a href="{{ $adminUrl }}" class="flex items-center justify-between py-3.5 px-2 border-b border-slate-100 hover:bg-slate-50 transition-colors">
                         <div class="flex items-center gap-3">
                             <i data-lucide="layout-dashboard" class="w-5 h-5 text-[#0AA5C0]"></i>
                             <span class="text-[15px] font-medium text-slate-700">Trang quản trị</span>
