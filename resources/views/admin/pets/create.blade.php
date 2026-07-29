@@ -46,7 +46,7 @@
             <!-- 1. Thông tin cơ bản -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10 border-b border-slate-200/60">
                 <div class="lg:col-span-1">
-                    <h3 class="text-base font-semibold text-slate-800">Thông vị trí nội bộ</h3>
+                    <h3 class="text-base font-semibold text-slate-800">Thông tin cơ bản</h3>
                     <p class="text-[13.5px] text-slate-500 mt-2 leading-relaxed">Tên, giống loài và các đặc điểm nhận dạng chính. Thông tin này sẽ hiển thị nổi bật trên thẻ thú cưng.</p>
                 </div>
                 <div class="lg:col-span-2">
